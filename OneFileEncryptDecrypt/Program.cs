@@ -1,19 +1,25 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.CommandLine;
 
 namespace OneFileEncryptDecrypt
 {
     public class Program
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
-            var args = Environment.GetCommandLineArgs();
-            var configX = new ConfigurationBuilder().AddJsonFile("appsettings.json", true).AddCommandLine(args).Build();
-            var xx = configX.Get<XAppSettings_Json.AppSettingsMain_Json>();
+            // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/
+            // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/syntax
+            // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/how-to-parse-and-invoke
+            var rc = new RootCommand("One file, encrypt and decrypt work.");
+            rc.Add(XWork.MainCommandWork.CreateCommand("encrypt", "Encrypt", XWork.EncryptWork.ExecuteNow));
+            rc.Add(XWork.MainCommandWork.CreateCommand("decrypt", "Decrypt", XWork.DecryptWork.ExecuteNow));
 
-            Console.Out.WriteLine(xx?.WorkID);
-            Console.Out.WriteLine(xx?.Say);
+            var pr = rc.Parse(args);
+            //var pr = rc.Parse("encrypt --key \"hello\" --file \"D:\\Download\\Dummy\\IMG_2819.jpg\"");
 
-            Console.Out.WriteLine("Hello, World!");
+            pr.Invoke();
         }
     }
 }
+
+
+
