@@ -50,6 +50,9 @@ namespace OneFileEncryptDecrypt.XWork
             //Console.WriteLine(hash2);
             //Console.WriteLine(hash1 == hash2);
 
+
+
+
             Console.WriteLine($"EncryptWork... ({wo.CryptoKey}) {wo.FilePath}");
         }
     }
