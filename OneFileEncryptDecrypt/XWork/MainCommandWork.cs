@@ -18,23 +18,38 @@ namespace OneFileEncryptDecrypt.XWork
 
         private static void OptionValidator_Key(OptionResult optr)
         {
+            // 키 최소한의 길이
+            var keyMinLength = XValue.ProcessValue.CryptoKeyMinimumLength;
             var tkText = MainCommandWork.IdentifierTokenText(optr);
-            var value = optr.GetValueOrDefault<string>();
-            var isAllow = ((value != string.Empty) && (value.Length <= 32));
+            var key = optr.GetValueOrDefault<string>();
+            // 키 길이는 일정길이 이상 필수로 잡음
+            var isAllowKeyLen = ((key != string.Empty) && (key.Length >= keyMinLength));
 
-            if (isAllow == false)
+            if (isAllowKeyLen == false)
             {
-                optr.AddError($"{tkText}Want size 1 ~ 32 length.");
+                optr.AddError($"{tkText}Want length minimum {keyMinLength}.");
             }
         }
 
         private static void OptionValidator_File(OptionResult optr)
         {
+            var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
             var tkText = MainCommandWork.IdentifierTokenText(optr);
-            var value = optr.GetValueOrDefault<string>();
-            var isAllow = ((value != string.Empty) && (File.Exists(value) == true));
+            var filePath = optr.GetValueOrDefault<string>();
 
-            if (isAllow == false)
+            // 파일이 존재하는지 체크
+            if ((filePath != string.Empty) && (File.Exists(filePath) == true))
+            {
+                var fi = new FileInfo(filePath);
+                var maxByte = (1_024_000L * (maxSizeMB * 1L));
+
+                // 파일은 일정 크기 이상 안되게 한다
+                if (fi.Length > maxByte)
+                {
+                    optr.AddError($"{tkText}Input file less {maxSizeMB} MB please.");
+                }
+            }
+            else
             {
                 optr.AddError($"{tkText}Not exist file.");
             }
