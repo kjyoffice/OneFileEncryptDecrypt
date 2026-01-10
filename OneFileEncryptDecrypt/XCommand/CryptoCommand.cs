@@ -4,9 +4,9 @@ using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Text;
 
-namespace OneFileEncryptDecrypt.XWork
+namespace OneFileEncryptDecrypt.XCommand
 {
-    public class MainCommandWork
+    public class CryptoCommand
     {
         private static string IdentifierTokenText(OptionResult optr)
         {
@@ -20,7 +20,7 @@ namespace OneFileEncryptDecrypt.XWork
         {
             // 키 최소한의 길이
             var keyMinLength = XValue.ProcessValue.CryptoKeyMinimumLength;
-            var tkText = MainCommandWork.IdentifierTokenText(optr);
+            var tkText = CryptoCommand.IdentifierTokenText(optr);
             var key = optr.GetValueOrDefault<string>();
             // 키 길이는 일정길이 이상 필수로 잡음
             var isAllowKeyLen = ((key != string.Empty) && (key.Length >= keyMinLength));
@@ -33,7 +33,7 @@ namespace OneFileEncryptDecrypt.XWork
 
         private static void OptionValidator_File(OptionResult optr)
         {
-            var tkText = MainCommandWork.IdentifierTokenText(optr);
+            var tkText = CryptoCommand.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
 
             // 파일이 존재하는지 체크
@@ -61,7 +61,7 @@ namespace OneFileEncryptDecrypt.XWork
             var result = new Option<string>("--key", "-k");
             result.Description = $"{workText} key";
             result.Required = true;
-            result.Validators.Add(MainCommandWork.OptionValidator_Key);
+            result.Validators.Add(CryptoCommand.OptionValidator_Key);
 
             return result;
         }
@@ -71,15 +71,15 @@ namespace OneFileEncryptDecrypt.XWork
             var result = new Option<string>("--file", "-f");
             result.Description = $"{workText} source file path";
             result.Required = true;
-            result.Validators.Add(MainCommandWork.OptionValidator_File);
+            result.Validators.Add(CryptoCommand.OptionValidator_File);
 
             return result;
         }
 
         public static Command CreateCommand(string workName, string workText, Action<XModel.WorkOrder> workAction)
         {
-            var optKey = MainCommandWork.CreateOptionKey(workText);
-            var optFile = MainCommandWork.CreateOptionFile(workText);
+            var optKey = CryptoCommand.CreateOptionKey(workText);
+            var optFile = CryptoCommand.CreateOptionFile(workText);
 
             var result = new Command(workName, $"{workText} a file");
             result.Options.Add(optKey);
