@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace OneFileEncryptDecrypt.XAppSettings
@@ -8,15 +9,18 @@ namespace OneFileEncryptDecrypt.XAppSettings
     {
         public bool IsAllow { get; private set; }
         public AppSettingsX_Crypto Crypto { get; private set; }
+        public XMessage.WorkMessageSet WorkMessage { get; private set; }
 
         // --------------------------------------------
 
         public AppSettingsX(XAppSettings_Json.AppSettingsX_Json? jsonData)
         {
+            var langCode = CultureInfo.CurrentUICulture.Name;
             var crypto = new AppSettingsX_Crypto(jsonData?.Crypto);
 
             this.IsAllow = (crypto.IsAllow == true);
             this.Crypto = crypto;
+            this.WorkMessage = new XMessage.WorkMessageSet(langCode);
         }
     }
 }

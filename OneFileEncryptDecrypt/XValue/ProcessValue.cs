@@ -14,11 +14,11 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
-        public static long FileAllowMaxSizeMB
+        public static int FileAllowMaxSizeMB
         {
             get
             {
-                return 30L;
+                return 30;
             }
         }
 

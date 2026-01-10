@@ -1,5 +1,5 @@
 ﻿using System.CommandLine;
-
+using System.Globalization;
 using Microsoft.Extensions.Configuration;
 
 namespace OneFileEncryptDecrypt
@@ -31,13 +31,15 @@ namespace OneFileEncryptDecrypt
 
                     if ((args.Length <= 0) || ((args.Length > 0) && (args[0].ToLower() != cmdName)))
                     {
-                        errorMessage.Add($"Not exist crypto salt. Please run {cmdName}.");
+                        // 암호화 Salt가 없습니다. 다음의 명령을 실행해주세요.
+                        errorMessage.AddRange(asx.WorkMessage.NotExistCryptoSalt(cmdName));
                     }
                 }
             }
             else
             {
-                errorMessage.Add("Empty or wrong AppSetting.");
+                // AppSettings이 없거나 올바르지 않습니다.
+                errorMessage.Add(asx.WorkMessage.EmptyOrWrongAppSettings);
             }
 
             if (errorMessage.Count > 0)
@@ -58,9 +60,10 @@ namespace OneFileEncryptDecrypt
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/syntax
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/how-to-parse-and-invoke
-            var rc = new RootCommand("One file encrypt and decrypt work.");
-            rc.Add(XCommand.CryptoCommand.CreateCommand("encrypt", "Encrypt", XWork.EncryptWork.ExecuteNow));
-            rc.Add(XCommand.CryptoCommand.CreateCommand("decrypt", "Decrypt", XWork.DecryptWork.ExecuteNow));
+            // 하나의 파일을 암호화 및 복호화 합니다.
+            var rc = new RootCommand(asx.WorkMessage.AppDescription);
+            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.EncryptCommandName, XWork.EncryptWork.ExecuteNow));
+            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.DecryptCommandName, XWork.DecryptWork.ExecuteNow));
             rc.Add(XCommand.CreateSaltCommand.CreateCommand(XWork.CreateSaltWork.ExecuteNow));
 
             var pr = rc.Parse(args);

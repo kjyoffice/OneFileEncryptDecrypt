@@ -1,0 +1,197 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+
+namespace OneFileEncryptDecrypt.XMessage
+{
+    public class WorkMessageSet
+    {
+        private bool IsHangul { get; set; }
+
+        // ------------------------------------------------
+
+        public string EmptyOrWrongAppSettings
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "AppSettings이 없거나 올바르지 않습니다." :
+                    "Empty or wrong AppSettings."
+                );
+            }
+        }
+
+        public string AppDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "하나의 파일을 암호화, 복호화 합니다." :
+                    "One file encrypt and decrypt work."
+                );
+            }
+        }
+
+        public string CreateSaltDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 생성합니다." :
+                    $"Create crypto salt."
+                );
+            }
+        }
+
+        /*
+        public string AppDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "" :
+                    ""
+                );
+            }
+        }
+        */
+
+        private string CryptoCommandText(bool isHangul, string commandName)
+        {
+            var encCmdName = XCommand.CryptoCommand.EncryptCommandName;
+            var decCmdName = XCommand.CryptoCommand.DecryptCommandName;
+            var result = string.Empty;
+
+            if (commandName == encCmdName)
+            {
+                result = ((isHangul == true) ? "암호화" : "Encrypt");
+            }
+            else if (commandName == decCmdName)
+            {
+                result = ((isHangul == true) ? "복호화" : "Decrypt");
+            }
+
+            return result;
+        }
+
+        // ------------------------------------------------
+
+        public WorkMessageSet(string languageCode)
+        {
+            this.IsHangul = (languageCode.ToUpper() == "KO-KR");
+        }
+
+        public List<string> NotExistCryptoSalt(string commandName)
+        {
+            return (
+                (this.IsHangul == true) ?
+                new List<string>() { $"암호화, 복호화 Salt가 없습니다.", $"다음의 명령을 실행해주세요. {commandName}." } :
+                new List<string>() { $"Not exist crypto salt.", $"Please run {commandName}." }
+            );
+        }
+
+        public string CryptoCommandDescription(string commandName)
+        {
+            var isHangul = this.IsHangul;
+            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var result = (
+                (isHangul == true) ?
+                $"파일을 {cmdText} 합니다." :
+                $"{cmdText} a file"
+            );
+
+            return result;
+        }
+
+        public string CryptoKeyDescription(string commandName)
+        {
+            var isHangul = this.IsHangul;
+            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var result = (
+                (isHangul == true) ?
+                $"{cmdText} 키" :
+                $"{cmdText} key"
+            );
+
+            return result;
+        }
+
+        public string CryptoKeyNotAllowLength(string tkText, int keyMinLength)
+        {
+            var isHangul = this.IsHangul;
+            var result = (
+                (isHangul == true) ?
+                $"{tkText}키는 최소 {keyMinLength}자 이상이어야 합니다." :
+                $"{tkText}Want key length minimum {keyMinLength}."
+            );
+
+            return result;
+        }
+
+        public string CryptoFileDescription(string commandName)
+        {
+            var isHangul = this.IsHangul;
+            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var result = (
+                (isHangul == true) ?
+                $"{cmdText} 파일 경로" :
+                $"{cmdText} file path"
+            );
+
+            return result;
+        }
+
+        public string CryptoFileNotExist(string tkText)
+        {
+            var isHangul = this.IsHangul;
+            var result = (
+                (isHangul == true) ?
+                $"{tkText}파일이 존재하지 않습니다." :
+                $"{tkText}Not exist file."
+            );
+
+            return result;
+        }
+
+        public string CryptoFileBigNotSupport(string tkText, int maxSizeMB)
+        {
+            var isHangul = this.IsHangul;
+            var result = (
+                (isHangul == true) ?
+                $"{tkText}{maxSizeMB} MB 이상의 파일은 지원하지 않습니다." :
+                $"{tkText}Not support {maxSizeMB} MB over file."
+            );
+
+            return result;
+        }
+
+        /*
+        public string CryptoCommandDescriptionX(string commandName)
+        {
+            var isHangul = this.IsHangul;
+            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var result = (
+                (isHangul == true) ?
+                $"" :
+                $""
+            );
+
+            return result;
+        }
+
+        public string NotExistCryptoSalt(string commandName)
+        {
+            return (
+                (this.IsHangul == true) ?
+                $"" :
+                $""
+            );
+        }
+        */
+    }
+}

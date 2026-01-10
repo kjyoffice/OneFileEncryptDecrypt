@@ -8,17 +8,36 @@ namespace OneFileEncryptDecrypt.XCommand
 {
     public class CryptoCommand
     {
-        private static Option<string> CreateOptionKey(string workText)
+        public static string EncryptCommandName
+        {
+            get
+            {
+                return "encrypt";
+            }
+        }
+
+        public static string DecryptCommandName
+        {
+            get
+            {
+                return "decrypt";
+            }
+        }
+
+        // -------------------------------------------------------------------
+
+        private static Option<string> CreateOptionKey(string commandName, XAppSettings.AppSettingsX asx)
         {
             var result = new Option<string>("--key", "-k");
-            result.Description = $"{workText} key";
+            // 암호화 키
+            result.Description = asx.WorkMessage.CryptoKeyDescription(commandName);
             result.Required = true;
-            result.Validators.Add(CryptoCommand.CreateOptionKeyValidator);
+            result.Validators.Add(optr => CryptoCommand.CreateOptionKeyValidator(optr, asx));
 
             return result;
         }
 
-        private static void CreateOptionKeyValidator(OptionResult optr)
+        private static void CreateOptionKeyValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
         {
             // 키 최소한의 길이
             var keyMinLength = XValue.ProcessValue.CryptoKeyMinimumLength;
@@ -29,21 +48,23 @@ namespace OneFileEncryptDecrypt.XCommand
 
             if (isAllowKeyLen == false)
             {
-                optr.AddError($"{tkText}Want length minimum {keyMinLength}.");
+                // 키는 최소 X자 이상이어야 합니다.
+                optr.AddError(asx.WorkMessage.CryptoKeyNotAllowLength(tkText, keyMinLength));
             }
         }
 
-        private static Option<string> CreateOptionFile(string workText)
+        private static Option<string> CreateOptionFile(string commandName, XAppSettings.AppSettingsX asx)
         {
             var result = new Option<string>("--file", "-f");
-            result.Description = $"{workText} source file path";
+            // 암호화 파일 경로
+            result.Description = asx.WorkMessage.CryptoFileDescription(commandName);
             result.Required = true;
-            result.Validators.Add(CryptoCommand.CreateOptionFileValidator);
+            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx));
 
             return result;
         }
 
-        private static void CreateOptionFileValidator(OptionResult optr)
+        private static void CreateOptionFileValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
         {
             var tkText = CommandProcess.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
@@ -53,30 +74,34 @@ namespace OneFileEncryptDecrypt.XCommand
             {
                 var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
                 // 1048576 : 1024 * 1024
-                var maxByte = (1_048_576L * (maxSizeMB * 1L));
+                var maxByte = (1_048_576L * (maxSizeMB + 1));
                 var fi = new FileInfo(filePath);
 
                 // 파일은 일정 크기 이상 안되게 한다
                 if (fi.Length > maxByte)
                 {
-                    optr.AddError($"{tkText}Input file less {maxSizeMB} MB please.");
+                    // 100 MB 이상의 파일은 지원하지 않습니다.
+                    optr.AddError(asx.WorkMessage.CryptoFileBigNotSupport(tkText, maxSizeMB));
                 }
             }
             else
             {
-                optr.AddError($"{tkText}Not exist file.");
+                // 파일이 존재하지 않습니다.
+                optr.AddError(asx.WorkMessage.CryptoFileNotExist(tkText));
             }
         }
 
         // ----------------------------------------------------------------------------------------------------------
 
-        public static Command CreateCommand(string workName, string workText, Action<XAppSettings.AppSettingsX, XModel.CryptoWorkOrder> workAction)
+        public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XModel.CryptoWorkOrder> workAction)
         {
             var asx = Program.ASX;
-            var optKey = CryptoCommand.CreateOptionKey(workText);
-            var optFile = CryptoCommand.CreateOptionFile(workText);
+            var optKey = CryptoCommand.CreateOptionKey(commandName, asx);
+            var optFile = CryptoCommand.CreateOptionFile(commandName, asx);
+            // 파일을 암호화 합니다.
+            var cmdDesc = asx.WorkMessage.CryptoCommandDescription(commandName);
 
-            var result = new Command(workName, $"{workText} a file");
+            var result = new Command(commandName, cmdDesc);
             result.Options.Add(optKey);
             result.Options.Add(optFile);
 

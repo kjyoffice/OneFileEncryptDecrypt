@@ -22,7 +22,8 @@ namespace OneFileEncryptDecrypt.XCommand
         {
             var asx = Program.ASX;
             var cmdName = CreateSaltCommand.CommandName;
-            var result = new Command(cmdName, $"Create crypto salt.");
+            // 암호화, 복호화 Salt를 생성합니다.
+            var result = new Command(cmdName, asx.WorkMessage.CreateSaltDescription);
 
             result.SetAction(
                 (ParseResult pr) =>
