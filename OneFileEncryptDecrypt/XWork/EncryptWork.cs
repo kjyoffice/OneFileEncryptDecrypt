@@ -10,7 +10,7 @@ namespace OneFileEncryptDecrypt.XWork
 {
     public class EncryptWork
     {
-        public static void ExecuteNow(XModel.WorkOrder wo)
+        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XModel.CryptoWorkOrder cwo)
         {
             //var text = "HelloWorld~";
             //var textBT = Encoding.UTF8.GetBytes("HelloWorld~");
@@ -53,7 +53,7 @@ namespace OneFileEncryptDecrypt.XWork
 
 
 
-            Console.WriteLine($"EncryptWork... ({wo.CryptoKey}) {wo.FilePath}");
+            Console.WriteLine($"EncryptWork... ({cwo.CryptoKey}) {cwo.FilePath}");
         }
     }
 }

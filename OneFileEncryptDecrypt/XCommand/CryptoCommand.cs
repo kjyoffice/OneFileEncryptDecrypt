@@ -8,19 +8,21 @@ namespace OneFileEncryptDecrypt.XCommand
 {
     public class CryptoCommand
     {
-        private static string IdentifierTokenText(OptionResult optr)
+        private static Option<string> CreateOptionKey(string workText)
         {
-            var tk = optr.IdentifierToken;
-            var result = ((tk != null) ? $"[{tk.Type} '{tk.Value}'] " : string.Empty);
+            var result = new Option<string>("--key", "-k");
+            result.Description = $"{workText} key";
+            result.Required = true;
+            result.Validators.Add(CryptoCommand.CreateOptionKeyValidator);
 
             return result;
         }
 
-        private static void OptionValidator_Key(OptionResult optr)
+        private static void CreateOptionKeyValidator(OptionResult optr)
         {
             // 키 최소한의 길이
             var keyMinLength = XValue.ProcessValue.CryptoKeyMinimumLength;
-            var tkText = CryptoCommand.IdentifierTokenText(optr);
+            var tkText = CommandProcess.IdentifierTokenText(optr);
             var key = optr.GetValueOrDefault<string>();
             // 키 길이는 일정길이 이상 필수로 잡음
             var isAllowKeyLen = ((key != string.Empty) && (key.Length >= keyMinLength));
@@ -31,9 +33,19 @@ namespace OneFileEncryptDecrypt.XCommand
             }
         }
 
-        private static void OptionValidator_File(OptionResult optr)
+        private static Option<string> CreateOptionFile(string workText)
         {
-            var tkText = CryptoCommand.IdentifierTokenText(optr);
+            var result = new Option<string>("--file", "-f");
+            result.Description = $"{workText} source file path";
+            result.Required = true;
+            result.Validators.Add(CryptoCommand.CreateOptionFileValidator);
+
+            return result;
+        }
+
+        private static void CreateOptionFileValidator(OptionResult optr)
+        {
+            var tkText = CommandProcess.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
 
             // 파일이 존재하는지 체크
@@ -56,28 +68,11 @@ namespace OneFileEncryptDecrypt.XCommand
             }
         }
 
-        private static Option<string> CreateOptionKey(string workText)
+        // ----------------------------------------------------------------------------------------------------------
+
+        public static Command CreateCommand(string workName, string workText, Action<XAppSettings.AppSettingsX, XModel.CryptoWorkOrder> workAction)
         {
-            var result = new Option<string>("--key", "-k");
-            result.Description = $"{workText} key";
-            result.Required = true;
-            result.Validators.Add(CryptoCommand.OptionValidator_Key);
-
-            return result;
-        }
-
-        private static Option<string> CreateOptionFile(string workText)
-        {
-            var result = new Option<string>("--file", "-f");
-            result.Description = $"{workText} source file path";
-            result.Required = true;
-            result.Validators.Add(CryptoCommand.OptionValidator_File);
-
-            return result;
-        }
-
-        public static Command CreateCommand(string workName, string workText, Action<XModel.WorkOrder> workAction)
-        {
+            var asx = Program.ASX;
             var optKey = CryptoCommand.CreateOptionKey(workText);
             var optFile = CryptoCommand.CreateOptionFile(workText);
 
@@ -88,11 +83,15 @@ namespace OneFileEncryptDecrypt.XCommand
             result.SetAction(
                 (ParseResult pr) =>
                 {
-                    var cryptoKey = (pr.GetValue(optKey) ?? string.Empty);
-                    var filePath = (pr.GetValue(optFile) ?? string.Empty);
-                    var wo = new XModel.WorkOrder(cryptoKey, filePath);
+                    // Salt 파일은 필수로 있어야 한다!
+                    if (asx.Crypto.IsExistSaltFile == true)
+                    {
+                        var cryptoKey = (pr.GetValue(optKey) ?? string.Empty);
+                        var filePath = (pr.GetValue(optFile) ?? string.Empty);
+                        var cwo = new XModel.CryptoWorkOrder(cryptoKey, filePath);
 
-                    workAction(wo);
+                        workAction(asx, cwo);
+                    }
                 }
             );
 

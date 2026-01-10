@@ -4,14 +4,14 @@ using System.Text;
 
 namespace OneFileEncryptDecrypt.XModel
 {
-    public class WorkOrder
+    public class CryptoWorkOrder
     {
         public string CryptoKey { get; private set; }
         public string FilePath { get; private set; }
 
         // ----------------------------------------------------------------
 
-        public WorkOrder(string cryptoKey, string filePath)
+        public CryptoWorkOrder(string cryptoKey, string filePath)
         {
             this.CryptoKey = cryptoKey;
             this.FilePath = filePath;
