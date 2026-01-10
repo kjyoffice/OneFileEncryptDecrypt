@@ -33,15 +33,16 @@ namespace OneFileEncryptDecrypt.XWork
 
         private static void OptionValidator_File(OptionResult optr)
         {
-            var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
             var tkText = MainCommandWork.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
 
             // 파일이 존재하는지 체크
             if ((filePath != string.Empty) && (File.Exists(filePath) == true))
             {
+                var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
+                // 1048576 : 1024 * 1024
+                var maxByte = (1_048_576L * (maxSizeMB * 1L));
                 var fi = new FileInfo(filePath);
-                var maxByte = (1_024_000L * (maxSizeMB * 1L));
 
                 // 파일은 일정 크기 이상 안되게 한다
                 if (fi.Length > maxByte)

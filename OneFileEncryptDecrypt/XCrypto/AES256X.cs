@@ -16,117 +16,122 @@ namespace OneFileEncryptDecrypt.XCrypto
             aes.IV = iv;
         }
 
-        public static byte[] EncryptNow(byte[] key, byte[] iv, byte[] source)
+        public static byte[] EncryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer pv)
         {
+            var chunkSize = XValue.ProcessValue.BufferChunkSize;
+            var offset = 0;
             var result = new List<byte>();
 
-            if ((key.Length == 32) && (iv.Length == 16))
+            if (source.Length > 0)
             {
-                if (source.Length > 0)
+                using (var aes = Aes.Create())
                 {
-                    try
+                    AES256X.CommonWork(key, iv, aes);
+
+                    using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
                     {
-                        using (var aes = Aes.Create())
+                        using (var ms = new MemoryStream())
                         {
-                            AES256X.CommonWork(key, iv, aes);
-
-                            using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
+                            using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                             {
-                                using (var ms = new MemoryStream())
+                                pv.Start(title, source.Length);
+
+                                while (offset < source.Length)
                                 {
-                                    using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                                    {
-                                        cs.Write(source, 0, source.Length);
-                                        cs.FlushFinalBlock();
+                                    var readBytes = Math.Min(chunkSize, (source.Length - offset));
 
-                                        result.AddRange(ms.ToArray());
+                                    cs.Write(source, offset, readBytes);
 
-                                        cs.Clear();
-                                        cs.Close();
-                                    }
+                                    offset += readBytes;
 
-                                    ms.Close();
+                                    // 진행 표시
+                                    pv.AddProgress(readBytes);
+                                    pv.ProgressDisplay();
                                 }
+
+                                cs.FlushFinalBlock();
+
+                                result.AddRange(ms.ToArray());
+
+                                cs.Clear();
+                                cs.Close();
+                                pv.Done();
                             }
 
-                            aes.Clear();
+                            ms.Close();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        AES256X.SilentException(ex);
 
-                        throw;
-                    }
+                    aes.Clear();
                 }
-            }
-            else
-            {
-                throw new ArgumentException("Require Key is 32 length and iv is 16 length.");
             }
 
             return result.ToArray();
         }
 
-        public static byte[] DecryptNow(byte[] key, byte[] iv, byte[] source)
+        public static byte[] DecryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer pv)
         {
+            var bufferSize = XValue.ProcessValue.BufferChunkSize;
+            var buffer = new byte[bufferSize];
+            var totalReadBytes = 0;
             var streamList = new List<byte>();
+            var isLoop = true;
 
-            if ((key.Length == 32) && (iv.Length == 16))
+            if (source.Length > 0)
             {
-                if (source.Length > 0)
+                using (var aes = Aes.Create())
                 {
-                    try
+                    AES256X.CommonWork(key, iv, aes);
+
+                    using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
                     {
-                        using (var aes = Aes.Create())
+                        using (var ms = new MemoryStream(source))
                         {
-                            AES256X.CommonWork(key, iv, aes);
-
-                            using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
+                            using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                             {
-                                using (var ms = new MemoryStream(source))
+                                // 여긴 복호화니, 들어올 때 크기랑 복호화 후 크기가 다를것임
+                                // 그래서 마지막에 전체 크기로 바꿔준다 ㅎㅎㅎ
+                                pv.Start(title, source.Length);
+
+                                while (isLoop == true)
                                 {
-                                    using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                                    var readBytes = cs.Read(buffer, 0, buffer.Length);
+
+                                    totalReadBytes += readBytes;
+
+                                    if (readBytes > 0)
                                     {
-                                        var buffer = new byte[32];
-                                        var read = 0;
+                                        // buffer.Take(readBytes)
+                                        streamList.AddRange(buffer[..readBytes]);
 
-                                        while ((read = cs.Read(buffer, 0, buffer.Length)) > 0)
-                                        {
-                                            streamList.AddRange(buffer.Take(read));
-                                        }
-
-                                        cs.Clear();
-                                        cs.Close();
+                                        pv.AddProgress(readBytes);
+                                        pv.ProgressDisplay();
                                     }
+                                    else
+                                    {
+                                        pv.ChangeTotalCount(totalReadBytes);
+                                        pv.ProgressDisplay();
 
-                                    ms.Close();
+                                        isLoop = false;
+                                    }
                                 }
+
+                                cs.Clear();
+                                cs.Close();
+                                pv.Done();
                             }
 
-                            aes.Clear();
+                            ms.Close();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        AES256X.SilentException(ex);
 
-                        throw;
-                    }
+                    aes.Clear();
                 }
-            }
-            else
-            {
-                throw new ArgumentException("Require Key is 32 length and iv is 16 length.");
             }
 
             var result = streamList.ToArray();
 
             return result;
-        }
-
-        private static void SilentException(Exception ex)
-        {
         }
     }
 }

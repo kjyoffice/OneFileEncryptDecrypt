@@ -18,7 +18,15 @@ namespace OneFileEncryptDecrypt.XValue
         {
             get
             {
-                return 10L;
+                return 300L;
+            }
+        }
+
+        public static int BufferChunkSize
+        {
+            get
+            {
+                return (1_048_576 * 4); // 4MB;
             }
         }
     }
