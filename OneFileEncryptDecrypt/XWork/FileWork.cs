@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Text;
 
 namespace OneFileEncryptDecrypt.XWork
@@ -70,6 +71,30 @@ namespace OneFileEncryptDecrypt.XWork
                 fs.Close();
                 pv.Done();
             }
+        }
+
+        public static void ZIPCompression(string sourceDirectoryPath, string zipFilePath, string title, XModel.ProgressViewer pv)
+        {
+            pv.Start(title, 100);
+            pv.ProgressDisplay();
+
+            ZipFile.CreateFromDirectory(sourceDirectoryPath, zipFilePath, CompressionLevel.NoCompression, false);
+
+            pv.AddProgress(100);
+            pv.ProgressDisplay();
+            pv.Done();
+        }
+
+        public static void ZIPExtract(string sourceFIlePath, string extractDirectoryDirPath, string title, XModel.ProgressViewer pv)
+        {
+            pv.Start(title, 100);
+            pv.ProgressDisplay();
+
+            ZipFile.ExtractToDirectory(sourceFIlePath, extractDirectoryDirPath, true);
+
+            pv.AddProgress(100);
+            pv.ProgressDisplay();
+            pv.Done();
         }
     }
 }

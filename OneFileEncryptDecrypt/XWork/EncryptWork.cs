@@ -50,8 +50,9 @@ namespace OneFileEncryptDecrypt.XWork
             //Console.WriteLine(hash2);
             //Console.WriteLine(hash1 == hash2);
 
-
-
+            //var pv = new XModel.ProgressViewer();
+            ////XWork.FileWork.ZIPCompression(@"D:\Download\Dummy", @"D:\Download\Dummy.zip", "ZIP Compression", pv);
+            //XWork.FileWork.ZIPExtract(@"D:\Download\Dummy.zip", @"D:\Download\DummyGOGO", "ZIP Extract", pv);
 
             Console.WriteLine($"EncryptWork... ({cwo.CryptoKey}) {cwo.FilePath}");
         }
