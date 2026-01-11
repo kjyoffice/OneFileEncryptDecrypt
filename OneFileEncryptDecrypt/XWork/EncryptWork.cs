@@ -38,8 +38,9 @@ namespace OneFileEncryptDecrypt.XWork
             FileWork.WriteFileByte(encryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
             // 파일들 압축
             FileWork.ZIPCompression(cfn.WorkDirectoryPath, cwo.CreateEncryptZIPFilePath, asx.WorkMessage.ZIPCompressionFile, pv);
-            // 원본파일 삭제
-            File.Delete(cwo.SourceFilePath);
+            
+            // 작업파일 삭제
+            cfn.DeleteAllFile(cwo.SourceFilePath);
 
             // 파일을 암호화 했습니다.
             cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
