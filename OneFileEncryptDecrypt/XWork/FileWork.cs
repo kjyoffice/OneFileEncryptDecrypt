@@ -86,12 +86,12 @@ namespace OneFileEncryptDecrypt.XWork
             pv.Done();
         }
 
-        public static void ZIPExtract(string sourceFIlePath, string extractDirectoryDirPath, string title, XModel.ProgressViewer pv)
+        public static void ZIPExtract(string sourceFIlePath, string extractDirectoryPath, string title, XModel.ProgressViewer pv)
         {
             pv.Start(title, 100);
             pv.ProgressDisplay();
 
-            ZipFile.ExtractToDirectory(sourceFIlePath, extractDirectoryDirPath, true);
+            ZipFile.ExtractToDirectory(sourceFIlePath, extractDirectoryPath, true);
 
             pv.AddProgress(100);
             pv.ProgressDisplay();

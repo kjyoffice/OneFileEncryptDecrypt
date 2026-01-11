@@ -37,7 +37,7 @@ namespace OneFileEncryptDecrypt.XWork
             // 암호화 된 파일 저장
             FileWork.WriteFileByte(encryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
             // 파일들 압축
-            FileWork.ZIPCompression(cfn.WorkDirPath, cwo.CreateEncryptZIPFilePath, asx.WorkMessage.SaveFinalFile, pv);
+            FileWork.ZIPCompression(cfn.WorkDirectoryPath, cwo.CreateEncryptZIPFilePath, asx.WorkMessage.ZIPCompressionFile, pv);
             // 원본파일 삭제
             File.Delete(cwo.SourceFilePath);
 

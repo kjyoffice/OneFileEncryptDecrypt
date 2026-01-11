@@ -46,5 +46,10 @@ namespace OneFileEncryptDecrypt.XCrypto
 
             return result;
         }
+
+        public static string ConvertHashText(byte[] hashSource)
+        {
+            return Regex.Replace(BitConverter.ToString(hashSource), "[^0-9A-Za-z]", string.Empty, RegexOptions.IgnoreCase).Trim().ToLower();
+        }
     }
 }

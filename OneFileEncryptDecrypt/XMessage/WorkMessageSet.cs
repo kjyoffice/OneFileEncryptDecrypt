@@ -131,7 +131,7 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string SaveFinalFile
+        public string ZIPCompressionFile
         {
             get
             {
@@ -149,8 +149,92 @@ namespace OneFileEncryptDecrypt.XMessage
             {
                 return (
                     (this.IsHangul == true) ?
-                    "최종파일 저장" :
-                    "Save final file"
+                    "파일을 암호화 했습니다." :
+                    "File encrypt done."
+                );
+            }
+        }
+
+        public string ZIPExtractFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "파일 분리" :
+                    "Separate file"
+                );
+            }
+        }
+
+        public string DecryptFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "파일 복호화" :
+                    "Decrypt file"
+                );
+            }
+        }
+
+        public string DecryptChecksum
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "복호화 파일 Checksum" :
+                    "Decrypt file checksum"
+                );
+            }
+        }
+
+        public string SaveDecryptFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "복호화 된 파일 저장" :
+                    "Save decrypt file"
+                );
+            }
+        }
+
+        public string DecryptFileDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "파일을 복호화 했습니다." :
+                    "File decrypt done."
+                );
+            }
+        }
+
+        public string DifferentEncryptChecksum
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화 파일 해쉬가 다릅니다." :
+                    "Different encrypt checksum."
+                );
+            }
+        }
+
+        public string DifferentDecryptChecksum
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "복호화 파일 해쉬가 다릅니다." :
+                    "Different decrypt checksum."
                 );
             }
         }
