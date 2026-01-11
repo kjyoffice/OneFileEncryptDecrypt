@@ -16,6 +16,14 @@ namespace OneFileEncryptDecrypt.XWork
             var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
             var cryptoIV = XCrypto.AES256Process.CreateIV();
 
+            Console.WriteLine(cfn.WorkDirPath);
+            Console.WriteLine(cfn.EncryptDataFilePath);
+            Console.WriteLine(cfn.EncryptDataChecksumFilePath);
+            Console.WriteLine(cfn.OriginalChecksumFilePath);
+            Console.WriteLine(cfn.CryptoIVFilePath);
+            Console.WriteLine(cwo.SourceFilePath);
+            Console.WriteLine(cwo.CreateEncryptZIPFilePath);
+
             //var text = "HelloWorld~";
             //var textBT = Encoding.UTF8.GetBytes("HelloWorld~");
             //var salt = "world";

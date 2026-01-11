@@ -127,7 +127,7 @@ namespace OneFileEncryptDecrypt.XCommand
                     {
                         var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
                         var filePath = (pr.GetValue(optFile) ?? string.Empty);
-                        var cwo = new XModel.CryptoWorkOrder(commandName, cryptoPW, filePath);
+                        var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath);
 
                         workAction(asx, cwms, cwo);
                     }
