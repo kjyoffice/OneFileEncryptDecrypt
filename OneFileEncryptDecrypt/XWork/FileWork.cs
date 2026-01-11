@@ -73,6 +73,7 @@ namespace OneFileEncryptDecrypt.XWork
             }
         }
 
+        // TODO : ZIP 압축과 해제는 나중에~~ Stream하게 하자..... 나중에~ 나중에 ㅎㅎㅎ
         public static void ZIPCompression(string sourceDirectoryPath, string zipFilePath, string title, XModel.ProgressViewer pv)
         {
             pv.Start(title, 100);
