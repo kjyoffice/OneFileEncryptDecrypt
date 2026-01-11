@@ -26,11 +26,11 @@ namespace OneFileEncryptDecrypt.XCommand
 
         // -------------------------------------------------------------------
 
-        private static Option<string> CreateOptionKey(string commandName, XAppSettings.AppSettingsX asx)
+        private static Option<string> CreateOptionPassword(string commandName, XAppSettings.AppSettingsX asx)
         {
-            var result = new Option<string>("--key", "-k");
-            // 암호화 키
-            result.Description = asx.WorkMessage.CryptoKeyDescription(commandName);
+            var result = new Option<string>("--password", "-pw");
+            // 암호화 비밀번호
+            result.Description = asx.WorkMessage.CryptoPasswordDescription(commandName);
             result.Required = true;
             result.Validators.Add(optr => CryptoCommand.CreateOptionKeyValidator(optr, asx));
 
@@ -39,17 +39,17 @@ namespace OneFileEncryptDecrypt.XCommand
 
         private static void CreateOptionKeyValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
         {
-            // 키 최소한의 길이
-            var keyMinLength = XValue.ProcessValue.CryptoKeyMinimumLength;
+            // 비밀번호 최소한의 길이
+            var keyMinLength = XValue.ProcessValue.CryptoPasswordMinimumLength;
             var tkText = CommandProcess.IdentifierTokenText(optr);
             var key = optr.GetValueOrDefault<string>();
-            // 키 길이는 일정길이 이상 필수로 잡음
+            // 비밀번호 길이는 일정길이 이상 필수로 잡음
             var isAllowKeyLen = ((key != string.Empty) && (key.Length >= keyMinLength));
 
             if (isAllowKeyLen == false)
             {
-                // 키는 최소 X자 이상이어야 합니다.
-                optr.AddError(asx.WorkMessage.CryptoKeyNotAllowLength(tkText, keyMinLength));
+                // 비밀번호는 최소 X자 이상이어야 합니다.
+                optr.AddError(asx.WorkMessage.CryptoPasswordNotAllowLength(tkText, keyMinLength));
             }
         }
 
@@ -97,13 +97,13 @@ namespace OneFileEncryptDecrypt.XCommand
         {
             var asx = Program.ASX;
             var cwms = Program.CWMS;
-            var optKey = CryptoCommand.CreateOptionKey(commandName, asx);
+            var optPW = CryptoCommand.CreateOptionPassword(commandName, asx);
             var optFile = CryptoCommand.CreateOptionFile(commandName, asx);
             // 파일을 암호화 합니다.
             var cmdDesc = asx.WorkMessage.CryptoCommandDescription(commandName);
 
             var result = new Command(commandName, cmdDesc);
-            result.Options.Add(optKey);
+            result.Options.Add(optPW);
             result.Options.Add(optFile);
 
             result.SetAction(
@@ -112,9 +112,9 @@ namespace OneFileEncryptDecrypt.XCommand
                     // Salt 파일은 필수로 있어야 한다!
                     if (asx.Crypto.IsExistSaltFile == true)
                     {
-                        var cryptoKey = (pr.GetValue(optKey) ?? string.Empty);
+                        var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
                         var filePath = (pr.GetValue(optFile) ?? string.Empty);
-                        var cwo = new XModel.CryptoWorkOrder(cryptoKey, filePath);
+                        var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath);
 
                         workAction(asx, cwms, cwo);
                     }

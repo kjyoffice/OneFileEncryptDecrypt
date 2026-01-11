@@ -12,11 +12,13 @@ namespace OneFileEncryptDecrypt.XWork
     {
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
+            var key = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
+            var iv = XCrypto.AES256Process.CreateIV();
+
             //var text = "HelloWorld~";
             //var textBT = Encoding.UTF8.GetBytes("HelloWorld~");
             //var salt = "world";
-            //var key = XCrypto.AES256ProcessX.CreateKey("hello", salt);
-            //var iv = XCrypto.AES256ProcessX.CreateIV();
+
             //var encData = XCrypto.AES256X.EncryptNow(key, iv, textBT);
             //var decData = XCrypto.AES256X.DecryptNow(key, iv, encData);
             //var decText = Encoding.UTF8.GetString(decData);
@@ -54,7 +56,7 @@ namespace OneFileEncryptDecrypt.XWork
             ////XWork.FileWork.ZIPCompression(@"D:\Download\Dummy", @"D:\Download\Dummy.zip", "ZIP Compression", pv);
             //XWork.FileWork.ZIPExtract(@"D:\Download\Dummy.zip", @"D:\Download\DummyGOGO", "ZIP Extract", pv);
 
-            cwms.Normal.MessageNow($"EncryptWork... ({cwo.CryptoKey}) {cwo.FilePath}");
+            //cwms.Normal.MessageNow($"EncryptWork... ({cwo.CryptoPassword}) {cwo.FilePath}");
         }
     }
 }

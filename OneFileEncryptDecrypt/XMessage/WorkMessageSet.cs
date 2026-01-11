@@ -132,26 +132,26 @@ namespace OneFileEncryptDecrypt.XMessage
             return result;
         }
 
-        public string CryptoKeyDescription(string commandName)
+        public string CryptoPasswordDescription(string commandName)
         {
             var isHangul = this.IsHangul;
             var cmdText = this.CryptoCommandText(isHangul, commandName);
             var result = (
                 (isHangul == true) ?
-                $"{cmdText} 키" :
-                $"{cmdText} key"
+                $"{cmdText} 비밀번호" :
+                $"{cmdText} password"
             );
 
             return result;
         }
 
-        public string CryptoKeyNotAllowLength(string tkText, int keyMinLength)
+        public string CryptoPasswordNotAllowLength(string tkText, int keyMinLength)
         {
             var isHangul = this.IsHangul;
             var result = (
                 (isHangul == true) ?
-                $"{tkText}키는 최소 {keyMinLength}자 이상이어야 합니다." :
-                $"{tkText}Want key length minimum {keyMinLength}."
+                $"{tkText}비밀번호는 최소 {keyMinLength}자 이상이어야 합니다." :
+                $"{tkText}Want password length minimum {keyMinLength}."
             );
 
             return result;

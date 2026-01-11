@@ -8,7 +8,7 @@ namespace OneFileEncryptDecrypt.XWork
     {
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
-            cwms.Normal.MessageNow($"DecryptWork... ({cwo.CryptoKey}) {cwo.FilePath}");
+            //cwms.Normal.MessageNow($"DecryptWork... ({cwo.CryptoPassword}) {cwo.FilePath}");
         }
     }
 }

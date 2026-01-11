@@ -6,7 +6,7 @@ namespace OneFileEncryptDecrypt.XValue
 {
     public class ProcessValue
     {
-        public static int CryptoKeyMinimumLength
+        public static int CryptoPasswordMinimumLength
         {
             get
             {
