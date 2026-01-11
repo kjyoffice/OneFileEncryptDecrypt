@@ -28,6 +28,9 @@ namespace OneFileEncryptDecrypt.XWork
                 var bakFilePath = CreateSaltWork.CreateBackupFilePath(saltFilePath);
 
                 File.Copy(saltFilePath, bakFilePath);
+
+                // 이미 생성된 암호화, 복호화 Salt를 백업했습니다.
+                Program.WarningMessage(asx.WorkMessage.BackupSaltDone, true);
             }
         }
 
@@ -40,6 +43,9 @@ namespace OneFileEncryptDecrypt.XWork
             var saltBT = RandomNumberGenerator.GetBytes(16);
 
             File.WriteAllBytes(asx.Crypto.SaltFilePath, saltBT);
+
+            // 암호화, 복호화 Salt를 생성했습니다.
+            Program.SuccessMessage(asx.WorkMessage.CreateSaltDone, false);
         }
     }
 }

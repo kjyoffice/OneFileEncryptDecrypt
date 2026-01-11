@@ -47,6 +47,30 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string CreateSaltDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 생성했습니다." :
+                    $"Create done crypto salt."
+                );
+            }
+        }
+
+        public string BackupSaltDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "이미 생성된 암호화, 복호화 Salt를 백업했습니다." :
+                    "Already have crypto salt is backup."
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {

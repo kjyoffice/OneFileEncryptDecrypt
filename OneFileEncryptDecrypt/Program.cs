@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
 
 namespace OneFileEncryptDecrypt
 {
@@ -42,13 +43,55 @@ namespace OneFileEncryptDecrypt
                 errorMessage.Add(asx.WorkMessage.EmptyOrWrongAppSettings);
             }
 
-            if (errorMessage.Count > 0)
+            Program.ErrorMessage(errorMessage, true);
+        }
+
+        private static void ConsoleWriteMessage(ConsoleColor textColor, bool isAndEmptyLine, params string[] message)
+        {
+            if (message.Length > 0)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Out.WriteLine(string.Join(Environment.NewLine, errorMessage));
-                Console.Out.WriteLine(string.Empty);
+                Console.ForegroundColor = textColor;
+                Console.Out.WriteLine(string.Join(Environment.NewLine, message));
+
+                if (isAndEmptyLine == true)
+                {
+                    Console.Out.WriteLine(string.Empty);
+                }
+
                 Console.ResetColor();
             }
+        }
+
+        // -------------------------------------------------------------------------------
+
+        public static void ErrorMessage(string message, bool isAndEmptyLine)
+        {
+            Program.ConsoleWriteMessage(ConsoleColor.Red, isAndEmptyLine, message);
+        }
+
+        public static void ErrorMessage(List<string> message, bool isAndEmptyLine)
+        {
+            Program.ConsoleWriteMessage(ConsoleColor.Red, isAndEmptyLine, message.ToArray());
+        }
+
+        public static void WarningMessage(string message, bool isAndEmptyLine)
+        {
+            Program.ConsoleWriteMessage(ConsoleColor.Yellow, isAndEmptyLine, message);
+        }
+
+        public static void WarningMessage(List<string> message, bool isAndEmptyLine)
+        {
+            Program.ConsoleWriteMessage(ConsoleColor.Yellow, isAndEmptyLine, message.ToArray());
+        }
+
+        public static void SuccessMessage(string message, bool isAndEmptyLine)
+        {
+            Program.ConsoleWriteMessage(ConsoleColor.Green, isAndEmptyLine, message);
+        }
+
+        public static void SuccessMessage(List<string> message, bool isAndEmptyLine)
+        {
+            Program.ConsoleWriteMessage(ConsoleColor.Green, isAndEmptyLine, message.ToArray());
         }
 
         public static void Main(string[] args)
