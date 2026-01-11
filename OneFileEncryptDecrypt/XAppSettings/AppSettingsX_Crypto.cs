@@ -9,6 +9,7 @@ namespace OneFileEncryptDecrypt.XAppSettings
         public bool IsAllow { get; private set; }
         public string SaltDirectoryPath { get; private set; }
         public string SaltFilePath { get; private set; }
+        public string CryptoTempDirectoryPath { get; private set; }
 
         // --------------------------------------------------------
 
@@ -22,9 +23,9 @@ namespace OneFileEncryptDecrypt.XAppSettings
 
         // --------------------------------------------------------
 
-        private string CreateSaltDirectoryPath(bool isAllow, string saltDirPath)
+        private string CreateXDirectoryPath(bool isAllow, string saltDirPath, string dirName)
         {
-            var result = ((isAllow == true) ? Path.Combine(saltDirPath, "OFEDCryptoSalt") : string.Empty);
+            var result = ((isAllow == true) ? Path.Combine(saltDirPath, dirName) : string.Empty);
 
             if ((isAllow == true) && (Directory.Exists(result) == false))
             {
@@ -40,11 +41,12 @@ namespace OneFileEncryptDecrypt.XAppSettings
         {
             var saltDirPath = (jsonData?.SaltDirectoryPath ?? string.Empty);
             var isAllow = ((saltDirPath != string.Empty) && (Directory.Exists(saltDirPath) == true));
-            var saltDirPathUse = this.CreateSaltDirectoryPath(isAllow, saltDirPath);
+            var saltDirPathUse = this.CreateXDirectoryPath(isAllow, saltDirPath, "OFEDCryptoSalt");
 
             this.IsAllow = isAllow;
             this.SaltDirectoryPath = saltDirPathUse;
             this.SaltFilePath = Path.Combine(saltDirPathUse, "CryptoSalt.ofed");
+            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, saltDirPath, "OFEDCryptoTemp_IfWantDeleteIsOK");
         }
     }
 }
