@@ -10,7 +10,7 @@ namespace OneFileEncryptDecrypt.XWork
 {
     public class EncryptWork
     {
-        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XModel.CryptoWorkOrder cwo)
+        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
             //var text = "HelloWorld~";
             //var textBT = Encoding.UTF8.GetBytes("HelloWorld~");
@@ -54,7 +54,7 @@ namespace OneFileEncryptDecrypt.XWork
             ////XWork.FileWork.ZIPCompression(@"D:\Download\Dummy", @"D:\Download\Dummy.zip", "ZIP Compression", pv);
             //XWork.FileWork.ZIPExtract(@"D:\Download\Dummy.zip", @"D:\Download\DummyGOGO", "ZIP Extract", pv);
 
-            Console.WriteLine($"EncryptWork... ({cwo.CryptoKey}) {cwo.FilePath}");
+            cwms.Normal.MessageNow($"EncryptWork... ({cwo.CryptoKey}) {cwo.FilePath}");
         }
     }
 }

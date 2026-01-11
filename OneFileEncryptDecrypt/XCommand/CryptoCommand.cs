@@ -93,9 +93,10 @@ namespace OneFileEncryptDecrypt.XCommand
 
         // ----------------------------------------------------------------------------------------------------------
 
-        public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XModel.CryptoWorkOrder> workAction)
+        public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet, XModel.CryptoWorkOrder> workAction)
         {
             var asx = Program.ASX;
+            var cwms = Program.CWMS;
             var optKey = CryptoCommand.CreateOptionKey(commandName, asx);
             var optFile = CryptoCommand.CreateOptionFile(commandName, asx);
             // 파일을 암호화 합니다.
@@ -115,7 +116,7 @@ namespace OneFileEncryptDecrypt.XCommand
                         var filePath = (pr.GetValue(optFile) ?? string.Empty);
                         var cwo = new XModel.CryptoWorkOrder(cryptoKey, filePath);
 
-                        workAction(asx, cwo);
+                        workAction(asx, cwms, cwo);
                     }
                 }
             );

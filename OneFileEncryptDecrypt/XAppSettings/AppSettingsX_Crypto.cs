@@ -21,6 +21,14 @@ namespace OneFileEncryptDecrypt.XAppSettings
             }
         }
 
+        public byte[] GetSalt
+        {
+            get
+            {
+                return File.ReadAllBytes(this.SaltFilePath);
+            }
+        }
+
         // --------------------------------------------------------
 
         private string CreateXDirectoryPath(bool isAllow, string dirPath, string dirName)
