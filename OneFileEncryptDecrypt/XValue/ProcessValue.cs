@@ -19,7 +19,7 @@ namespace OneFileEncryptDecrypt.XValue
         {
             get
             {
-                return 30;
+                return 50;
             }
         }
 
