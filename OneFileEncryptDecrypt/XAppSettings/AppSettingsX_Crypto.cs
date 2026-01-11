@@ -29,6 +29,32 @@ namespace OneFileEncryptDecrypt.XAppSettings
             }
         }
 
+        private string CreateWorkDirectoryName
+        {
+            get
+            {
+                var rndText = Path.GetRandomFileName().Replace(".", string.Empty);
+                var dnt = DateTime.Now.ToString("yyyyMMdd_HHmmss_fffff");
+                //var result = $"Work__{dnt}__{rndText}";
+                var result = $"Work__X";
+
+                return result;
+            }
+        }
+
+        public XModel.CryptoXFilePath GetCryptoWorkPath
+        {
+            get
+            {
+                var tempDirPath = this.CryptoTempDirectoryPath;
+                var workDirName = this.CreateWorkDirectoryName;
+                var workDirPath = this.CreateXDirectoryPath(true, tempDirPath, workDirName);
+                var result = new XModel.CryptoXFilePath(workDirPath);
+
+                return result;
+            }
+        }
+
         // --------------------------------------------------------
 
         private string CreateXDirectoryPath(bool isAllow, string dirPath, string dirName)

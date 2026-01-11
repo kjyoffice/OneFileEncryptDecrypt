@@ -8,11 +8,6 @@ namespace OneFileEncryptDecrypt
 {
     public class Program
     {
-        public static XAppSettings.AppSettingsX ASX { get; private set; } = Program.GetAppSetting();
-        public static XConsole.ConsoleWriteMessageSet CWMS { get; private set; } = new XConsole.ConsoleWriteMessageSet();
-
-        // -------------------------------------------------------------------------------
-
         private static XAppSettings.AppSettingsX GetAppSetting()
         {
             var configX = new ConfigurationBuilder().AddJsonFile("appsettings.json", false).Build();
@@ -52,8 +47,8 @@ namespace OneFileEncryptDecrypt
 
         public static void Main(string[] args)
         {
-            var asx = Program.ASX;
-            var cwms = Program.CWMS;
+            var asx = Program.GetAppSetting();
+            var cwms = new XConsole.ConsoleWriteMessageSet();
 
             Program.AppSettingDefaultCheck(asx, cwms, args);
 
@@ -62,9 +57,9 @@ namespace OneFileEncryptDecrypt
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/how-to-parse-and-invoke
             // 하나의 파일을 암호화 및 복호화 합니다.
             var rc = new RootCommand(asx.WorkMessage.AppDescription);
-            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.EncryptCommandName, XWork.EncryptWork.ExecuteNow));
-            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.DecryptCommandName, XWork.DecryptWork.ExecuteNow));
-            rc.Add(XCommand.CreateSaltCommand.CreateCommand(XWork.CreateSaltWork.ExecuteNow));
+            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.EncryptCommandName, XWork.EncryptWork.ExecuteNow, asx, cwms));
+            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.DecryptCommandName, XWork.DecryptWork.ExecuteNow, asx, cwms));
+            rc.Add(XCommand.CreateSaltCommand.CreateCommand(XWork.CreateSaltWork.ExecuteNow, asx, cwms));
 
             var pr = rc.Parse(args);
             //var pr = rc.Parse("encrypt --key helloworld --file D:\\Download\\Dummy\\IMG_2819.jpg");

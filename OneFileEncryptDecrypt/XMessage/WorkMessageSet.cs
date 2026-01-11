@@ -194,6 +194,19 @@ namespace OneFileEncryptDecrypt.XMessage
             return result;
         }
 
+        public string DecryptFileWrong(string tkText, string commandName)
+        {
+            var isHangul = this.IsHangul;
+            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var result = (
+                (isHangul == true) ?
+                $"{tkText}{cmdText} 파일이 올바르지 않습니다." :
+                $"{tkText}Wrong {cmdText.ToLower()} file"
+            );
+
+            return result;
+        }
+
         /*
         public string CryptoCommandDescriptionX(string commandName)
         {

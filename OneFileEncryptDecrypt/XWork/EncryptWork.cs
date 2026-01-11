@@ -12,8 +12,9 @@ namespace OneFileEncryptDecrypt.XWork
     {
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
-            var key = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
-            var iv = XCrypto.AES256Process.CreateIV();
+            var cfn = asx.Crypto.GetCryptoWorkPath;
+            var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
+            var cryptoIV = XCrypto.AES256Process.CreateIV();
 
             //var text = "HelloWorld~";
             //var textBT = Encoding.UTF8.GetBytes("HelloWorld~");
