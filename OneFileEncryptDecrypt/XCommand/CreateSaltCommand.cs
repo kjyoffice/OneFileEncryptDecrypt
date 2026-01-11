@@ -18,9 +18,10 @@ namespace OneFileEncryptDecrypt.XCommand
 
         // -------------------------------------------------------------------------
 
-        public static Command CreateCommand(Action<XAppSettings.AppSettingsX> workAction)
+        public static Command CreateCommand(Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet> workAction)
         {
             var asx = Program.ASX;
+            var cwms = Program.CWMS;
             var cmdName = CreateSaltCommand.CommandName;
             // 암호화, 복호화 Salt를 생성합니다.
             var result = new Command(cmdName, asx.WorkMessage.CreateSaltDescription);
@@ -28,7 +29,7 @@ namespace OneFileEncryptDecrypt.XCommand
             result.SetAction(
                 (ParseResult pr) =>
                 {
-                    workAction(asx);
+                    workAction(asx, cwms);
                 }
             );
 

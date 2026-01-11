@@ -20,7 +20,7 @@ namespace OneFileEncryptDecrypt.XWork
             return result;
         }
 
-        private static void BackupSaltFile(XAppSettings.AppSettingsX asx)
+        private static void BackupSaltFile(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
         {
             if (asx.Crypto.IsExistSaltFile == true)
             {
@@ -30,22 +30,22 @@ namespace OneFileEncryptDecrypt.XWork
                 File.Copy(saltFilePath, bakFilePath);
 
                 // 이미 생성된 암호화, 복호화 Salt를 백업했습니다.
-                Program.WarningMessage(asx.WorkMessage.BackupSaltDone, true);
+                cwms.Warning.MessageNow(asx.WorkMessage.BackupSaltDone, true);
             }
         }
 
         // -----------------------------------------------------------
 
-        public static void ExecuteNow(XAppSettings.AppSettingsX asx)
+        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
         {
-            CreateSaltWork.BackupSaltFile(asx);
+            CreateSaltWork.BackupSaltFile(asx, cwms);
 
             var saltBT = RandomNumberGenerator.GetBytes(16);
 
             File.WriteAllBytes(asx.Crypto.SaltFilePath, saltBT);
 
             // 암호화, 복호화 Salt를 생성했습니다.
-            Program.SuccessMessage(asx.WorkMessage.CreateSaltDone, false);
+            cwms.Success.MessageNow(asx.WorkMessage.CreateSaltDone);
         }
     }
 }

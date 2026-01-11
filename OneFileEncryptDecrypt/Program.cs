@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
 
@@ -8,6 +9,7 @@ namespace OneFileEncryptDecrypt
     public class Program
     {
         public static XAppSettings.AppSettingsX ASX { get; private set; } = Program.GetAppSetting();
+        public static XConsole.ConsoleWriteMessageSet CWMS { get; private set; } = new XConsole.ConsoleWriteMessageSet();
 
         // -------------------------------------------------------------------------------
 
@@ -20,7 +22,7 @@ namespace OneFileEncryptDecrypt
             return result;
         }
 
-        private static void AppSettingDefaultCheck(XAppSettings.AppSettingsX asx, string[] args)
+        private static void AppSettingDefaultCheck(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, string[] args)
         {
             var errorMessage = new List<string>();
 
@@ -43,62 +45,17 @@ namespace OneFileEncryptDecrypt
                 errorMessage.Add(asx.WorkMessage.EmptyOrWrongAppSettings);
             }
 
-            Program.ErrorMessage(errorMessage, true);
-        }
-
-        private static void ConsoleWriteMessage(ConsoleColor textColor, bool isAndEmptyLine, params string[] message)
-        {
-            if (message.Length > 0)
-            {
-                Console.ForegroundColor = textColor;
-                Console.Out.WriteLine(string.Join(Environment.NewLine, message));
-
-                if (isAndEmptyLine == true)
-                {
-                    Console.Out.WriteLine(string.Empty);
-                }
-
-                Console.ResetColor();
-            }
+            cwms.Error.MessageNow(errorMessage, true);
         }
 
         // -------------------------------------------------------------------------------
 
-        public static void ErrorMessage(string message, bool isAndEmptyLine)
-        {
-            Program.ConsoleWriteMessage(ConsoleColor.Red, isAndEmptyLine, message);
-        }
-
-        public static void ErrorMessage(List<string> message, bool isAndEmptyLine)
-        {
-            Program.ConsoleWriteMessage(ConsoleColor.Red, isAndEmptyLine, message.ToArray());
-        }
-
-        public static void WarningMessage(string message, bool isAndEmptyLine)
-        {
-            Program.ConsoleWriteMessage(ConsoleColor.Yellow, isAndEmptyLine, message);
-        }
-
-        public static void WarningMessage(List<string> message, bool isAndEmptyLine)
-        {
-            Program.ConsoleWriteMessage(ConsoleColor.Yellow, isAndEmptyLine, message.ToArray());
-        }
-
-        public static void SuccessMessage(string message, bool isAndEmptyLine)
-        {
-            Program.ConsoleWriteMessage(ConsoleColor.Green, isAndEmptyLine, message);
-        }
-
-        public static void SuccessMessage(List<string> message, bool isAndEmptyLine)
-        {
-            Program.ConsoleWriteMessage(ConsoleColor.Green, isAndEmptyLine, message.ToArray());
-        }
-
         public static void Main(string[] args)
         {
             var asx = Program.ASX;
+            var cwms = Program.CWMS;
 
-            Program.AppSettingDefaultCheck(asx, args);
+            Program.AppSettingDefaultCheck(asx, cwms, args);
 
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/syntax
