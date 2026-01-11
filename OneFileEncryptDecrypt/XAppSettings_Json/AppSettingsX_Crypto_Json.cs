@@ -6,7 +6,7 @@ namespace OneFileEncryptDecrypt.XAppSettings_Json
 {
     public class AppSettingsX_Crypto_Json
     {
-        //[Microsoft.Extensions.Configuration.ConfigurationKeyName("saltDirectoryPath")]
-        public string? SaltDirectoryPath { get; set; }
+        //[Microsoft.Extensions.Configuration.ConfigurationKeyName("workDirectoryPath")]
+        public string? WorkDirectoryPath { get; set; }
     }
 }

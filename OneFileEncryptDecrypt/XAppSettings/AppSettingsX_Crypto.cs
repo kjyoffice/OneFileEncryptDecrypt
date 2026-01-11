@@ -23,14 +23,16 @@ namespace OneFileEncryptDecrypt.XAppSettings
 
         // --------------------------------------------------------
 
-        private string CreateXDirectoryPath(bool isAllow, string saltDirPath, string dirName)
+        private string CreateXDirectoryPath(bool isAllow, string dirPath, string dirName)
         {
-            var result = ((isAllow == true) ? Path.Combine(saltDirPath, dirName) : string.Empty);
+            var dirPathUse = ((isAllow == true) ? Path.Combine(dirPath, dirName) : string.Empty);
 
-            if ((isAllow == true) && (Directory.Exists(result) == false))
+            if ((isAllow == true) && (Directory.Exists(dirPathUse) == false))
             {
-                Directory.CreateDirectory(result);
+                Directory.CreateDirectory(dirPathUse);
             }
+
+            var result = ((isAllow == true) ? Path.GetFullPath(dirPathUse) : string.Empty);
 
             return result;
         }
@@ -39,14 +41,14 @@ namespace OneFileEncryptDecrypt.XAppSettings
 
         public AppSettingsX_Crypto(XAppSettings_Json.AppSettingsX_Crypto_Json? jsonData)
         {
-            var saltDirPath = (jsonData?.SaltDirectoryPath ?? string.Empty);
-            var isAllow = ((saltDirPath != string.Empty) && (Directory.Exists(saltDirPath) == true));
-            var saltDirPathUse = this.CreateXDirectoryPath(isAllow, saltDirPath, "OFEDCryptoSalt");
+            var workDirPath = (jsonData?.WorkDirectoryPath ?? string.Empty);
+            var isAllow = ((workDirPath != string.Empty) && (Directory.Exists(workDirPath) == true));
+            var saltDirPathUse = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoSalt");
 
             this.IsAllow = isAllow;
             this.SaltDirectoryPath = saltDirPathUse;
             this.SaltFilePath = Path.Combine(saltDirPathUse, "CryptoSalt.ofed");
-            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, saltDirPath, "OFEDCryptoTemp_IfWantDeleteIsOK");
+            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoTemp_IfWantDeleteIsOK");
         }
     }
 }
