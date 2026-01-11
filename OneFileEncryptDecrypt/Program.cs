@@ -72,3 +72,33 @@ namespace OneFileEncryptDecrypt
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+//Console.WriteLine(Regex.Replace(BitConverter.ToString(originalChecksum), "[^0-9A-Za-z]", string.Empty, RegexOptions.IgnoreCase).Trim().ToLower());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

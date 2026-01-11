@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-
+using System.Text.RegularExpressions;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 
@@ -12,60 +12,37 @@ namespace OneFileEncryptDecrypt.XWork
     {
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
-            var cfn = asx.Crypto.GetCryptoWorkPath;
+            // 키 생성
             var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
+            // IV 생성
             var cryptoIV = XCrypto.AES256Process.CreateIV();
+            var pv = new XModel.ProgressViewer();
+            // 파일 읽기
+            var sourceBT = FileWork.GetFileByte(cwo.SourceFilePath, asx.WorkMessage.ReadFile, pv);
+            // 원본파일 해쉬 만들기
+            var originalChecksum = XCrypto.HashWork.CreateSHA512(sourceBT, asx.WorkMessage.OriginalChecksum, pv);
+            // 파일 암호화
+            var encryptData = XCrypto.AES256X.EncryptNow(cryptoKey, cryptoIV, sourceBT, asx.WorkMessage.EncryptFile, pv);
+            // 암호화 된 파일 해쉬 만들기
+            var encryptDataChecksum = XCrypto.HashWork.CreateSHA512(encryptData, asx.WorkMessage.EncryptChecksum, pv);
+            // 저장 할 파일들 경로생성
+            var cfn = asx.Crypto.GetCryptoWorkPath;
 
-            Console.WriteLine(cfn.WorkDirPath);
-            Console.WriteLine(cfn.EncryptDataFilePath);
-            Console.WriteLine(cfn.EncryptDataChecksumFilePath);
-            Console.WriteLine(cfn.OriginalChecksumFilePath);
-            Console.WriteLine(cfn.CryptoIVFilePath);
-            Console.WriteLine(cwo.SourceFilePath);
-            Console.WriteLine(cwo.CreateEncryptZIPFilePath);
+            // 원본파일 해쉬 저장
+            File.WriteAllBytes(cfn.OriginalChecksumFilePath, originalChecksum);
+            // 암호화 된 파일 해쉬 저장
+            File.WriteAllBytes(cfn.EncryptDataChecksumFilePath, encryptDataChecksum);
+            // 암호화 IV 저장
+            File.WriteAllBytes(cfn.CryptoIVFilePath, cryptoIV);
+            // 암호화 된 파일 저장
+            FileWork.WriteFileByte(encryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
+            // 파일들 압축
+            FileWork.ZIPCompression(cfn.WorkDirPath, cwo.CreateEncryptZIPFilePath, asx.WorkMessage.SaveFinalFile, pv);
+            // 원본파일 삭제
+            File.Delete(cwo.SourceFilePath);
 
-            //var text = "HelloWorld~";
-            //var textBT = Encoding.UTF8.GetBytes("HelloWorld~");
-            //var salt = "world";
-
-            //var encData = XCrypto.AES256X.EncryptNow(key, iv, textBT);
-            //var decData = XCrypto.AES256X.DecryptNow(key, iv, encData);
-            //var decText = Encoding.UTF8.GetString(decData);
-            //Console.WriteLine(text);
-            //Console.WriteLine("------------------------------------------------------------");
-            //Console.WriteLine(XCrypto.CryptoWork.CreateHash(textBT));
-            //Console.WriteLine("------------------------------------------------------------");
-            //Console.WriteLine(BitConverter.ToString(encData));
-            //Console.WriteLine("------------------------------------------------------------");
-            //Console.WriteLine(BitConverter.ToString(decData));
-            //Console.WriteLine(decText);
-            //Console.WriteLine("------------------------------------------------------------");
-            //Console.WriteLine(XCrypto.CryptoWork.CreateHash(decData));
-            //Console.WriteLine("------------------------------------------------------------");
-            //Console.WriteLine(text == decText);
-            //Console.WriteLine(XCrypto.CryptoWork.CreateHash(textBT) == XCrypto.CryptoWork.CreateHash(decData));
-
-            //var pv = new XModel.ProgressViewer();
-            //var salt = "world";
-            //var key = XCrypto.AES256ProcessX.CreateKey("hello", salt);
-            //var iv = XCrypto.AES256ProcessX.CreateIV();
-            //var fileBT = FileWork.GetFileByte(wo.FilePath, "Read file...", pv);
-            //var hash1 = XCrypto.HashWork.CreateSHA512(fileBT, "File hash...", pv);
-            //var enc = XCrypto.AES256X.EncryptNow(key, iv, fileBT, "Encrypt...", pv);
-            //FileWork.WriteFileByte(enc, @"D:\Download\Dummy\Hello_End.txt", "Save encrypt file...", pv);
-            //var dec = XCrypto.AES256X.DecryptNow(key, iv, enc, "Decrypt...", pv);
-            //var hash2 = XCrypto.HashWork.CreateSHA512(dec, "Decrypt after hash...", pv);
-            //FileWork.WriteFileByte(dec, @"D:\Download\Dummy\Hello_EndDec.txt", "Save decrypt file...", pv);
-
-            //Console.WriteLine(hash1);
-            //Console.WriteLine(hash2);
-            //Console.WriteLine(hash1 == hash2);
-
-            //var pv = new XModel.ProgressViewer();
-            ////XWork.FileWork.ZIPCompression(@"D:\Download\Dummy", @"D:\Download\Dummy.zip", "ZIP Compression", pv);
-            //XWork.FileWork.ZIPExtract(@"D:\Download\Dummy.zip", @"D:\Download\DummyGOGO", "ZIP Extract", pv);
-
-            //cwms.Normal.MessageNow($"EncryptWork... ({cwo.CryptoPassword}) {cwo.FilePath}");
+            // 파일을 암호화 했습니다.
+            cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
         }
     }
 }

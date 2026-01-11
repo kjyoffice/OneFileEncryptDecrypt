@@ -71,6 +71,90 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ReadFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "파일 읽기" :
+                    $"Read file"
+                );
+            }
+        }
+
+        public string OriginalChecksum
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "원본파일 Checksum" :
+                    "Original file checksum"
+                );
+            }
+        }
+
+        public string EncryptFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "파일 암호화" :
+                    "Encrypt file"
+                );
+            }
+        }
+
+        public string EncryptChecksum
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화 파일 Checksum" :
+                    "Encrypt file checksum"
+                );
+            }
+        }
+
+        public string SaveEncryptFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화 된 파일 저장" :
+                    "Save encrypt file"
+                );
+            }
+        }
+
+        public string SaveFinalFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "최종파일 저장" :
+                    "Save final file"
+                );
+            }
+        }
+
+        public string EncryptFileDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "최종파일 저장" :
+                    "Save final file"
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {

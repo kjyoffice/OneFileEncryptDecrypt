@@ -10,11 +10,11 @@ namespace OneFileEncryptDecrypt.XCrypto
 {
     public class HashWork
     {
-        public static string CreateSHA512(byte[] source, string title, XModel.ProgressViewer pv)
+        public static byte[] CreateSHA512(byte[] source, string title, XModel.ProgressViewer pv)
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
-            var result = string.Empty;
+            var hashList = new List<byte>();    
 
             using (var hash = SHA512.Create())
             {
@@ -36,13 +36,13 @@ namespace OneFileEncryptDecrypt.XCrypto
 
                 hash.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
 
-                var rawText = BitConverter.ToString(hash.Hash!);
-
-                result = Regex.Replace(rawText, "[^0-9A-Za-z]", string.Empty, RegexOptions.IgnoreCase).Trim().ToLower();
+                hashList.AddRange(hash.Hash!);
 
                 hash.Clear();
                 pv.Done();
             }
+
+            var result = hashList.ToArray();
 
             return result;
         }
