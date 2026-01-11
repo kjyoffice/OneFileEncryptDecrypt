@@ -72,32 +72,3 @@ namespace OneFileEncryptDecrypt
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

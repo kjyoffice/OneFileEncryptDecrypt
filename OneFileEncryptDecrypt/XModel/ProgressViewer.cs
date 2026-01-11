@@ -56,13 +56,20 @@ namespace OneFileEncryptDecrypt.XModel
             var percent = this.CalcPercent(totalCount, nowCount);
 
             Console.CursorLeft = 0;
-            Console.Out.Write($"[{title}] {nowCount:N0} / {totalCount:N0} ({percent:F1}%)");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Out.Write($"[{title}] ");
+            Console.ResetColor();
+            Console.Out.Write($"{nowCount:N0} / {totalCount:N0} ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Out.Write($"({percent:F1}%)");
             //Thread.Sleep(50);
         }
 
         public void Done()
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.Out.WriteLine($" - Done");
+            Console.ResetColor();
         }
     }
 }
