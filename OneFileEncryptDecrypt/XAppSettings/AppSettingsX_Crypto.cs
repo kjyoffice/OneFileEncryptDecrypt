@@ -81,7 +81,7 @@ namespace OneFileEncryptDecrypt.XAppSettings
             this.IsAllow = isAllow;
             this.SaltDirectoryPath = saltDirPathUse;
             this.SaltFilePath = Path.Combine(saltDirPathUse, "CryptoSalt.ofed");
-            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoTemp_IfWantDeleteIsOK");
+            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoTemp");
         }
     }
 }
