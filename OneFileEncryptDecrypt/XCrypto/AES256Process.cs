@@ -30,5 +30,10 @@ namespace OneFileEncryptDecrypt.XCrypto
         {
             return RandomNumberGenerator.GetBytes(16);
         }
+
+        public static byte[] CreateNonce()
+        {
+            return RandomNumberGenerator.GetBytes(12);
+        }
     }
 }
