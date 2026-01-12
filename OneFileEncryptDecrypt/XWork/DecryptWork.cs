@@ -50,6 +50,8 @@ namespace OneFileEncryptDecrypt.XWork
                         // 작업파일 삭제
                         cfn.DeleteAllFile(cwo.SourceFilePath);
 
+                        cwms.EmptyLine();
+
                         // 파일을 복호화 했습니다.
                         cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
                     }

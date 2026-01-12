@@ -48,6 +48,12 @@ namespace OneFileEncryptDecrypt.XWork
                 // 작업파일 삭제
                 cfn.DeleteAllFile(cwo.SourceFilePath);
 
+                cwms.EmptyLine();
+
+                // 암호화 비밀번호는 잊으면 안됩니다.
+                // 잊지 않도록 기억해주세요!
+                cwms.Warning.MessageNow(asx.WorkMessage.EncryptPasswordMemoryNotify, true);
+
                 // 파일을 암호화 했습니다.
                 cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
             }
