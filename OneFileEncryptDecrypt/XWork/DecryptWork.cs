@@ -16,8 +16,6 @@ namespace OneFileEncryptDecrypt.XWork
             {
                 // 저장 할 파일들 경로생성
                 var cfn = asx.Crypto.GetCryptoWorkPath;
-                // 복호화 키 생성
-                var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
                 var pv = new XModel.ProgressViewer();
 
                 // 우선 파일 압축을 해제한다
@@ -37,6 +35,8 @@ namespace OneFileEncryptDecrypt.XWork
                 // 암호화 된 파일 해쉬 비교
                 if (encryptDataChecksum == encryptDataChecksumChecker)
                 {
+                    // 복호화 키 생성
+                    var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
                     // 파일 복호화
                     var decryptData = XCrypto.AES256X.DecryptNow(cryptoKey, cryptoIV, encryptData, asx.WorkMessage.DecryptFile, pv);
                     // 암호화 된 파일 해쉬 만들기
