@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -122,7 +122,8 @@ namespace OneFileEncryptDecrypt.XCrypto
                                     cs.Close();
                                     pv.Done();
                                 }
-                                catch (CryptographicException ex)
+                                // CryptographicException
+                                catch (Exception ex)
                                 {
                                     AES256X.ExceptionTimeSilentSkip(ex);
 
