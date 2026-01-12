@@ -45,6 +45,8 @@ namespace OneFileEncryptDecrypt
 
         // -------------------------------------------------------------------------------
 
+        // OneFileEncryptDecrypt encrypt -pw 0123456789 -f d:\Download\Dummy\IMG_2819.JPG
+        // OneFileEncryptDecrypt decrypt -pw 0123456789 -f d:\Download\Dummy\IMG_2819.JPG.ofedx
         public static void Main(string[] args)
         {
             var asx = Program.GetAppSetting();
