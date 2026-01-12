@@ -155,6 +155,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public List<string> AlreadyExistEncryptFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    new List<string>() { "같은 이름의 암호화된 파일이 있습니다.", "진행이 중단되었습니다." } :
+                    new List<string>() { "Exist same encrypt file", "Stop this process." }
+                );
+            }
+        }
+
         public string ZIPExtractFile
         {
             get
@@ -235,6 +247,18 @@ namespace OneFileEncryptDecrypt.XMessage
                     (this.IsHangul == true) ?
                     "복호화 파일 해쉬가 다릅니다." :
                     "Different decrypt checksum."
+                );
+            }
+        }
+
+        public List<string> AlreadyExistDecryptFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    new List<string>() { "같은 이름의 복호화된 파일이 있습니다.", "진행이 중단되었습니다." } :
+                    new List<string>() { "Exist same decrypt file", "Stop this process." }
                 );
             }
         }
