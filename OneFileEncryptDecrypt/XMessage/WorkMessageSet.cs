@@ -263,6 +263,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public List<string> EncryptPasswordMemoryNotify
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    new List<string>() { "암호화 비밀번호는 아주 중요합니다.", "잊지 않도록 해주세요!" } :
+                    new List<string>() { "Encrypt password is very important", "Don't forget!" }
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
