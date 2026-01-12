@@ -133,5 +133,10 @@ namespace OneFileEncryptDecrypt.XCrypto
 
             return result;
         }
+
+        private static void ExceptionTimeSilentSkip(Exception ex)
+        {
+            // Empty
+        }
     }
 }
