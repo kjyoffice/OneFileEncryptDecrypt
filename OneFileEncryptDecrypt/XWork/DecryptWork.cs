@@ -39,26 +39,38 @@ namespace OneFileEncryptDecrypt.XWork
                     var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
                     // 파일 복호화
                     var decryptData = XCrypto.AES256X.DecryptNow(cryptoKey, cryptoIV, encryptData, asx.WorkMessage.DecryptFile, pv);
-                    // 암호화 된 파일 해쉬 만들기
-                    var decryptDataChecksum = XCrypto.HashWork.ConvertHashText(XCrypto.HashWork.CreateSHA512(decryptData, asx.WorkMessage.DecryptChecksum, pv));
 
-                    if (decryptDataChecksum == originalChecksumChecker)
+                    // 복호화 데이터가 있으면 일단 정상 비번이라고 간주
+                    if (decryptData.Length > 0)
                     {
-                        // 원본파일 저장
-                        FileWork.WriteFileByte(decryptData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
+                        // 암호화 된 파일 해쉬 만들기
+                        var decryptDataChecksum = XCrypto.HashWork.ConvertHashText(XCrypto.HashWork.CreateSHA512(decryptData, asx.WorkMessage.DecryptChecksum, pv));
 
-                        // 작업파일 삭제
-                        cfn.DeleteAllFile(cwo.SourceFilePath);
+                        if (decryptDataChecksum == originalChecksumChecker)
+                        {
+                            // 원본파일 저장
+                            FileWork.WriteFileByte(decryptData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
 
-                        cwms.EmptyLine();
-                        // 파일을 복호화 했습니다.
-                        cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
+                            // 작업파일 삭제
+                            cfn.DeleteAllFile(cwo.SourceFilePath);
+
+                            cwms.EmptyLine();
+                            // 파일을 복호화 했습니다.
+                            cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
+                        }
+                        else
+                        {
+                            cwms.EmptyLine();
+                            // 복호화 파일 해쉬가 다릅니다.
+                            cwms.Error.MessageNow(asx.WorkMessage.DifferentDecryptChecksum);
+                        }
                     }
                     else
                     {
+                        // 복호화 비번 틀림으로 간주
                         cwms.EmptyLine();
-                        // 복호화 파일 해쉬가 다릅니다.
-                        cwms.Error.MessageNow(asx.WorkMessage.DifferentDecryptChecksum);
+                        // 복호화에 실패했습니다.
+                        cwms.Error.MessageNow(asx.WorkMessage.DecryptFail);
                     }
                 }
                 else
