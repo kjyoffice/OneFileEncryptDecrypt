@@ -65,11 +65,22 @@ namespace OneFileEncryptDecrypt.XModel
             //Thread.Sleep(50);
         }
 
+        private void FinalMessage(ConsoleColor textColor, string finalText)
+        {
+            Console.Out.Write($" - ");
+            Console.ForegroundColor = textColor;
+            Console.Out.WriteLine(finalText);
+            Console.ResetColor();
+        }
+
         public void Done()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Out.WriteLine($" - Done");
-            Console.ResetColor();
+            this.FinalMessage(ConsoleColor.Green, "Done");
+        }
+
+        public void Fail()
+        {
+            this.FinalMessage(ConsoleColor.Red, "Fail");
         }
     }
 }
