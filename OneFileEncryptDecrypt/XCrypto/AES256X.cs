@@ -89,36 +89,46 @@ namespace OneFileEncryptDecrypt.XCrypto
                         {
                             using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                             {
-                                // 여긴 복호화니, 들어올 때 크기랑 복호화 후 크기가 다를것임
-                                // 그래서 마지막에 전체 크기로 바꿔준다 ㅎㅎㅎ
-                                pv.Start(title, source.Length);
-
-                                while (isLoop == true)
+                                try
                                 {
-                                    var readBytes = cs.Read(buffer, 0, buffer.Length);
+                                    // 여긴 복호화니, 들어올 때 크기랑 복호화 후 크기가 다를것임
+                                    // 그래서 마지막에 전체 크기로 바꿔준다 ㅎㅎㅎ
+                                    pv.Start(title, source.Length);
 
-                                    totalReadBytes += readBytes;
-
-                                    if (readBytes > 0)
+                                    while (isLoop == true)
                                     {
-                                        // buffer.Take(readBytes)
-                                        streamList.AddRange(buffer[..readBytes]);
+                                        var readBytes = cs.Read(buffer, 0, buffer.Length);
 
-                                        pv.AddProgress(readBytes);
-                                        pv.ProgressDisplay();
-                                    }
-                                    else
-                                    {
-                                        pv.ChangeTotalCount(totalReadBytes);
-                                        pv.ProgressDisplay();
+                                        totalReadBytes += readBytes;
 
-                                        isLoop = false;
+                                        if (readBytes > 0)
+                                        {
+                                            // buffer.Take(readBytes)
+                                            streamList.AddRange(buffer[..readBytes]);
+
+                                            pv.AddProgress(readBytes);
+                                            pv.ProgressDisplay();
+                                        }
+                                        else
+                                        {
+                                            pv.ChangeTotalCount(totalReadBytes);
+                                            pv.ProgressDisplay();
+
+                                            isLoop = false;
+                                        }
                                     }
+
+                                    cs.Clear();
+                                    cs.Close();
+                                    pv.Done();
                                 }
+                                catch (CryptographicException ex)
+                                {
+                                    AES256X.ExceptionTimeSilentSkip(ex);
 
-                                cs.Clear();
-                                cs.Close();
-                                pv.Done();
+                                    // 오류나면 비번 틀려서 복호화 실패한거로 간주!
+                                    streamList.Clear();
+                                }
                             }
 
                             ms.Close();
