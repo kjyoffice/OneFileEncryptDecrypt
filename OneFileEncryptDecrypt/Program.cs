@@ -76,7 +76,7 @@ namespace OneFileEncryptDecrypt
             var pw = Encoding.UTF8.GetBytes("hello");
             var salt = Encoding.UTF8.GetBytes("world");
             var key = XCrypto.AES256Process.CreateKey(pw, salt);
-            var nonce = XCrypto.AES256Process.CreateNonce();
+            var nonce = XCrypto.AES256Process.CreateNonce;
             var plainText = Encoding.UTF8.GetBytes("Hello World");
             var aad = Encoding.UTF8.GetBytes("JSON OR TEXT, Want non encrypt data like Header, Info!"); // Optional
 

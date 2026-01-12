@@ -21,7 +21,7 @@ namespace OneFileEncryptDecrypt.XWork
                 // 키 생성
                 var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
                 // IV 생성
-                var cryptoIV = XCrypto.AES256Process.CreateIV();
+                var cryptoIV = XCrypto.AES256Process.CreateIV;
                 var pv = new XModel.ProgressViewer();
                 // 파일 읽기
                 var sourceBT = FileWork.GetFileByte(cwo.SourceFilePath, asx.WorkMessage.ReadFile, pv);

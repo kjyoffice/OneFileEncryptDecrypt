@@ -10,6 +10,24 @@ namespace OneFileEncryptDecrypt.XCrypto
 {
     public class AES256Process
     {
+        public static byte[] CreateIV
+        {
+            get
+            {
+                return RandomNumberGenerator.GetBytes(16);
+            }
+        }
+
+        public static byte[] CreateNonce
+        {
+            get
+            {
+                return RandomNumberGenerator.GetBytes(12);
+            }
+        }
+
+        // -----------------------------------------------------------------
+
         public static byte[] CreateKey(byte[] password, byte[] salt)
         {
             // SHA-256 기반 PBKDF2
@@ -24,16 +42,6 @@ namespace OneFileEncryptDecrypt.XCrypto
             var result = keyParam!.GetKey();
 
             return result;
-        }
-
-        public static byte[] CreateIV()
-        {
-            return RandomNumberGenerator.GetBytes(16);
-        }
-
-        public static byte[] CreateNonce()
-        {
-            return RandomNumberGenerator.GetBytes(12);
         }
     }
 }
