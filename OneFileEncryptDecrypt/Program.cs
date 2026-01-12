@@ -1,6 +1,8 @@
 ﻿using System.CommandLine;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
 
@@ -68,6 +70,54 @@ namespace OneFileEncryptDecrypt
             //var pr = rc.Parse("encrypt -k helloworld -f D:\\Download\\Dummy\\Hello.txt");
 
             pr.Invoke();
+
+            // AES-GCM
+            /*
+            var pw = Encoding.UTF8.GetBytes("hello");
+            var salt = Encoding.UTF8.GetBytes("world");
+            var key = XCrypto.AES256Process.CreateKey(pw, salt);
+            var nonce = XCrypto.AES256Process.CreateNonce();
+            var plainText = Encoding.UTF8.GetBytes("Hello World");
+            var aad = Encoding.UTF8.GetBytes("JSON OR TEXT, Want non encrypt data like Header, Info!"); // Optional
+
+            var encryptX = new byte[plainText.Length];
+            var tagX = new byte[16];
+
+            // https://learn.microsoft.com/ko-kr/dotnet/api/system.security.cryptography.aesgcm?view=net-10.0
+            // https://www.scottbrady.io/c-sharp/aes-gcm-dotnet
+            using (var aesGcm = new AesGcm(key, tagX.Length))
+            {
+                aesGcm.Encrypt(
+                    nonce,
+                    plainText,
+                    encryptX,
+                    tagX,
+                    aad
+                );
+            }
+
+            // Save!
+            // nonce
+            // encryptX
+            // tagX
+
+            var decryptX = new byte[encryptX.Length];
+
+            using (var aesGcm = new AesGcm(key, tagX.Length))
+            {
+                aesGcm.Decrypt(
+                    nonce,
+                    encryptX,
+                    tagX,
+                    decryptX,
+                    aad
+                );
+            }
+            // catch (CryptographicException)
+
+            Console.WriteLine(Encoding.UTF8.GetString(plainText));
+            Console.WriteLine(Encoding.UTF8.GetString(decryptX));
+            */
         }
     }
 }
