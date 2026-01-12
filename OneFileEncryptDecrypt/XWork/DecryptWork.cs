@@ -51,18 +51,19 @@ namespace OneFileEncryptDecrypt.XWork
                         cfn.DeleteAllFile(cwo.SourceFilePath);
 
                         cwms.EmptyLine();
-
                         // 파일을 복호화 했습니다.
                         cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
                     }
                     else
                     {
+                        cwms.EmptyLine();
                         // 복호화 파일 해쉬가 다릅니다.
                         cwms.Error.MessageNow(asx.WorkMessage.DifferentDecryptChecksum);
                     }
                 }
                 else
                 {
+                    cwms.EmptyLine();
                     // 암호화 파일 해쉬가 다릅니다.
                     cwms.Error.MessageNow(asx.WorkMessage.DifferentEncryptChecksum);
                 }
