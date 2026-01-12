@@ -118,6 +118,11 @@ namespace OneFileEncryptDecrypt
             Console.WriteLine(Encoding.UTF8.GetString(plainText));
             Console.WriteLine(Encoding.UTF8.GetString(decryptX));
             */
+            // 돌긴 하는데.. GPT왈, 고용량 데이터(Ex 1GB) 암호화는 청크로 잘라서 해란다...
+            // 복호화 역시 청크로 잘린거 복호화 해서 이어 붙여야 한다는건데...
+            // 이건 나중에 차기 버젼에 하기로 하자 ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ ㅠㅠ
+            // 아니면 바운스캐슬로 해야할듯
+            // 암튼 나중에~~~
         }
     }
 }
