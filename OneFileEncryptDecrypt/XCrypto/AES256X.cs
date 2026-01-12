@@ -128,6 +128,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 
                                     // 오류나면 비번 틀려서 복호화 실패한거로 간주!
                                     streamList.Clear();
+                                    pv.Fail();
                                 }
                             }
 
