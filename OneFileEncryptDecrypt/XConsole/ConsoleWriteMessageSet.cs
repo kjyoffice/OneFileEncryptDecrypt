@@ -20,5 +20,10 @@ namespace OneFileEncryptDecrypt.XConsole
             this.Warning = new ConsoleWriteMessage(ConsoleColor.Yellow);
             this.Error = new ConsoleWriteMessage(ConsoleColor.Red);
         }
+
+        public void EmptyLine()
+        {
+            Console.Out.WriteLine(string.Empty);
+        }
     }
 }
