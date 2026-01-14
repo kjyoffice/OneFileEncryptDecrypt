@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace OneFileEncryptDecrypt.XWork
 {
@@ -98,16 +99,20 @@ namespace OneFileEncryptDecrypt.XWork
             pv.Done();
         }
 
-        public static byte[] GetFileChunkByte(string filePath, int startPosition, int readSize)
+        // https://en.wikipedia.org/wiki/List_of_file_signatures
+        public static string GetFileMagicByte(string filePath, int startPosition, int readSize)
         {
-            var result = new byte[readSize];
+            var byteX = new byte[readSize];
 
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 fs.Seek(startPosition, SeekOrigin.Begin);
-                fs.ReadExactly(result);
+                fs.ReadExactly(byteX);
                 fs.Close();
             }
+
+            var byteXText = BitConverter.ToString(byteX);
+            var result = Regex.Replace(byteXText, "[^0-9A-Za-z]", string.Empty, RegexOptions.IgnoreCase).Trim().ToUpper();
 
             return result;
         }

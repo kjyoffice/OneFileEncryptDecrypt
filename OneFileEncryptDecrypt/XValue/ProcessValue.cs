@@ -30,5 +30,13 @@ namespace OneFileEncryptDecrypt.XValue
                 return (1_048_576 * 4); // 4MB;
             }
         }
+
+        public static string ZIPFileMagicByte
+        {
+            get
+            {
+                return "504B0304";
+            }
+        }
     }
 }
