@@ -14,6 +14,21 @@ namespace OneFileEncryptDecrypt.XModel
 
         // ----------------------------------------------------------
 
+        // 암호화때는 해당 폴더가 비어있어야 한다 
+        public bool IsEmptyDirectory
+        {
+            get
+            {
+                var workDirPath = this.WorkDirectoryPath;
+                var isNotExistDir = (Directory.GetDirectories(workDirPath, "*.*", SearchOption.AllDirectories).Length <= 0);
+                var isNotExistFile = (Directory.GetFiles(workDirPath, "*.*", SearchOption.AllDirectories).Length <= 0);
+                var result = ((isNotExistDir == true) && (isNotExistFile == true));
+
+                return result;
+            }
+        }
+
+        // 복호화때는 파일이 모두 있어야 한다
         public bool IsAllExistDecryptFile
         {
             get

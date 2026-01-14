@@ -18,42 +18,52 @@ namespace OneFileEncryptDecrypt.XWork
             // 압축할 파일이 존재하지 않아야 한다!
             if (File.Exists(encryptZIPFilePath) == false)
             {
-                // 키 생성
-                var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
-                // IV 생성
-                var cryptoIV = XCrypto.AES256Process.CreateIV;
-                var pv = new XModel.ProgressViewer();
-                // 파일 읽기
-                var sourceBT = FileWork.GetFileByte(cwo.SourceFilePath, asx.WorkMessage.ReadFile, pv);
-                // 원본파일 해쉬 만들기
-                var originalChecksum = XCrypto.HashWork.CreateSHA512(sourceBT, asx.WorkMessage.OriginalChecksum, pv);
-                // 파일 암호화
-                var encryptData = XCrypto.AES256X.EncryptNow(cryptoKey, cryptoIV, sourceBT, asx.WorkMessage.EncryptFile, pv);
-                // 암호화 된 파일 해쉬 만들기
-                var encryptDataChecksum = XCrypto.HashWork.CreateSHA512(encryptData, asx.WorkMessage.EncryptChecksum, pv);
                 // 저장 할 파일들 경로생성
                 var cfn = asx.Crypto.GetCryptoWorkPath;
 
-                // 원본파일 해쉬 저장
-                File.WriteAllBytes(cfn.OriginalChecksumFilePath, originalChecksum);
-                // 암호화 된 파일 해쉬 저장
-                File.WriteAllBytes(cfn.EncryptDataChecksumFilePath, encryptDataChecksum);
-                // 암호화 IV 저장
-                File.WriteAllBytes(cfn.CryptoIVFilePath, cryptoIV);
-                // 암호화 된 파일 저장
-                FileWork.WriteFileByte(encryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
-                // 파일들 압축
-                FileWork.ZIPCompression(cfn.WorkDirectoryPath, encryptZIPFilePath, asx.WorkMessage.ZIPCompressionFile, pv);
+                if (cfn.IsEmptyDirectory == true)
+                {
+                    // 키 생성
+                    var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
+                    // IV 생성
+                    var cryptoIV = XCrypto.AES256Process.CreateIV;
+                    var pv = new XModel.ProgressViewer();
+                    // 파일 읽기
+                    var sourceBT = FileWork.GetFileByte(cwo.SourceFilePath, asx.WorkMessage.ReadFile, pv);
+                    // 원본파일 해쉬 만들기
+                    var originalChecksum = XCrypto.HashWork.CreateSHA512(sourceBT, asx.WorkMessage.OriginalChecksum, pv);
+                    // 파일 암호화
+                    var encryptData = XCrypto.AES256X.EncryptNow(cryptoKey, cryptoIV, sourceBT, asx.WorkMessage.EncryptFile, pv);
+                    // 암호화 된 파일 해쉬 만들기
+                    var encryptDataChecksum = XCrypto.HashWork.CreateSHA512(encryptData, asx.WorkMessage.EncryptChecksum, pv);
 
-                // 작업파일 삭제
-                cfn.DeleteAllFile(cwo.SourceFilePath);
+                    // 원본파일 해쉬 저장
+                    File.WriteAllBytes(cfn.OriginalChecksumFilePath, originalChecksum);
+                    // 암호화 된 파일 해쉬 저장
+                    File.WriteAllBytes(cfn.EncryptDataChecksumFilePath, encryptDataChecksum);
+                    // 암호화 IV 저장
+                    File.WriteAllBytes(cfn.CryptoIVFilePath, cryptoIV);
+                    // 암호화 된 파일 저장
+                    FileWork.WriteFileByte(encryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
+                    // 파일들 압축
+                    FileWork.ZIPCompression(cfn.WorkDirectoryPath, encryptZIPFilePath, asx.WorkMessage.ZIPCompressionFile, pv);
 
-                cwms.EmptyLine();
-                // 암호화 비밀번호는 잊으면 안됩니다.
-                // 잊지 않도록 기억해주세요!
-                cwms.Warning.MessageNow(asx.WorkMessage.EncryptPasswordMemoryNotify, true);
-                // 파일을 암호화 했습니다.
-                cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
+                    // 작업파일 삭제
+                    cfn.DeleteAllFile(cwo.SourceFilePath);
+
+                    cwms.EmptyLine();
+                    // 암호화 비밀번호는 잊으면 안됩니다.
+                    // 잊지 않도록 기억해주세요!
+                    cwms.Warning.MessageNow(asx.WorkMessage.EncryptPasswordMemoryNotify, true);
+                    // 파일을 암호화 했습니다.
+                    cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
+                }
+                else
+                {
+                    // 암호화 작업 디렉토리가 비어있지 않습니다."
+                    // 진행이 중단되었습니다.
+                    cwms.Error.MessageNow(asx.WorkMessage.NotEmptyEncryptDirectory);
+                }
             }
             else
             {

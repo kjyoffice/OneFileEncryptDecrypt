@@ -89,7 +89,7 @@ namespace OneFileEncryptDecrypt.XWork
                 {
                     cwms.EmptyLine();
                     // 존재하지 않는 복호화 필수 파일이 있습니다.
-                    cwms.Error.MessageNow(asx.WorkMessage.NotExistDecryptTimeRequireFile);
+                    cwms.Error.MessageNow(asx.WorkMessage.NotExistDecryptRequireFile);
                 }
             }
             else

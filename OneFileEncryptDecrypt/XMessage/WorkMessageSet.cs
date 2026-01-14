@@ -161,7 +161,7 @@ namespace OneFileEncryptDecrypt.XMessage
             {
                 return (
                     (this.IsHangul == true) ?
-                    new List<string>() { "같은 이름의 암호화된 파일이 있습니다.", "진행이 중단되었습니다." } :
+                    new List<string>() { "같은 이름의 암호화된 파일이 있습니다.", "진행이 중단 됐습니다." } :
                     new List<string>() { "Exist same encrypt file", "Stop this process." }
                 );
             }
@@ -257,7 +257,7 @@ namespace OneFileEncryptDecrypt.XMessage
             {
                 return (
                     (this.IsHangul == true) ?
-                    new List<string>() { "같은 이름의 복호화된 파일이 있습니다.", "진행이 중단되었습니다." } :
+                    new List<string>() { "같은 이름의 복호화된 파일이 있습니다.", "진행이 중단 됐습니다." } :
                     new List<string>() { "Exist same decrypt file", "Stop this process." }
                 );
             }
@@ -287,7 +287,19 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string NotExistDecryptTimeRequireFile
+        public List<string> NotEmptyEncryptDirectory
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    new List<string>() { "암호화 작업 디렉토리가 비어있지 않습니다.", "진행이 중단 됐습니다." } :
+                    new List<string>() {"Not empty encrypt directory", "Stop this process." }
+                );
+            }
+        }
+
+        public string NotExistDecryptRequireFile
         {
             get
             {
@@ -312,6 +324,8 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
         */
+
+        // ------------------------------------------------
 
         private string CryptoCommandText(bool isHangul, string commandName)
         {
