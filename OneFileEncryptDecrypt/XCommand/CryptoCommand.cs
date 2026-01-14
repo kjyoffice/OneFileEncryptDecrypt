@@ -59,14 +59,13 @@ namespace OneFileEncryptDecrypt.XCommand
             // 암호화 파일 경로
             result.Description = asx.WorkMessage.CryptoFileDescription(commandName);
             result.Required = true;
-            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, commandName, asx));
+            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx));
 
             return result;
         }
 
-        private static void CreateOptionFileValidator(OptionResult optr, string commandName, XAppSettings.AppSettingsX asx)
+        private static void CreateOptionFileValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
         {
-            var decCmdName = CryptoCommand.DecryptCommandName;
             var tkText = CommandProcess.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
 
@@ -79,21 +78,7 @@ namespace OneFileEncryptDecrypt.XCommand
                 var fi = new FileInfo(filePath);
 
                 // 파일은 일정 크기 이상 안되게 한다
-                if (fi.Length <= maxByte)
-                {
-                    // 파일 경로에서 복호화 할때는 파일 확장자가 .ofedx인지 체크
-                    if (commandName == decCmdName)
-                    {
-                        if (Path.GetExtension(filePath).ToUpper() != ".OFEDX")
-                        {
-                            // 복호화 파일이 올바르지 않습니다.
-                            optr.AddError(asx.WorkMessage.DecryptFileWrong(tkText, commandName));
-                        }
-                        // else - OK
-                    }
-                    // else - OK
-                }
-                else
+                if (fi.Length > maxByte)
                 {
                     // 100 MB 이상의 파일은 지원하지 않습니다.
                     optr.AddError(asx.WorkMessage.CryptoFileBigNotSupport(tkText, maxSizeMB));
