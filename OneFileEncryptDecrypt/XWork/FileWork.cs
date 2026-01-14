@@ -100,7 +100,7 @@ namespace OneFileEncryptDecrypt.XWork
         }
 
         // https://en.wikipedia.org/wiki/List_of_file_signatures
-        public static string GetFileMagicByte(string filePath, int startPosition, int readSize)
+        private static string GetFileMagicByte(string filePath, int startPosition, int readSize)
         {
             var byteX = new byte[readSize];
 
@@ -115,6 +115,11 @@ namespace OneFileEncryptDecrypt.XWork
             var result = Regex.Replace(byteXText, "[^0-9A-Za-z]", string.Empty, RegexOptions.IgnoreCase).Trim().ToUpper();
 
             return result;
+        }
+
+        public static bool IsZIPFileMagicByte(string filePath)
+        {
+            return (FileWork.GetFileMagicByte(filePath, 0, 4) == "504B0304");
         }
     }
 }
