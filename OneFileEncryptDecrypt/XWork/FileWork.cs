@@ -97,5 +97,19 @@ namespace OneFileEncryptDecrypt.XWork
             pv.ProgressDisplay();
             pv.Done();
         }
+
+        public static byte[] GetFileChunkByte(string filePath, int startPosition, int readSize)
+        {
+            var result = new byte[readSize];
+
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                fs.Seek(startPosition, SeekOrigin.Begin);
+                fs.ReadExactly(result);
+                fs.Close();
+            }
+
+            return result;
+        }
     }
 }
