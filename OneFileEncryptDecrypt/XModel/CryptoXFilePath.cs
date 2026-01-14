@@ -11,6 +11,7 @@ namespace OneFileEncryptDecrypt.XModel
         public string EncryptDataChecksumFilePath { get; private set; }
         public string OriginalChecksumFilePath { get; private set; }
         public string CryptoIVFilePath { get; private set; }
+        public string CryptoInfoFilePath { get; private set; }
 
         // ----------------------------------------------------------
 
@@ -37,7 +38,8 @@ namespace OneFileEncryptDecrypt.XModel
                     (File.Exists(this.EncryptDataFilePath) == true) &&
                     (File.Exists(this.EncryptDataChecksumFilePath) == true) &&
                     (File.Exists(this.OriginalChecksumFilePath) == true) &&
-                    (File.Exists(this.CryptoIVFilePath) == true)
+                    (File.Exists(this.CryptoIVFilePath) == true) &&
+                    (File.Exists(this.CryptoInfoFilePath) == true)
                 );
             } 
         }
@@ -51,6 +53,7 @@ namespace OneFileEncryptDecrypt.XModel
             this.EncryptDataChecksumFilePath = Path.Combine(workDirPath, "EncryptDataChecksum.ofed");
             this.OriginalChecksumFilePath = Path.Combine(workDirPath, "OriginalChecksum.ofed");            
             this.CryptoIVFilePath = Path.Combine(workDirPath, "CryptoIV.ofed");
+            this.CryptoInfoFilePath = Path.Combine(workDirPath, "CryptoInfo.json");
         }
 
         public void DeleteAllFile(string sourceFilePath)
@@ -62,7 +65,8 @@ namespace OneFileEncryptDecrypt.XModel
                 this.EncryptDataFilePath,
                 this.EncryptDataChecksumFilePath,
                 this.OriginalChecksumFilePath,
-                this.CryptoIVFilePath
+                this.CryptoIVFilePath,
+                this.CryptoInfoFilePath
             };
 
             if (sourceFilePath != string.Empty)

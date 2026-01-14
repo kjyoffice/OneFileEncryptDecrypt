@@ -36,6 +36,8 @@ namespace OneFileEncryptDecrypt.XWork
                     var encryptData = XCrypto.AES256X.EncryptNow(cryptoKey, cryptoIV, sourceBT, asx.WorkMessage.EncryptFile, pv);
                     // 암호화 된 파일 해쉬 만들기
                     var encryptDataChecksum = XCrypto.HashWork.CreateSHA512(encryptData, asx.WorkMessage.EncryptChecksum, pv);
+                    // 암호화 정보 추가
+                    var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(1));
 
                     // 원본파일 해쉬 저장
                     File.WriteAllBytes(cfn.OriginalChecksumFilePath, originalChecksum);
@@ -45,6 +47,8 @@ namespace OneFileEncryptDecrypt.XWork
                     File.WriteAllBytes(cfn.CryptoIVFilePath, cryptoIV);
                     // 암호화 된 파일 저장
                     FileWork.WriteFileByte(encryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
+                    // 암호화 정보 저장
+                    File.WriteAllText(cfn.CryptoInfoFilePath, infoText, Encoding.UTF8);
                     // 파일들 압축
                     FileWork.ZIPCompression(cfn.WorkDirectoryPath, encryptZIPFilePath, asx.WorkMessage.ZIPCompressionFile, pv);
 
