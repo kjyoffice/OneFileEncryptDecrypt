@@ -16,16 +16,15 @@ namespace OneFileEncryptDecrypt.XWork
             {
                 // 저장 할 파일들 경로생성
                 var cfn = asx.Crypto.GetCryptoWorkPath;
+                var pv = new XModel.ProgressViewer();
+
+                // 우선 파일 압축을 해제한다
+                FileWork.ZIPExtract(cwo.SourceFilePath, cfn.WorkDirectoryPath, asx.WorkMessage.ZIPExtractFile, pv);
 
                 // 복호화 필수 파일들이 있는지 체크
                 // 아무래도 zip 파일 경로 아무거나 넣으면 일단 압축을 풀거기 때문에 필수 파일이 모두 있는지 체크함
                 if (cfn.IsAllExistDecryptFile == true)
                 {
-                    var pv = new XModel.ProgressViewer();
-
-                    // 우선 파일 압축을 해제한다
-                    FileWork.ZIPExtract(cwo.SourceFilePath, cfn.WorkDirectoryPath, asx.WorkMessage.ZIPExtractFile, pv);
-
                     // 원본파일 해쉬 읽기
                     var originalChecksumChecker = XCrypto.HashWork.ConvertHashText(File.ReadAllBytes(cfn.OriginalChecksumFilePath));
                     // 암호화 된 파일 해쉬 읽기
@@ -87,6 +86,9 @@ namespace OneFileEncryptDecrypt.XWork
                 }
                 else
                 {
+                    // 파일이 모두 없으니 있는 파일이라도 지운다
+                    cfn.DeleteAllFile(string.Empty);
+
                     cwms.EmptyLine();
                     // 존재하지 않는 복호화 필수 파일이 있습니다.
                     cwms.Error.MessageNow(asx.WorkMessage.NotExistDecryptRequireFile);

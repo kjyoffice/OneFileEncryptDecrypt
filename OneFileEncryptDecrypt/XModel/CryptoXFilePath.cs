@@ -62,12 +62,22 @@ namespace OneFileEncryptDecrypt.XModel
                 this.EncryptDataFilePath,
                 this.EncryptDataChecksumFilePath,
                 this.OriginalChecksumFilePath,
-                this.CryptoIVFilePath,
-                sourceFilePath
+                this.CryptoIVFilePath
             };
 
+            if (sourceFilePath != string.Empty)
+            {
+                filePathList.Add(sourceFilePath);
+            }
+
             // 파일 삭제 고고
-            filePathList.ForEach(x => File.Delete(x));
+            foreach (var filePath in filePathList)
+            {
+                if (File.Exists(filePath) == true)
+                {
+                    File.Delete(filePath);
+                }
+            }
 
             // 작업 디렉토리에 파일이 남았는지 체크
             var isExistFile = (Directory.GetFiles(workDirPath, "*.*", SearchOption.AllDirectories).Length > 0);
