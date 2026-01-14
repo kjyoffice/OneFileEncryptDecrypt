@@ -311,6 +311,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string DecryptFileWrong
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"복호화 파일이 올바르지 않습니다." :
+                    $"Wrong decrypt file."
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
@@ -431,19 +443,6 @@ namespace OneFileEncryptDecrypt.XMessage
                 (isHangul == true) ?
                 $"{tkText}{maxSizeMB} MB 이상의 파일은 지원하지 않습니다." :
                 $"{tkText}Not support {maxSizeMB} MB over file."
-            );
-
-            return result;
-        }
-
-        public string DecryptFileWrong(string tkText, string commandName)
-        {
-            var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
-            var result = (
-                (isHangul == true) ?
-                $"{tkText}{cmdText} 파일이 올바르지 않습니다." :
-                $"{tkText}Wrong {cmdText.ToLower()} file"
             );
 
             return result;
