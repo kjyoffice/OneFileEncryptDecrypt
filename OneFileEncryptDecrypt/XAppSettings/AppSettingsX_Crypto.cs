@@ -34,7 +34,7 @@ namespace OneFileEncryptDecrypt.XAppSettings
             get
             {
                 var rndText = Path.GetRandomFileName().Replace(".", string.Empty);
-                var dnt = DateTime.Now.ToString("yyyyMMdd_HHmmss_fffff");
+                var dnt = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss_fffff");
                 var result = $"Work__{dnt}__{rndText}";
 
                 return result;

@@ -13,7 +13,7 @@ namespace OneFileEncryptDecrypt.XWork
             var dirPath = Path.GetDirectoryName(filePath)!;
             var fileName = Path.GetFileNameWithoutExtension(filePath);
             var fileExt = Path.GetExtension(filePath);
-            var dnt = DateTime.Now.ToString("yyyyMMdd_HHmmss_fffff");
+            var dnt = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss_fffff");
             var newFileName = $"{fileName}__Backup__{dnt}{fileExt}";
             var result = Path.Combine(dirPath, newFileName);
 
