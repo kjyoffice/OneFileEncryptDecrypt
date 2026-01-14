@@ -14,6 +14,21 @@ namespace OneFileEncryptDecrypt.XModel
 
         // ----------------------------------------------------------
 
+        public bool IsAllExistDecryptFile
+        {
+            get
+            {
+                return (
+                    (File.Exists(this.EncryptDataFilePath) == true) &&
+                    (File.Exists(this.EncryptDataChecksumFilePath) == true) &&
+                    (File.Exists(this.OriginalChecksumFilePath) == true) &&
+                    (File.Exists(this.CryptoIVFilePath) == true)
+                );
+            } 
+        }
+
+        // ----------------------------------------------------------
+
         public CryptoXFilePath(string workDirPath)
         {
             this.WorkDirectoryPath = workDirPath;

@@ -287,6 +287,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string NotExistDecryptTimeRequireFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "존재하지 않는 복호화 필수 파일이 있습니다." :
+                    "Not exist decrypt require file."
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
