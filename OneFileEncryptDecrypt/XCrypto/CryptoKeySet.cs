@@ -15,7 +15,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 
         // ------------------------------------------------------------------------
 
-        public byte[] CreateIV
+        public byte[] GetCryptoIV
         {
             get
             {
@@ -23,11 +23,35 @@ namespace OneFileEncryptDecrypt.XCrypto
             }
         }
 
-        public byte[] CreateNonce
+        public byte[] GetCryptoNonce
         {
             get
             {
                 return RandomNumberGenerator.GetBytes(12);
+            }
+        }
+
+        public byte[] GetOriginalHMACKey
+        {
+            get
+            {
+                return this.CreateKey("ORIGINALDATA", 32);
+            }
+        }
+
+        public byte[] GetCryptoKey
+        {
+            get
+            {
+                return this.CreateKey("CRYPTO", 32);
+            }
+        }
+
+        public byte[] GetCryptoHMACKey
+        {
+            get
+            {
+                return this.CreateKey("CRYPTODATA", 32);
             }
         }
 

@@ -83,14 +83,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string OriginalChecksum
+        public string OriginalHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "원본파일 Checksum" :
-                    "Original file checksum"
+                    "원본파일 HMAC" :
+                    "Original file HMAC"
                 );
             }
         }
@@ -107,14 +107,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string EncryptChecksum
+        public string EncryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "암호화 파일 Checksum" :
-                    "Encrypt file checksum"
+                    "암호화 파일 HMAC" :
+                    "Encrypt file HMAC"
                 );
             }
         }
@@ -191,14 +191,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string DecryptChecksum
+        public string DecryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "복호화 파일 Checksum" :
-                    "Decrypt file checksum"
+                    "복호화 파일 HMAC" :
+                    "Decrypt file HMAC"
                 );
             }
         }
@@ -227,26 +227,26 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string DifferentEncryptChecksum
+        public string DifferentEncryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "암호화 파일 해쉬가 다릅니다." :
-                    "Different encrypt checksum."
+                    "암호화 파일 HMAC이 다릅니다." :
+                    "Different encrypt HMAC."
                 );
             }
         }
 
-        public string DifferentDecryptChecksum
+        public string DifferentDecryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "복호화 파일 해쉬가 다릅니다." :
-                    "Different decrypt checksum."
+                    "복호화 파일 HMAC이 다릅니다." :
+                    "Different decrypt HMAC."
                 );
             }
         }

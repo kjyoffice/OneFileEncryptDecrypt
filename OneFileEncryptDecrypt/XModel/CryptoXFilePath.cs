@@ -8,8 +8,8 @@ namespace OneFileEncryptDecrypt.XModel
     {
         public string WorkDirectoryPath { get; private set; }
         public string EncryptDataFilePath { get; private set; }
-        public string EncryptDataChecksumFilePath { get; private set; }
-        public string OriginalChecksumFilePath { get; private set; }
+        public string EncryptHMACFilePath { get; private set; }
+        public string OriginalHMACFilePath { get; private set; }
         public string CryptoIVFilePath { get; private set; }
         public string CryptoInfoFilePath { get; private set; }
 
@@ -36,8 +36,8 @@ namespace OneFileEncryptDecrypt.XModel
             {
                 return (
                     (File.Exists(this.EncryptDataFilePath) == true) &&
-                    (File.Exists(this.EncryptDataChecksumFilePath) == true) &&
-                    (File.Exists(this.OriginalChecksumFilePath) == true) &&
+                    (File.Exists(this.EncryptHMACFilePath) == true) &&
+                    (File.Exists(this.OriginalHMACFilePath) == true) &&
                     (File.Exists(this.CryptoIVFilePath) == true) &&
                     (File.Exists(this.CryptoInfoFilePath) == true)
                 );
@@ -50,8 +50,8 @@ namespace OneFileEncryptDecrypt.XModel
         {
             this.WorkDirectoryPath = workDirPath;
             this.EncryptDataFilePath = Path.Combine(workDirPath, "EncryptData.ofed");
-            this.EncryptDataChecksumFilePath = Path.Combine(workDirPath, "EncryptDataChecksum.ofed");
-            this.OriginalChecksumFilePath = Path.Combine(workDirPath, "OriginalChecksum.ofed");            
+            this.EncryptHMACFilePath = Path.Combine(workDirPath, "EncryptDataHMAC.ofed");
+            this.OriginalHMACFilePath = Path.Combine(workDirPath, "OriginalHMAC.ofed");            
             this.CryptoIVFilePath = Path.Combine(workDirPath, "CryptoIV.ofed");
             this.CryptoInfoFilePath = Path.Combine(workDirPath, "CryptoInfo.json");
         }
@@ -63,8 +63,8 @@ namespace OneFileEncryptDecrypt.XModel
             var filePathList = new List<string>()
             {
                 this.EncryptDataFilePath,
-                this.EncryptDataChecksumFilePath,
-                this.OriginalChecksumFilePath,
+                this.EncryptHMACFilePath,
+                this.OriginalHMACFilePath,
                 this.CryptoIVFilePath,
                 this.CryptoInfoFilePath
             };

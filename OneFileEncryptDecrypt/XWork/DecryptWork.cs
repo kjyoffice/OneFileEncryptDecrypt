@@ -8,6 +8,7 @@ namespace OneFileEncryptDecrypt.XWork
     {
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
+            /*
             // 복호화 후 원본파일 경로
             var decryptOriginalFIlePath = cwo.CreateDecryptOriginalFIlePath;
 
@@ -109,6 +110,7 @@ namespace OneFileEncryptDecrypt.XWork
                 // 진행이 중단되었습니다.
                 cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistDecryptFile);
             }
+            */
         }
     }
 }

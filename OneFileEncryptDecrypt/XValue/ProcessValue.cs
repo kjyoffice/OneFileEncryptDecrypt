@@ -30,5 +30,13 @@ namespace OneFileEncryptDecrypt.XValue
                 return (1_048_576 * 4); // 4MB;
             }
         }
+
+        public static string CryptoMode_AESCBC
+        {
+            get
+            {
+                return "AESCBC";
+            }
+        }
     }
 }
