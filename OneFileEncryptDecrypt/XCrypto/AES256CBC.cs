@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OneFileEncryptDecrypt.XCrypto
 {
-    public class AES256X
+    public class AES256CBC
     {
         private static void CommonWork(byte[] key, byte[] iv, Aes aes)
         {
@@ -26,7 +26,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             {
                 using (var aes = Aes.Create())
                 {
-                    AES256X.CommonWork(key, iv, aes);
+                    AES256CBC.CommonWork(key, iv, aes);
 
                     using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
                     {
@@ -81,7 +81,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             {
                 using (var aes = Aes.Create())
                 {
-                    AES256X.CommonWork(key, iv, aes);
+                    AES256CBC.CommonWork(key, iv, aes);
 
                     using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
                     {
@@ -125,7 +125,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                                 // CryptographicException
                                 catch (Exception ex)
                                 {
-                                    AES256X.ExceptionTimeSilentSkip(ex);
+                                    AES256CBC.ExceptionTimeSilentSkip(ex);
 
                                     // 오류나면 비번 틀려서 복호화 실패한거로 간주!
                                     streamList.Clear();
