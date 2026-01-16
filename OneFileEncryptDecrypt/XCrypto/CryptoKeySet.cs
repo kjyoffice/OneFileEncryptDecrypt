@@ -50,7 +50,7 @@ namespace OneFileEncryptDecrypt.XCrypto
         }
 
         // HKDF
-        public byte[] CreateSubKey(byte[] masterKey, byte[]? salt, string info, int keyLength)
+        private byte[] CreateSubKey(byte[] masterKey, byte[]? salt, string info, int keyLength)
         {
             var infoUse = Encoding.UTF8.GetBytes(info);
             var digest = new Sha256Digest();
