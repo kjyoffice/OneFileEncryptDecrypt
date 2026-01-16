@@ -10,7 +10,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 {
     public class HashWork
     {
-        public static byte[] CreateSHA512(byte[] source, string title, XModel.ProgressViewer pv)
+        public static byte[] CreateSHA512(byte[] source, string title, XModel.ProgressViewer? pv)
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
@@ -18,7 +18,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 
             using (var hash = SHA512.Create())
             {
-                pv.Start(title, source.Length);
+                pv?.Start(title, source.Length);
 
                 while (offset < source.Length)
                 {
@@ -30,8 +30,8 @@ namespace OneFileEncryptDecrypt.XCrypto
                     offset += readBytes;
 
                     // 진행 표시
-                    pv.AddProgress(readBytes);
-                    pv.ProgressDisplay();
+                    pv?.AddProgress(readBytes);
+                    pv?.ProgressDisplay();
                 }
 
                 hash.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
@@ -39,7 +39,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                 hashList.AddRange(hash.Hash!);
 
                 hash.Clear();
-                pv.Done();
+                pv?.Done();
             }
 
             var result = hashList.ToArray();

@@ -8,7 +8,7 @@ namespace OneFileEncryptDecrypt.XWork
 {
     public class FileWork
     {
-        public static byte[] GetFileByte(string filePath, string title, XModel.ProgressViewer pv)
+        public static byte[] GetFileByte(string filePath, string title, XModel.ProgressViewer? pv)
         {
             var bufferSize = XValue.ProcessValue.BufferChunkSize;
             var buffer = new byte[bufferSize];
@@ -17,7 +17,7 @@ namespace OneFileEncryptDecrypt.XWork
 
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                pv.Start(title, fs.Length);
+                pv?.Start(title, fs.Length);
 
                 while (isLoop == true)
                 {
@@ -29,8 +29,8 @@ namespace OneFileEncryptDecrypt.XWork
                         // buffer.Take(readBytes)
                         allBytes.AddRange(buffer[..readBytes]);
 
-                        pv.AddProgress(readBytes);
-                        pv.ProgressDisplay();
+                        pv?.AddProgress(readBytes);
+                        pv?.ProgressDisplay();
                     }
                     else
                     {
@@ -39,7 +39,7 @@ namespace OneFileEncryptDecrypt.XWork
                 }
 
                 fs.Close();
-                pv.Done();
+                pv?.Done();
             }
 
             var result = allBytes.ToArray();
@@ -47,14 +47,14 @@ namespace OneFileEncryptDecrypt.XWork
             return result;
         }
 
-        public static void WriteFileByte(byte[] source, string saveFilePath, string title, XModel.ProgressViewer pv)
+        public static void WriteFileByte(byte[] source, string saveFilePath, string title, XModel.ProgressViewer? pv)
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
 
             using (var fs = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                pv.Start(title, source.Length);
+                pv?.Start(title, source.Length);
 
                 while (offset < source.Length)
                 {
@@ -65,38 +65,38 @@ namespace OneFileEncryptDecrypt.XWork
                     offset += readBytes;
 
                     // 진행 표시
-                    pv.AddProgress(readBytes);
-                    pv.ProgressDisplay();
+                    pv?.AddProgress(readBytes);
+                    pv?.ProgressDisplay();
                 }
 
                 fs.Close();
-                pv.Done();
+                pv?.Done();
             }
         }
 
         // TODO : ZIP 압축과 해제는 나중에~~ Stream하게 하자..... 나중에~ 나중에 ㅎㅎㅎ
-        public static void ZIPCompression(string sourceDirectoryPath, string zipFilePath, string title, XModel.ProgressViewer pv)
+        public static void ZIPCompression(string sourceDirectoryPath, string zipFilePath, string title, XModel.ProgressViewer? pv)
         {
-            pv.Start(title, 100);
-            pv.ProgressDisplay();
+            pv?.Start(title, 100);
+            pv?.ProgressDisplay();
 
             ZipFile.CreateFromDirectory(sourceDirectoryPath, zipFilePath, CompressionLevel.NoCompression, false);
 
-            pv.AddProgress(100);
-            pv.ProgressDisplay();
-            pv.Done();
+            pv?.AddProgress(100);
+            pv?.ProgressDisplay();
+            pv?.Done();
         }
 
-        public static void ZIPExtract(string sourceFIlePath, string extractDirectoryPath, string title, XModel.ProgressViewer pv)
+        public static void ZIPExtract(string sourceFIlePath, string extractDirectoryPath, string title, XModel.ProgressViewer? pv)
         {
-            pv.Start(title, 100);
-            pv.ProgressDisplay();
+            pv?.Start(title, 100);
+            pv?.ProgressDisplay();
 
             ZipFile.ExtractToDirectory(sourceFIlePath, extractDirectoryPath, true);
 
-            pv.AddProgress(100);
-            pv.ProgressDisplay();
-            pv.Done();
+            pv?.AddProgress(100);
+            pv?.ProgressDisplay();
+            pv?.Done();
         }
 
         // https://en.wikipedia.org/wiki/List_of_file_signatures
