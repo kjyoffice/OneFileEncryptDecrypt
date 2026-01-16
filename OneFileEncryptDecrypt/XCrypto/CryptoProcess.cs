@@ -8,7 +8,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 namespace OneFileEncryptDecrypt.XCrypto
 {
-    public class AES256Process
+    public class CryptoProcess
     {
         public static byte[] CreateIV
         {
