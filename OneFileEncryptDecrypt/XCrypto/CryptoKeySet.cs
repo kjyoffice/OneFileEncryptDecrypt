@@ -73,6 +73,11 @@ namespace OneFileEncryptDecrypt.XCrypto
             this.MasterKey = this.CreateMasterKey(password, salt);
         }
 
+        public CryptoKeySet(XAppSettings.AppSettingsX asx, XModel.CryptoWorkOrder cwo)
+        {
+            this.MasterKey = this.CreateMasterKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
+        }
+
         public byte[] CreateKey(byte[] salt, string info, int keyLength)
         {
             return this.CreateSubKey(this.MasterKey, salt, info, keyLength);
