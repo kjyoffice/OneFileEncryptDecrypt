@@ -49,7 +49,7 @@ namespace OneFileEncryptDecrypt.XWork
         {
             // 암호화 정보 생성
             var cryptoMode = XValue.ProcessValue.CryptoMode_AES256CBC;
-            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(cks.KeyType, cks.KeyIterations, cryptoMode, 1));
+            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(1, cryptoMode, cks.KeyType, cks.KeyIterations));
 
             // 암호화 정보 저장
             File.WriteAllText(cfn.CryptoInfoFilePath, infoText, Encoding.UTF8);
@@ -93,13 +93,11 @@ namespace OneFileEncryptDecrypt.XWork
             // 암호화 정보
             EncryptWork_AES256CBC.CreateAndSaveCryptoInfo(cfn, cks);
 
-            Console.WriteLine(cfn.WorkDirectoryPath);
+            // 파일들 압축
+            EncryptWork_AES256CBC.ZIPCompression(asx, cfn, encryptZIPFilePath, pv);
 
-            //// 파일들 압축
-            //EncryptWork_AESCBC.ZIPCompression(asx, cfn, encryptZIPFilePath, pv);
-
-            //// Success
-            //EncryptWork_AESCBC.SuccessMessage(asx, cwms, cwo, cfn);
+            // Success
+            EncryptWork_AES256CBC.SuccessMessage(asx, cwms, cwo, cfn);
         }
     }
 }
