@@ -97,7 +97,7 @@ namespace OneFileEncryptDecrypt.XCrypto
         {
             var keyIterations = 100_000;
 
-            this.KeyType = "SHA-256 PBKDF2";
+            this.KeyType = "SHA-256 PBKDF2 HKDF";
             this.KeyIterations = keyIterations;
             this.MasterKey = this.CreateMasterKey(password, salt, keyIterations);
         }
