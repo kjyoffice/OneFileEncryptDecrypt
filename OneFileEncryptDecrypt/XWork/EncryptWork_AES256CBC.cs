@@ -55,6 +55,11 @@ namespace OneFileEncryptDecrypt.XWork
             File.WriteAllText(cfn.CryptoInfoFilePath, infoText, Encoding.UTF8);
         }
 
+        private static void CopyCryptoSaltForRecoveryFile(XAppSettings.AppSettingsX asx, XModel.CryptoXFilePath cfn)
+        {
+            File.Copy(asx.Crypto.SaltFilePath, cfn.CryptoSaltForRecoveryFilePath);
+        }
+
         private static void ZIPCompression(XAppSettings.AppSettingsX asx, XModel.CryptoXFilePath cfn, string encryptZIPFilePath, XModel.ProgressViewer pv)
         {
             // 파일들 압축
@@ -92,6 +97,8 @@ namespace OneFileEncryptDecrypt.XWork
             EncryptWork_AES256CBC.SaveEncryptData(asx, cfn, edh, pv);
             // 암호화 정보
             EncryptWork_AES256CBC.CreateAndSaveCryptoInfo(cfn, cks);
+            // Salt 파일 복구용으로 복사
+            EncryptWork_AES256CBC.CopyCryptoSaltForRecoveryFile(asx, cfn);
 
             // 파일들 압축
             EncryptWork_AES256CBC.ZIPCompression(asx, cfn, encryptZIPFilePath, pv);

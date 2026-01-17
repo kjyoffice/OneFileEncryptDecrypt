@@ -12,6 +12,7 @@ namespace OneFileEncryptDecrypt.XModel
         public string OriginalHMACFilePath { get; private set; }
         public string CryptoIVFilePath { get; private set; }
         public string CryptoInfoFilePath { get; private set; }
+        public string CryptoSaltForRecoveryFilePath { get; private set; }
 
         // ----------------------------------------------------------
 
@@ -39,7 +40,8 @@ namespace OneFileEncryptDecrypt.XModel
                     (File.Exists(this.EncryptHMACFilePath) == true) &&
                     (File.Exists(this.OriginalHMACFilePath) == true) &&
                     (File.Exists(this.CryptoIVFilePath) == true) &&
-                    (File.Exists(this.CryptoInfoFilePath) == true)
+                    (File.Exists(this.CryptoInfoFilePath) == true) &&
+                    (File.Exists(this.CryptoSaltForRecoveryFilePath) == true)                    
                 );
             } 
         }
@@ -56,6 +58,7 @@ namespace OneFileEncryptDecrypt.XModel
             this.OriginalHMACFilePath = Path.Combine(workDirPath, $"OriginalHMAC{workFileExt}");            
             this.CryptoIVFilePath = Path.Combine(workDirPath, $"CryptoIV{workFileExt}");
             this.CryptoInfoFilePath = Path.Combine(workDirPath, "CryptoInfo.json");
+            this.CryptoSaltForRecoveryFilePath = Path.Combine(workDirPath, $"CryptoSaltForRecovery{workFileExt}");
         }
 
         public void DeleteAllFile(string sourceFilePath)
@@ -68,7 +71,8 @@ namespace OneFileEncryptDecrypt.XModel
                 this.EncryptHMACFilePath,
                 this.OriginalHMACFilePath,
                 this.CryptoIVFilePath,
-                this.CryptoInfoFilePath
+                this.CryptoInfoFilePath,
+                this.CryptoSaltForRecoveryFilePath
             };
 
             if (sourceFilePath != string.Empty)
