@@ -29,14 +29,12 @@ namespace OneFileEncryptDecrypt
                 {
                     // 암호화 Salt가 없습니다.
                     errorMessage.AddRange(asx.WorkMessage.NotExistCryptoSalt);
-                    errorMessage.Add(string.Empty);
                 }
             }
             else
             {
                 // AppSettings이 없거나 올바르지 않습니다.
                 errorMessage.Add(asx.WorkMessage.EmptyOrWrongAppSettings);
-                errorMessage.Add(string.Empty);
             }
 
             cwms.Error.MessageNow(errorMessage, true);

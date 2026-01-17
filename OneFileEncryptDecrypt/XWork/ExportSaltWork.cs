@@ -8,46 +8,37 @@ namespace OneFileEncryptDecrypt.XWork
 {
     public class ExportSaltWork
     {
-        //private static string CreateBackupFilePath(string filePath)
-        //{
-        //    var dirPath = Path.GetDirectoryName(filePath)!;
-        //    var fileName = Path.GetFileNameWithoutExtension(filePath);
-        //    var fileExt = Path.GetExtension(filePath);
-        //    var dnt = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss_fffff");
-        //    var newFileName = $"{fileName}__Backup__{dnt}{fileExt}";
-        //    var result = Path.Combine(dirPath, newFileName);
+        private static string CreateExportFilePath(string filePath, string exportDirectoryPath)
+        {
+            var callSign = XValue.ProcessValue.ApplicationCallSign;
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var fileExt = Path.GetExtension(filePath);
+            var dnt = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss_fffff");
+            var newFileName = $"{callSign}_{fileName}__{dnt}{fileExt}";
+            var result = Path.Combine(exportDirectoryPath, newFileName);
 
-        //    return result;
-        //}
-
-        //private static void BackupSaltFile(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
-        //{
-        //    if (asx.Crypto.IsExistSaltFile == true)
-        //    {
-        //        var saltFilePath = asx.Crypto.SaltFilePath;
-        //        var bakFilePath = ExportSaltWork.CreateBackupFilePath(saltFilePath);
-
-        //        File.Copy(saltFilePath, bakFilePath);
-
-        //        // 이미 생성된 암호화, 복호화 Salt를 백업했습니다.
-        //        cwms.Warning.MessageNow(asx.WorkMessage.BackupSaltDone, true);
-        //    }
-        //}
+            return result;
+        }
 
         // -----------------------------------------------------------
 
-        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
+        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, string exportDirectoryPath)
         {
-            Console.WriteLine(asx.Crypto.SaltFilePath);
+            var filePath = asx.Crypto.SaltFilePath;
+            var exportFilePath = ExportSaltWork.CreateExportFilePath(filePath, exportDirectoryPath);
 
-            //ExportSaltWork.BackupSaltFile(asx, cwms);
+            if (File.Exists(exportFilePath) == false)
+            {
+                File.Copy(filePath, exportFilePath, true);
 
-            //var saltBT = RandomNumberGenerator.GetBytes(16);
-
-            //File.WriteAllBytes(asx.Crypto.SaltFilePath, saltBT);
-
-            //// 암호화, 복호화 Salt를 생성했습니다.
-            //cwms.Success.MessageNow(asx.WorkMessage.CreateSaltDone);
+                // 암호화, 복호화 Salt를 내보냈습니다.
+                cwms.Success.MessageNow(asx.WorkMessage.ExportSaltDone);
+            }
+            else
+            {
+                // 내보낼 암호화, 복호화 Salt를 저장할 파일이 존재합니다.
+                cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistExportSaltFile);
+            }
         }
     }
 }

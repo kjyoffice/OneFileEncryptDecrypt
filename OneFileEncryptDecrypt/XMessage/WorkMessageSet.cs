@@ -83,6 +83,30 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ExportSaltDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 내보냈습니다." :
+                    $"Export done crypto salt."
+                );
+            }
+        }
+
+        public string AlreadyExistExportSaltFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "내보낼 암호화, 복호화 Salt를 저장할 파일이 존재합니다." :
+                    $"Already exist export crypto salt faile."
+                );
+            }
+        }
+
         public string BackupSaltDone
         {
             get
@@ -395,6 +419,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ExportDirectoryPath
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"내보내기 디렉토리 경로" :
+                    $"Export directory path"
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
@@ -506,6 +542,15 @@ namespace OneFileEncryptDecrypt.XMessage
                 (this.IsHangul == true) ?
                 $"{tkText}지정되지 않은 Mode 입니다." :
                 $"{tkText}Undefined mode."
+            );
+        }
+
+        public string NotExistExportDirectory(string tkText)
+        {
+            return (
+                (this.IsHangul == true) ?
+                $"{tkText}내보내기 디렉토리가 존재하지 않습니다." :
+                $"{tkText}Not exist export directory."
             );
         }
 
