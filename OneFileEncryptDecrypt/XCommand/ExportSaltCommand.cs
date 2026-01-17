@@ -23,9 +23,9 @@ namespace OneFileEncryptDecrypt.XCommand
         {
             var tkText = CommandProcess.IdentifierTokenText(optr);
             var dirPath = optr.GetValueOrDefault<string>();
-            var isExist = ((dirPath != string.Empty) && (Directory.Exists(dirPath) == true));
+            var isExistDir = ((dirPath != string.Empty) && (Directory.Exists(dirPath) == true));
 
-            if (isExist == false)
+            if (isExistDir == false)
             {
                 // 내보내기 디렉토리가 존재하지 않습니다.
                 optr.AddError(asx.WorkMessage.NotExistExportDirectory(tkText));
@@ -46,12 +46,8 @@ namespace OneFileEncryptDecrypt.XCommand
                 (ParseResult pr) =>
                 {
                     var dirPath = (pr.GetValue(optDirPath) ?? string.Empty);
-                    var isExecute = (
-                        (asx.Crypto.IsExistSaltFile == true) &&
-                        ((dirPath != string.Empty) && (Directory.Exists(dirPath) == true))
-                    );
-
-                    if (isExecute == true)
+                    
+                    if (asx.Crypto.IsExistSaltFile == true)
                     {
                         XWork.ExportSaltWork.ExecuteNow(asx, cwms, dirPath);
                     }

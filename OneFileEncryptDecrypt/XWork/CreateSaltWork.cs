@@ -20,7 +20,7 @@ namespace OneFileEncryptDecrypt.XWork
             return result;
         }
 
-        private static void BackupSaltFile(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
+        public static void BackupSaltFile(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
         {
             if (asx.Crypto.IsExistSaltFile == true)
             {

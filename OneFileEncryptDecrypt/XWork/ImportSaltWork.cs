@@ -8,44 +8,14 @@ namespace OneFileEncryptDecrypt.XWork
 {
     public class ImportSaltWork
     {
-        private static string CreateBackupFilePath(string filePath)
+        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, string importFilePath)
         {
-            var dirPath = Path.GetDirectoryName(filePath)!;
-            var fileName = Path.GetFileNameWithoutExtension(filePath);
-            var fileExt = Path.GetExtension(filePath);
-            var dnt = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss_fffff");
-            var newFileName = $"{fileName}__Backup__{dnt}{fileExt}";
-            var result = Path.Combine(dirPath, newFileName);
+            CreateSaltWork.BackupSaltFile(asx, cwms);
 
-            return result;
-        }
+            File.Copy(importFilePath, asx.Crypto.SaltFilePath, true);
 
-        private static void BackupSaltFile(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
-        {
-            if (asx.Crypto.IsExistSaltFile == true)
-            {
-                var saltFilePath = asx.Crypto.SaltFilePath;
-                var bakFilePath = ImportSaltWork.CreateBackupFilePath(saltFilePath);
-
-                File.Copy(saltFilePath, bakFilePath);
-
-                // 이미 생성된 암호화, 복호화 Salt를 백업했습니다.
-                cwms.Warning.MessageNow(asx.WorkMessage.BackupSaltDone, true);
-            }
-        }
-
-        // -----------------------------------------------------------
-
-        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
-        {
-            ImportSaltWork.BackupSaltFile(asx, cwms);
-
-            var saltBT = RandomNumberGenerator.GetBytes(16);
-
-            File.WriteAllBytes(asx.Crypto.SaltFilePath, saltBT);
-
-            // 암호화, 복호화 Salt를 생성했습니다.
-            cwms.Success.MessageNow(asx.WorkMessage.CreateSaltDone);
+            // 암호화, 복호화 Salt를 가져왔습니다.
+            cwms.Success.MessageNow(asx.WorkMessage.ImportSaltDone);
         }
     }
 }

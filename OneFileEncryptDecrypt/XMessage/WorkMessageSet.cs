@@ -83,6 +83,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ImportSaltDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 가져왔습니다." :
+                    $"Import done crypto salt."
+                );
+            }
+        }
+
         public string ExportSaltDone
         {
             get
@@ -427,6 +439,18 @@ namespace OneFileEncryptDecrypt.XMessage
                     (this.IsHangul == true) ?
                     $"내보내기 디렉토리 경로" :
                     $"Export directory path"
+                );
+            }
+        }
+
+        public string ImportFilePath
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"가져오기 파일 경로" :
+                    $"Import file path"
                 );
             }
         }
