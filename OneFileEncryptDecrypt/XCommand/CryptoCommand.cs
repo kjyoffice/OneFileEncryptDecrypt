@@ -8,29 +8,11 @@ namespace OneFileEncryptDecrypt.XCommand
 {
     public class CryptoCommand
     {
-        public static string EncryptCommandName
+        private static Option<string> CreateOptionPassword(bool isEncrypt, XAppSettings.AppSettingsX asx)
         {
-            get
-            {
-                return "encrypt";
-            }
-        }
-
-        public static string DecryptCommandName
-        {
-            get
-            {
-                return "decrypt";
-            }
-        }
-
-        // -------------------------------------------------------------------
-
-        private static Option<string> CreateOptionPassword(string commandName, XAppSettings.AppSettingsX asx)
-        {
-            var result = new Option<string>("--password", "-pw");
+            var result = new Option<string>("--password", "-p");
             // 암호화 비밀번호
-            result.Description = asx.WorkMessage.CryptoPasswordDescription(commandName);
+            result.Description = asx.WorkMessage.CryptoPasswordDescription(isEncrypt);
             result.Required = true;
             result.Validators.Add(optr => CryptoCommand.CreateOptionKeyValidator(optr, asx));
 
@@ -53,20 +35,19 @@ namespace OneFileEncryptDecrypt.XCommand
             }
         }
 
-        private static Option<string> CreateOptionFile(string commandName, XAppSettings.AppSettingsX asx)
+        private static Option<string> CreateOptionFile(bool isEncrypt, XAppSettings.AppSettingsX asx)
         {
             var result = new Option<string>("--file", "-f");
             // 암호화 파일 경로
-            result.Description = asx.WorkMessage.CryptoFileDescription(commandName);
+            result.Description = asx.WorkMessage.CryptoFileDescription(isEncrypt);
             result.Required = true;
-            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, commandName, asx));
+            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx));
 
             return result;
         }
 
-        private static void CreateOptionFileValidator(OptionResult optr, string commandName, XAppSettings.AppSettingsX asx)
+        private static void CreateOptionFileValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
         {
-            var decCmdName = CryptoCommand.DecryptCommandName;
             var tkText = CommandProcess.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
 
@@ -79,21 +60,7 @@ namespace OneFileEncryptDecrypt.XCommand
                 var fi = new FileInfo(filePath);
 
                 // 파일은 일정 크기 이상 안되게 한다
-                if (fi.Length <= maxByte)
-                {
-                    // 파일 경로에서 복호화 할때는 파일 확장자가 .ofedx인지 체크
-                    if (commandName == decCmdName)
-                    {
-                        if (Path.GetExtension(filePath).ToUpper() != ".OFEDX")
-                        {
-                            // 복호화 파일이 올바르지 않습니다.
-                            optr.AddError(asx.WorkMessage.DecryptFileWrong(tkText, commandName));
-                        }
-                        // else - OK
-                    }
-                    // else - OK
-                }
-                else
+                if (fi.Length > maxByte)
                 {
                     // 100 MB 이상의 파일은 지원하지 않습니다.
                     optr.AddError(asx.WorkMessage.CryptoFileBigNotSupport(tkText, maxSizeMB));
@@ -106,18 +73,51 @@ namespace OneFileEncryptDecrypt.XCommand
             }
         }
 
+        private static Option<string> CreateOptionMode(XAppSettings.AppSettingsX asx)
+        {
+            var result = new Option<string>("--mode", "-m");
+            // 암호화 방법을 지정합니다.
+            result.Description = asx.WorkMessage.CryptoModeDescription;
+            result.Required = false;
+            result.Validators.Add(optr => CryptoCommand.CreateOptionModeValidator(optr, asx));
+
+            return result;
+        }
+
+        private static void CreateOptionModeValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
+        {
+            var tkText = CommandProcess.IdentifierTokenText(optr);
+            var cryptoMode = optr.GetValueOrDefault<string>().ToUpper();
+            var isAllow = (
+                (cryptoMode == string.Empty) ||
+                ((cryptoMode != string.Empty) && (cryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC))
+            );
+
+            if (isAllow == false)
+            {
+                // 지정되지 않은 Mode 입니다.
+                optr.AddError(asx.WorkMessage.UndefinedMode(tkText));
+            }
+        }
+
         // ----------------------------------------------------------------------------------------------------------
 
-        public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet, XModel.CryptoWorkOrder> workAction, XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
+        public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet, XModel.CryptoWorkOrder> workAction, XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, bool isEncrypt)
         {
-            var optPW = CryptoCommand.CreateOptionPassword(commandName, asx);
-            var optFile = CryptoCommand.CreateOptionFile(commandName, asx);
+            var optPW = CryptoCommand.CreateOptionPassword(isEncrypt, asx);
+            var optFile = CryptoCommand.CreateOptionFile(isEncrypt, asx);
+            var optMode = CryptoCommand.CreateOptionMode(asx);
             // 파일을 암호화 합니다.
-            var cmdDesc = asx.WorkMessage.CryptoCommandDescription(commandName);
+            var cmdDesc = asx.WorkMessage.CryptoCommandDescription(isEncrypt);
 
             var result = new Command(commandName, cmdDesc);
             result.Options.Add(optPW);
             result.Options.Add(optFile);
+
+            if (isEncrypt == true)
+            {
+                result.Options.Add(optMode);
+            }
 
             result.SetAction(
                 (ParseResult pr) =>
@@ -127,7 +127,8 @@ namespace OneFileEncryptDecrypt.XCommand
                     {
                         var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
                         var filePath = (pr.GetValue(optFile) ?? string.Empty);
-                        var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath);
+                        var cryptoMode = (pr.GetValue(optMode) ?? string.Empty);
+                        var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode, isEncrypt);
 
                         workAction(asx, cwms, cwo);
                     }

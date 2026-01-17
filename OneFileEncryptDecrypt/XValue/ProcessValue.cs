@@ -30,5 +30,37 @@ namespace OneFileEncryptDecrypt.XValue
                 return (1_048_576 * 4); // 4MB;
             }
         }
+
+        public static string CryptoMode_AES256CBC
+        {
+            get
+            {
+                return "AES256CBC";
+            }
+        }
+
+        public static string ApplicationCallSign
+        {
+            get
+            {
+                return "OFED";
+            }
+        }
+
+        public static string WorkFileExtension
+        {
+            get
+            {
+                return ".ofed";
+            }
+        }
+
+        public static string WorkFileExtension_DoneX
+        {
+            get
+            {
+                return ".ofedx";
+            }
+        }
     }
 }

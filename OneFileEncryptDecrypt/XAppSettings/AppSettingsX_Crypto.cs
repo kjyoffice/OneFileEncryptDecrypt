@@ -34,21 +34,8 @@ namespace OneFileEncryptDecrypt.XAppSettings
             get
             {
                 var rndText = Path.GetRandomFileName().Replace(".", string.Empty);
-                var dnt = DateTime.Now.ToString("yyyyMMdd_HHmmss_fffff");
+                var dnt = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss_fffff");
                 var result = $"Work__{dnt}__{rndText}";
-
-                return result;
-            }
-        }
-
-        public XModel.CryptoXFilePath GetCryptoWorkPath
-        {
-            get
-            {
-                var tempDirPath = this.CryptoTempDirectoryPath;
-                var workDirName = this.CreateWorkDirectoryName;
-                var workDirPath = this.CreateXDirectoryPath(true, tempDirPath, workDirName);
-                var result = new XModel.CryptoXFilePath(workDirPath);
 
                 return result;
             }
@@ -74,14 +61,26 @@ namespace OneFileEncryptDecrypt.XAppSettings
 
         public AppSettingsX_Crypto(XAppSettings_Json.AppSettingsX_Crypto_Json? jsonData)
         {
+            var callSign = XValue.ProcessValue.ApplicationCallSign;
+            var workFileExt = XValue.ProcessValue.WorkFileExtension;
             var workDirPath = (jsonData?.WorkDirectoryPath ?? string.Empty);
             var isAllow = ((workDirPath != string.Empty) && (Directory.Exists(workDirPath) == true));
-            var saltDirPathUse = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoSalt");
+            var saltDirPathUse = this.CreateXDirectoryPath(isAllow, workDirPath, $"{callSign}CryptoSalt");
 
             this.IsAllow = isAllow;
             this.SaltDirectoryPath = saltDirPathUse;
-            this.SaltFilePath = Path.Combine(saltDirPathUse, "CryptoSalt.ofed");
-            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoTemp");
+            this.SaltFilePath = Path.Combine(saltDirPathUse, $"CryptoSalt{workFileExt}");
+            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, $"{callSign}CryptoTemp");
+        }
+
+        public XModel.CryptoXFilePath CreateCryptoWorkPath()
+        {
+            var tempDirPath = this.CryptoTempDirectoryPath;
+            var workDirName = this.CreateWorkDirectoryName;
+            var workDirPath = this.CreateXDirectoryPath(true, tempDirPath, workDirName);
+            var result = new XModel.CryptoXFilePath(workDirPath);
+
+            return result;
         }
     }
 }

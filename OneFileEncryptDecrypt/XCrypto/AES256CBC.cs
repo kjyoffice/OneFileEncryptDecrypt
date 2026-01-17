@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace OneFileEncryptDecrypt.XCrypto
 {
-    public class AES256X
+    public class AES256CBC
     {
         private static void CommonWork(byte[] key, byte[] iv, Aes aes)
         {
@@ -16,7 +16,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             aes.IV = iv;
         }
 
-        public static byte[] EncryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer pv)
+        public static byte[] EncryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv)
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
@@ -26,7 +26,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             {
                 using (var aes = Aes.Create())
                 {
-                    AES256X.CommonWork(key, iv, aes);
+                    AES256CBC.CommonWork(key, iv, aes);
 
                     using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
                     {
@@ -34,7 +34,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                         {
                             using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                             {
-                                pv.Start(title, source.Length);
+                                pv?.Start(title, source.Length);
 
                                 while (offset < source.Length)
                                 {
@@ -45,8 +45,8 @@ namespace OneFileEncryptDecrypt.XCrypto
                                     offset += readBytes;
 
                                     // 진행 표시
-                                    pv.AddProgress(readBytes);
-                                    pv.ProgressDisplay();
+                                    pv?.AddProgress(readBytes);
+                                    pv?.ProgressDisplay();
                                 }
 
                                 cs.FlushFinalBlock();
@@ -55,7 +55,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 
                                 cs.Clear();
                                 cs.Close();
-                                pv.Done();
+                                pv?.Done();
                             }
 
                             ms.Close();
@@ -69,7 +69,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             return result.ToArray();
         }
 
-        public static byte[] DecryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer pv)
+        public static byte[] DecryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv)
         {
             var bufferSize = XValue.ProcessValue.BufferChunkSize;
             var buffer = new byte[bufferSize];
@@ -81,7 +81,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             {
                 using (var aes = Aes.Create())
                 {
-                    AES256X.CommonWork(key, iv, aes);
+                    AES256CBC.CommonWork(key, iv, aes);
 
                     using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
                     {
@@ -89,47 +89,36 @@ namespace OneFileEncryptDecrypt.XCrypto
                         {
                             using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                             {
-                                try
-                                {
-                                    // 여긴 복호화니, 들어올 때 크기랑 복호화 후 크기가 다를것임
-                                    // 그래서 마지막에 전체 크기로 바꿔준다 ㅎㅎㅎ
-                                    pv.Start(title, source.Length);
+                                // 여긴 복호화니, 들어올 때 크기랑 복호화 후 크기가 다를것임
+                                // 그래서 마지막에 전체 크기로 바꿔준다 ㅎㅎㅎ
+                                pv?.Start(title, source.Length);
 
-                                    while (isLoop == true)
+                                while (isLoop == true)
+                                {
+                                    var readBytes = cs.Read(buffer, 0, buffer.Length);
+
+                                    totalReadBytes += readBytes;
+
+                                    if (readBytes > 0)
                                     {
-                                        var readBytes = cs.Read(buffer, 0, buffer.Length);
+                                        // buffer.Take(readBytes)
+                                        streamList.AddRange(buffer[..readBytes]);
 
-                                        totalReadBytes += readBytes;
-
-                                        if (readBytes > 0)
-                                        {
-                                            // buffer.Take(readBytes)
-                                            streamList.AddRange(buffer[..readBytes]);
-
-                                            pv.AddProgress(readBytes);
-                                            pv.ProgressDisplay();
-                                        }
-                                        else
-                                        {
-                                            pv.ChangeTotalCount(totalReadBytes);
-                                            pv.ProgressDisplay();
-
-                                            isLoop = false;
-                                        }
+                                        pv?.AddProgress(readBytes);
+                                        pv?.ProgressDisplay();
                                     }
+                                    else
+                                    {
+                                        pv?.ChangeTotalCount(totalReadBytes);
+                                        pv?.ProgressDisplay();
 
-                                    cs.Clear();
-                                    cs.Close();
-                                    pv.Done();
+                                        isLoop = false;
+                                    }
                                 }
-                                catch (CryptographicException ex)
-                                {
-                                    AES256X.ExceptionTimeSilentSkip(ex);
 
-                                    // 오류나면 비번 틀려서 복호화 실패한거로 간주!
-                                    streamList.Clear();
-                                    pv.Fail();
-                                }
+                                cs.Clear();
+                                cs.Close();
+                                pv?.Done();
                             }
 
                             ms.Close();
@@ -143,11 +132,6 @@ namespace OneFileEncryptDecrypt.XCrypto
             var result = streamList.ToArray();
 
             return result;
-        }
-
-        private static void ExceptionTimeSilentSkip(Exception ex)
-        {
-            // Empty
         }
     }
 }

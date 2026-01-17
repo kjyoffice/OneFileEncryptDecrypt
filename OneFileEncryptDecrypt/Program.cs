@@ -1,4 +1,4 @@
-﻿using System.CommandLine;
+using System.CommandLine;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -19,7 +19,7 @@ namespace OneFileEncryptDecrypt
             return result;
         }
 
-        private static void AppSettingDefaultCheck(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, string[] args)
+        private static void AppSettingDefaultCheck(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
         {
             var errorMessage = new List<string>();
 
@@ -27,13 +27,8 @@ namespace OneFileEncryptDecrypt
             {
                 if (asx.Crypto.IsExistSaltFile == false)
                 {
-                    var cmdName = XCommand.CreateSaltCommand.CommandName;
-
-                    if ((args.Length <= 0) || ((args.Length > 0) && (args[0].ToLower() != cmdName)))
-                    {
-                        // 암호화 Salt가 없습니다. 다음의 명령을 실행해주세요.
-                        errorMessage.AddRange(asx.WorkMessage.NotExistCryptoSalt(cmdName));
-                    }
+                    // 암호화 Salt가 없습니다.
+                    errorMessage.AddRange(asx.WorkMessage.NotExistCryptoSalt);
                 }
             }
             else
@@ -47,82 +42,31 @@ namespace OneFileEncryptDecrypt
 
         // -------------------------------------------------------------------------------
 
-        // OneFileEncryptDecrypt encrypt -pw 0123456789 -f d:\Download\Dummy\IMG_2819.JPG
-        // OneFileEncryptDecrypt decrypt -pw 0123456789 -f d:\Download\Dummy\IMG_2819.JPG.ofedx
+        // OneFileEncryptDecrypt encrypt -p 0123456789 -f d:\Download\Dummy\IMG_2819.JPG
+        // OneFileEncryptDecrypt decrypt -p 0123456789 -f d:\Download\Dummy\IMG_2819.JPG.ofedx
         public static void Main(string[] args)
         {
             var asx = Program.GetAppSetting();
             var cwms = new XConsole.ConsoleWriteMessageSet();
 
-            Program.AppSettingDefaultCheck(asx, cwms, args);
+            Program.AppSettingDefaultCheck(asx, cwms);
 
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/syntax
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/how-to-parse-and-invoke
             // 하나의 파일을 암호화 및 복호화 합니다.
             var rc = new RootCommand(asx.WorkMessage.AppDescription);
-            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.EncryptCommandName, XWork.EncryptWork.ExecuteNow, asx, cwms));
-            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.DecryptCommandName, XWork.DecryptWork.ExecuteNow, asx, cwms));
-            rc.Add(XCommand.CreateSaltCommand.CreateCommand(XWork.CreateSaltWork.ExecuteNow, asx, cwms));
+            rc.Add(XCommand.CryptoCommand.CreateCommand("encrypt", XWork.EncryptWork.ExecuteNow, asx, cwms, true));
+            rc.Add(XCommand.CryptoCommand.CreateCommand("decrypt", XWork.DecryptWork.ExecuteNow, asx, cwms, false));
+            rc.Add(XCommand.CreateSaltCommand.CreateCommand(asx, cwms));
+            rc.Add(XCommand.ImportSaltCommand.CreateCommand(asx, cwms));
+            rc.Add(XCommand.ExportSaltCommand.CreateCommand(asx, cwms));
 
             var pr = rc.Parse(args);
-            //var pr = rc.Parse("encrypt --key helloworld --file D:\\Download\\Dummy\\IMG_2819.jpg");
-            //var pr = rc.Parse("encrypt -k helloworld -f D:\\Download\\Dummy\\Hello.txt");
+            //var pr = rc.Parse("encrypt -p helloworld -f D:\\Download\\Dummy\\IMG_2819.jpg");
+            //var pr = rc.Parse("decrypt -p helloworld -f D:\\Download\\Dummy\\IMG_2819.jpg.ofedx");
 
             pr.Invoke();
-
-            // AES-GCM
-            /*
-            var pw = Encoding.UTF8.GetBytes("hello");
-            var salt = Encoding.UTF8.GetBytes("world");
-            var key = XCrypto.AES256Process.CreateKey(pw, salt);
-            var nonce = XCrypto.AES256Process.CreateNonce;
-            var plainText = Encoding.UTF8.GetBytes("Hello World");
-            var aad = Encoding.UTF8.GetBytes("JSON OR TEXT, Want non encrypt data like Header, Info!"); // Optional
-
-            var encryptX = new byte[plainText.Length];
-            var tagX = new byte[16];
-
-            // https://learn.microsoft.com/ko-kr/dotnet/api/system.security.cryptography.aesgcm?view=net-10.0
-            // https://www.scottbrady.io/c-sharp/aes-gcm-dotnet
-            using (var aesGcm = new AesGcm(key, tagX.Length))
-            {
-                aesGcm.Encrypt(
-                    nonce,
-                    plainText,
-                    encryptX,
-                    tagX,
-                    aad
-                );
-            }
-
-            // Save!
-            // nonce
-            // encryptX
-            // tagX
-
-            var decryptX = new byte[encryptX.Length];
-
-            using (var aesGcm = new AesGcm(key, tagX.Length))
-            {
-                aesGcm.Decrypt(
-                    nonce,
-                    encryptX,
-                    tagX,
-                    decryptX,
-                    aad
-                );
-            }
-            // catch (CryptographicException)
-
-            Console.WriteLine(Encoding.UTF8.GetString(plainText));
-            Console.WriteLine(Encoding.UTF8.GetString(decryptX));
-            */
-            // 돌긴 하는데.. GPT왈, 고용량 데이터(Ex 1GB) 암호화는 청크로 잘라서 해란다...
-            // 복호화 역시 청크로 잘린거 복호화 해서 이어 붙여야 한다는건데...
-            // 이건 나중에 차기 버젼에 하기로 하자 ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ ㅠㅠ
-            // 아니면 바운스캐슬로 해야할듯
-            // 암튼 나중에~~~
         }
     }
 }

@@ -47,6 +47,30 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ImportSaltDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 가져옵니다." :
+                    $"Import crypto salt."
+                );
+            }
+        }
+
+        public string ExportSaltDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 내보냅니다." :
+                    $"Export crypto salt."
+                );
+            }
+        }
+
         public string CreateSaltDone
         {
             get
@@ -55,6 +79,42 @@ namespace OneFileEncryptDecrypt.XMessage
                     (this.IsHangul == true) ?
                     "암호화, 복호화 Salt를 생성했습니다." :
                     $"Create done crypto salt."
+                );
+            }
+        }
+
+        public string ImportSaltDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 가져왔습니다." :
+                    $"Import done crypto salt."
+                );
+            }
+        }
+
+        public string ExportSaltDone
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 내보냈습니다." :
+                    $"Export done crypto salt."
+                );
+            }
+        }
+
+        public string AlreadyExistExportSaltFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "내보낼 암호화, 복호화 Salt를 저장할 파일이 존재합니다." :
+                    $"Already exist export crypto salt faile."
                 );
             }
         }
@@ -83,14 +143,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string OriginalChecksum
+        public string OriginalHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "원본파일 Checksum" :
-                    "Original file checksum"
+                    "원본파일 HMAC" :
+                    "Original file HMAC"
                 );
             }
         }
@@ -107,14 +167,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string EncryptChecksum
+        public string EncryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "암호화 파일 Checksum" :
-                    "Encrypt file checksum"
+                    "암호화 파일 HMAC" :
+                    "Encrypt file HMAC"
                 );
             }
         }
@@ -155,14 +215,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public List<string> AlreadyExistEncryptFile
+        public string AlreadyExistEncryptFile
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    new List<string>() { "같은 이름의 암호화된 파일이 있습니다.", "진행이 중단되었습니다." } :
-                    new List<string>() { "Exist same encrypt file", "Stop this process." }
+                    "같은 이름의 암호화된 파일이 있습니다." :
+                    "Exist same encrypt file"
                 );
             }
         }
@@ -191,14 +251,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string DecryptChecksum
+        public string DecryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "복호화 파일 Checksum" :
-                    "Decrypt file checksum"
+                    "복호화 파일 HMAC" :
+                    "Decrypt file HMAC"
                 );
             }
         }
@@ -227,38 +287,38 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string DifferentEncryptChecksum
+        public string DifferentEncryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "암호화 파일 해쉬가 다릅니다." :
-                    "Different encrypt checksum."
+                    "암호화 파일 HMAC이 다릅니다." :
+                    "Different encrypt HMAC."
                 );
             }
         }
 
-        public string DifferentDecryptChecksum
+        public string DifferentDecryptHMAC
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "복호화 파일 해쉬가 다릅니다." :
-                    "Different decrypt checksum."
+                    "복호화 파일 HMAC이 다릅니다." :
+                    "Different decrypt HMAC."
                 );
             }
         }
 
-        public List<string> AlreadyExistDecryptFile
+        public string AlreadyExistDecryptFile
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    new List<string>() { "같은 이름의 복호화된 파일이 있습니다.", "진행이 중단되었습니다." } :
-                    new List<string>() { "Exist same decrypt file", "Stop this process." }
+                    "같은 이름의 복호화된 파일이 있습니다." :
+                    "Exist same decrypt file"
                 );
             }
         }
@@ -275,14 +335,122 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string DecryptFail
+        public string NotEmptyEncryptDirectory
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    "복호화에 실패했습니다." :
-                    "Decrypt fail."
+                    "암호화 작업 디렉토리가 비어있지 않습니다." :
+                    "Not empty encrypt directory"
+                );
+            }
+        }
+
+        public string NotExistDecryptRequireFile
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "존재하지 않는 복호화 필수 파일이 있습니다." :
+                    "Not exist decrypt require file."
+                );
+            }
+        }
+
+        public string DecryptFileWrong
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"복호화 파일이 올바르지 않습니다." :
+                    $"Wrong decrypt file."
+                );
+            }
+        }
+
+        public string WrongDecryptInfo
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"복호화 정보가 올바르지 않습니다." :
+                    $"Wrong decrypt info."
+                );
+            }
+        }
+
+        public string UndefinedEncryptWork
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"지정되지 않은 암호화 작업입니다." :
+                    $"Undefined encrypt work."
+                );
+            }
+        }
+
+        public string UndefinedDecryptWork
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"지정되지 않은 복호화 작업입니다." :
+                    $"Undefined decrypt work."
+                );
+            }
+        }
+
+        public string CryptoModeDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"암호화 방법을 지정합니다. (AESCBC) (기본값, AESCBC)" :
+                    $"Select crypto mode. (AESCBC) (Default, AESCBC)"
+                );
+            }
+        }
+
+        public List<string> NotExistCryptoSalt
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    new List<string>() { $"암호화, 복호화 Salt가 없습니다.", $"새로운 Salt를 생성하거나 Import 해주세요." } :
+                    new List<string>() { $"Not exist crypto salt.", $"Please create new or import salt." }
+                );
+            }
+        }
+
+        public string ExportDirectoryPath
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"내보내기 디렉토리 경로" :
+                    $"Export directory path"
+                );
+            }
+        }
+
+        public string ImportFilePath
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"가져오기 파일 경로" :
+                    $"Import file path"
                 );
             }
         }
@@ -301,17 +469,17 @@ namespace OneFileEncryptDecrypt.XMessage
         }
         */
 
-        private string CryptoCommandText(bool isHangul, string commandName)
+        // ------------------------------------------------
+
+        private string CryptoCommandText(bool isHangul, bool isEncrypt)
         {
-            var encCmdName = XCommand.CryptoCommand.EncryptCommandName;
-            var decCmdName = XCommand.CryptoCommand.DecryptCommandName;
             var result = string.Empty;
 
-            if (commandName == encCmdName)
+            if (isEncrypt == true)
             {
                 result = ((isHangul == true) ? "암호화" : "Encrypt");
             }
-            else if (commandName == decCmdName)
+            else if (isEncrypt == false)
             {
                 result = ((isHangul == true) ? "복호화" : "Decrypt");
             }
@@ -326,19 +494,10 @@ namespace OneFileEncryptDecrypt.XMessage
             this.IsHangul = (languageCode.ToUpper() == "KO-KR");
         }
 
-        public List<string> NotExistCryptoSalt(string commandName)
-        {
-            return (
-                (this.IsHangul == true) ?
-                new List<string>() { $"암호화, 복호화 Salt가 없습니다.", $"다음의 명령을 실행해주세요. {commandName}." } :
-                new List<string>() { $"Not exist crypto salt.", $"Please run {commandName}." }
-            );
-        }
-
-        public string CryptoCommandDescription(string commandName)
+        public string CryptoCommandDescription(bool isEncrypt)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncrypt);
             var result = (
                 (isHangul == true) ?
                 $"파일을 {cmdText} 합니다." :
@@ -348,10 +507,10 @@ namespace OneFileEncryptDecrypt.XMessage
             return result;
         }
 
-        public string CryptoPasswordDescription(string commandName)
+        public string CryptoPasswordDescription(bool isEncrypt)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncrypt);
             var result = (
                 (isHangul == true) ?
                 $"{cmdText} 비밀번호" :
@@ -363,20 +522,17 @@ namespace OneFileEncryptDecrypt.XMessage
 
         public string CryptoPasswordNotAllowLength(string tkText, int keyMinLength)
         {
-            var isHangul = this.IsHangul;
-            var result = (
-                (isHangul == true) ?
+            return (
+                (this.IsHangul == true) ?
                 $"{tkText}비밀번호는 최소 {keyMinLength}자 이상이어야 합니다." :
                 $"{tkText}Want password length minimum {keyMinLength}."
             );
-
-            return result;
         }
 
-        public string CryptoFileDescription(string commandName)
+        public string CryptoFileDescription(bool isEncrypt)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncrypt);
             var result = (
                 (isHangul == true) ?
                 $"{cmdText} 파일 경로" :
@@ -388,46 +544,45 @@ namespace OneFileEncryptDecrypt.XMessage
 
         public string CryptoFileNotExist(string tkText)
         {
-            var isHangul = this.IsHangul;
-            var result = (
-                (isHangul == true) ?
+            return (
+                (this.IsHangul == true) ?
                 $"{tkText}파일이 존재하지 않습니다." :
                 $"{tkText}Not exist file."
             );
-
-            return result;
         }
 
         public string CryptoFileBigNotSupport(string tkText, int maxSizeMB)
         {
-            var isHangul = this.IsHangul;
-            var result = (
-                (isHangul == true) ?
+            return (
+                (this.IsHangul == true) ?
                 $"{tkText}{maxSizeMB} MB 이상의 파일은 지원하지 않습니다." :
                 $"{tkText}Not support {maxSizeMB} MB over file."
             );
-
-            return result;
         }
 
-        public string DecryptFileWrong(string tkText, string commandName)
+        public string UndefinedMode(string tkText)
         {
-            var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
-            var result = (
-                (isHangul == true) ?
-                $"{tkText}{cmdText} 파일이 올바르지 않습니다." :
-                $"{tkText}Wrong {cmdText.ToLower()} file"
+            return (
+                (this.IsHangul == true) ?
+                $"{tkText}지정되지 않은 Mode 입니다." :
+                $"{tkText}Undefined mode."
             );
+        }
 
-            return result;
+        public string NotExistExportDirectory(string tkText)
+        {
+            return (
+                (this.IsHangul == true) ?
+                $"{tkText}내보내기 디렉토리가 존재하지 않습니다." :
+                $"{tkText}Not exist export directory."
+            );
         }
 
         /*
-        public string CryptoCommandDescriptionX(string commandName)
+        public string CryptoCommandDescriptionX(bool isEncrypt)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncrypt);
             var result = (
                 (isHangul == true) ?
                 $"" :
@@ -437,7 +592,7 @@ namespace OneFileEncryptDecrypt.XMessage
             return result;
         }
 
-        public string NotExistCryptoSalt(string commandName)
+        public string NotExistCryptoSalt(bool isEncrypt)
         {
             return (
                 (this.IsHangul == true) ?
