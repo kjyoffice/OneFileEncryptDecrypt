@@ -13,11 +13,22 @@ namespace OneFileEncryptDecrypt.XModel
 
         // ----------------------------------------------------------------
 
-        public CryptoWorkOrder(string cryptoPassword, string sourceFilePath, string cryptoMode)
+        private string CryptoModeConfirm(string cryptoMode, bool isEncrypt)
+        {
+            var defaultCryptoMode = XValue.ProcessValue.CryptoMode_AESCBC;
+            var cryptoModeUse = ((cryptoMode == string.Empty) ? defaultCryptoMode : cryptoMode);
+            var result = ((isEncrypt == true) ? cryptoModeUse : string.Empty).ToUpper();
+
+            return result;
+        }
+
+        // ----------------------------------------------------------------
+
+        public CryptoWorkOrder(string cryptoPassword, string sourceFilePath, string cryptoMode, bool isEncrypt)
         {
             this.CryptoPassword = Encoding.UTF8.GetBytes(cryptoPassword);
             this.SourceFilePath = sourceFilePath;
-            this.CryptoMode = cryptoMode;
+            this.CryptoMode = this.CryptoModeConfirm(cryptoMode, isEncrypt);
         }
 
         public string CreateEncryptZIPFilePath()

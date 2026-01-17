@@ -10,10 +10,6 @@ namespace OneFileEncryptDecrypt.XWork
 {
     public class EncryptWork
     {
-
-
-        // ---------------------------------------------------------------------------------------
-
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
             // 압축할 파일 경로
