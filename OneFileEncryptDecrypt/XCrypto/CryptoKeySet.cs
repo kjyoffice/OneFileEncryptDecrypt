@@ -11,6 +11,8 @@ namespace OneFileEncryptDecrypt.XCrypto
 {
     public class CryptoKeySet
     {
+        public string KeyType { get; private set; }
+        public int KeyIterations { get; private set; }
         private byte[] MasterKey { get; set; }
 
         // ------------------------------------------------------------------------
@@ -57,12 +59,11 @@ namespace OneFileEncryptDecrypt.XCrypto
 
         // ------------------------------------------------------------------------
 
-        private byte[] CreateMasterKey(byte[] password, byte[] salt)
+        private byte[] CreateMasterKey(byte[] password, byte[] salt, int iterations)
         {
             // SHA-256 기반 PBKDF2
             var digest = new Sha256Digest();
             var generator = new Pkcs5S2ParametersGenerator(digest);
-            var iterations = 100_000;
 
             generator.Init(password, salt, iterations);
 
@@ -94,12 +95,16 @@ namespace OneFileEncryptDecrypt.XCrypto
 
         public CryptoKeySet(byte[] password, byte[] salt)
         {
-            this.MasterKey = this.CreateMasterKey(password, salt);
+            var keyIterations = 100_000;
+
+            this.KeyType = "SHA-256 PBKDF2";
+            this.KeyIterations = keyIterations;
+            this.MasterKey = this.CreateMasterKey(password, salt, keyIterations);
         }
 
-        public CryptoKeySet(XAppSettings.AppSettingsX asx, XModel.CryptoWorkOrder cwo)
+        public CryptoKeySet(XAppSettings.AppSettingsX asx, XModel.CryptoWorkOrder cwo) : this(cwo.CryptoPassword, asx.Crypto.GetSalt)
         {
-            this.MasterKey = this.CreateMasterKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
+            // Empty
         }
 
         public byte[] CreateKey(byte[] salt, string info, int keyLength)

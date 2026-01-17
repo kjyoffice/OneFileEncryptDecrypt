@@ -6,11 +6,15 @@ namespace OneFileEncryptDecrypt.XModel_Json
 {
     public class CryptoInfo_Json
     {
-        [Newtonsoft.Json.JsonProperty("cryptoMode")]
+        [Newtonsoft.Json.JsonProperty("keyType")]
+        public string? CryptoKeyType { get; set; }
+        [Newtonsoft.Json.JsonProperty("keyIterations")]
+        public int CryptoKeyIterations { get; set; }
+        [Newtonsoft.Json.JsonProperty("mode")]
         public string? CryptoMode { get; set; }
-        [Newtonsoft.Json.JsonProperty("cryptoVersion")]
+        [Newtonsoft.Json.JsonProperty("version")]
         public int CryptoVersion { get; set; }
-        [Newtonsoft.Json.JsonProperty("cryptoDateTime")]
-        public string? CryptoDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("workDateTime")]
+        public string? WorkDateTime { get; set; }
     }
 }

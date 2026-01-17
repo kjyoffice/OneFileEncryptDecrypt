@@ -8,12 +8,16 @@ namespace OneFileEncryptDecrypt.XModel
     {
         [Newtonsoft.Json.JsonIgnore]
         public bool IsAllow { get; private set; }
-        [Newtonsoft.Json.JsonProperty("cryptoMode")]
+        [Newtonsoft.Json.JsonProperty("keyType")]
+        public string CryptoKeyType { get; private set; }
+        [Newtonsoft.Json.JsonProperty("keyIterations")]
+        public int CryptoKeyIterations { get; private set; }
+        [Newtonsoft.Json.JsonProperty("mode")]
         public string CryptoMode { get; private set; }
-        [Newtonsoft.Json.JsonProperty("cryptoVersion")]
+        [Newtonsoft.Json.JsonProperty("version")]
         public int CryptoVersion { get; private set; }
-        [Newtonsoft.Json.JsonProperty("cryptoDateTime")]
-        public string CryptoDateTime { get; private set; }
+        [Newtonsoft.Json.JsonProperty("workDateTime")]
+        public string WorkDateTime { get; private set; }
 
         // --------------------------------------------
 
@@ -22,34 +26,40 @@ namespace OneFileEncryptDecrypt.XModel
             return dnt.ToString("yyyy-MM-dd HH:mm:ss.fffff");
         }
 
-        private DateTime ConvertDnT(XModel_Json.CryptoInfo_Json? jsonData)
+        private DateTime ConvertWorkDate(XModel_Json.CryptoInfo_Json? jsonData)
         {
-            var cryptoDateTime = (jsonData?.CryptoDateTime ?? string.Empty).ToString();
-            var result = (((cryptoDateTime != string.Empty) && (DateTime.TryParse(cryptoDateTime, out DateTime dnt) == true)) ? dnt : DateTime.MinValue);
+            var workDateTime = (jsonData?.WorkDateTime ?? string.Empty).ToString();
+            var result = (((workDateTime != string.Empty) && (DateTime.TryParse(workDateTime, out DateTime dnt) == true)) ? dnt : DateTime.MinValue);
 
             return result;
         }
 
         // --------------------------------------------
 
-        public CryptoInfo(string cryptoMode, int cryptoVersion)
+        public CryptoInfo(string cryptoKeyType, int cryptoKeyIterations, string cryptoMode, int cryptoVersion)
         {
             this.IsAllow = true;
+            this.CryptoKeyType = cryptoKeyType;
+            this.CryptoKeyIterations = cryptoKeyIterations;
             this.CryptoMode = cryptoMode;
             this.CryptoVersion = cryptoVersion;
-            this.CryptoDateTime = this.ConvertDateText(DateTime.UtcNow);
+            this.WorkDateTime = this.ConvertDateText(DateTime.UtcNow);
         }
 
         public CryptoInfo(XModel_Json.CryptoInfo_Json? jsonData)
         {
+            var cryptoKeyType = (jsonData?.CryptoKeyType ?? string.Empty);
+            var cryptoKeyIterations = (jsonData?.CryptoKeyIterations ?? 0);
             var cryptoMode = (jsonData?.CryptoMode ?? string.Empty).ToString().ToUpper();
             var cryptoVersion = (jsonData?.CryptoVersion ?? 0);
-            var cryptoDateTime = this.ConvertDnT(jsonData);
+            var workDateTime = this.ConvertWorkDate(jsonData);
 
-            this.IsAllow = ((cryptoMode != string.Empty) && (cryptoVersion > 0) && (cryptoDateTime != DateTime.MinValue));
+            this.IsAllow = ((cryptoMode != string.Empty) && (cryptoVersion > 0) && (workDateTime != DateTime.MinValue));
+            this.CryptoKeyType = cryptoKeyType;
+            this.CryptoKeyIterations = cryptoKeyIterations;
             this.CryptoMode = cryptoMode;
             this.CryptoVersion = cryptoVersion;
-            this.CryptoDateTime = this.ConvertDateText(cryptoDateTime);
+            this.WorkDateTime = this.ConvertDateText(workDateTime);
         }
     }
 }

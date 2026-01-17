@@ -45,10 +45,11 @@ namespace OneFileEncryptDecrypt.XWork
             FileWork.WriteFileByte(edh.EncryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
         }
 
-        private static void CreateAndSaveCryptoInfo(XModel.CryptoXFilePath cfn)
+        private static void CreateAndSaveCryptoInfo(XModel.CryptoXFilePath cfn, XCrypto.CryptoKeySet cks)
         {
             // 암호화 정보 생성
-            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(XValue.ProcessValue.CryptoMode_AES256CBC, 1));
+            var cryptoMode = XValue.ProcessValue.CryptoMode_AES256CBC;
+            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(cks.KeyType, cks.KeyIterations, cryptoMode, 1));
 
             // 암호화 정보 저장
             File.WriteAllText(cfn.CryptoInfoFilePath, infoText, Encoding.UTF8);
@@ -90,7 +91,7 @@ namespace OneFileEncryptDecrypt.XWork
             // 암호화
             EncryptWork_AES256CBC.SaveEncryptData(asx, cfn, edh, pv);
             // 암호화 정보
-            EncryptWork_AES256CBC.CreateAndSaveCryptoInfo(cfn);
+            EncryptWork_AES256CBC.CreateAndSaveCryptoInfo(cfn, cks);
 
             Console.WriteLine(cfn.WorkDirectoryPath);
 
