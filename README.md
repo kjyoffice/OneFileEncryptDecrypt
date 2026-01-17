@@ -130,6 +130,14 @@ After change  `appsettings.json` in `crypto.workDirectoryPath` value.
 
 Require execute `createsalt` or `importsalt`.
 
+### Network
 
+Encrypted file send/share to another machine is not recommended.
+
+First concept is `MY MACHINE` in file encrypt and decrypt.
+
+If you know encrypted file send/share network risk.
+
+Please `MY ANOTHER MACHINE` or `TRUST MACHINE`.
 
 
