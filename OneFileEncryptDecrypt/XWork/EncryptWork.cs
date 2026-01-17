@@ -25,7 +25,7 @@ namespace OneFileEncryptDecrypt.XWork
         {
             var cryptoIV = cks.GetCryptoIV;
             // 파일 암호화
-            var encryptData = XCrypto.AES256CBC.EncryptNow(cks.GetCryptoKey, cryptoIV, odh.OriginalData, asx.WorkMessage.EncryptFile, pv);
+            var encryptData = XCrypto.AESCBC.EncryptNow(cks.GetCryptoKey, cryptoIV, odh.OriginalData, asx.WorkMessage.EncryptFile, pv);
             // 암호화 된 데이터 HMAC
             var hmac = XCrypto.HashWork.CreateSHA512HMAC(encryptData, cks.GetCryptoHMACKey, asx.WorkMessage.EncryptHMAC, pv);
             var result = new XModel.EncryptDataHMAC(cryptoIV, encryptData, hmac);

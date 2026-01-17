@@ -323,6 +323,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string UndefinedDecryptWork
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"지정되지 않은 복호화 작업입니다." :
+                    $"Undefined decrypt work."
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
