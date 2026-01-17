@@ -155,14 +155,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public List<string> AlreadyExistEncryptFile
+        public string AlreadyExistEncryptFile
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    new List<string>() { "같은 이름의 암호화된 파일이 있습니다.", "진행이 중단 됐습니다." } :
-                    new List<string>() { "Exist same encrypt file", "Stop this process." }
+                    "같은 이름의 암호화된 파일이 있습니다." :
+                    "Exist same encrypt file"
                 );
             }
         }
@@ -251,14 +251,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public List<string> AlreadyExistDecryptFile
+        public string AlreadyExistDecryptFile
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    new List<string>() { "같은 이름의 복호화된 파일이 있습니다.", "진행이 중단 됐습니다." } :
-                    new List<string>() { "Exist same decrypt file", "Stop this process." }
+                    "같은 이름의 복호화된 파일이 있습니다." :
+                    "Exist same decrypt file"
                 );
             }
         }
@@ -275,14 +275,14 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public List<string> NotEmptyEncryptDirectory
+        public string NotEmptyEncryptDirectory
         {
             get
             {
                 return (
                     (this.IsHangul == true) ?
-                    new List<string>() { "암호화 작업 디렉토리가 비어있지 않습니다.", "진행이 중단 됐습니다." } :
-                    new List<string>() {"Not empty encrypt directory", "Stop this process." }
+                    "암호화 작업 디렉토리가 비어있지 않습니다." :
+                    "Not empty encrypt directory"
                 );
             }
         }
@@ -319,6 +319,18 @@ namespace OneFileEncryptDecrypt.XMessage
                     (this.IsHangul == true) ?
                     $"복호화 정보가 올바르지 않습니다." :
                     $"Wrong decrypt info."
+                );
+            }
+        }
+
+        public string UndefinedEncryptWork
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"지정되지 않은 암호화 작업입니다." :
+                    $"Undefined encrypt work."
                 );
             }
         }
