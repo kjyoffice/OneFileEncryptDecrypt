@@ -347,6 +347,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string CryptoModeDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"암호화 방법을 지정합니다. (AESCBC) (기본값, AESCBC)" :
+                    $"Select crypto mode. (AESCBC) (Default, AESCBC)"
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
@@ -423,14 +435,11 @@ namespace OneFileEncryptDecrypt.XMessage
 
         public string CryptoPasswordNotAllowLength(string tkText, int keyMinLength)
         {
-            var isHangul = this.IsHangul;
-            var result = (
-                (isHangul == true) ?
+            return (
+                (this.IsHangul == true) ?
                 $"{tkText}비밀번호는 최소 {keyMinLength}자 이상이어야 합니다." :
                 $"{tkText}Want password length minimum {keyMinLength}."
             );
-
-            return result;
         }
 
         public string CryptoFileDescription(bool isEncryptCommand)
@@ -448,33 +457,36 @@ namespace OneFileEncryptDecrypt.XMessage
 
         public string CryptoFileNotExist(string tkText)
         {
-            var isHangul = this.IsHangul;
-            var result = (
-                (isHangul == true) ?
+            return (
+                (this.IsHangul == true) ?
                 $"{tkText}파일이 존재하지 않습니다." :
                 $"{tkText}Not exist file."
             );
-
-            return result;
         }
 
         public string CryptoFileBigNotSupport(string tkText, int maxSizeMB)
         {
-            var isHangul = this.IsHangul;
-            var result = (
-                (isHangul == true) ?
+            return (
+                (this.IsHangul == true) ?
                 $"{tkText}{maxSizeMB} MB 이상의 파일은 지원하지 않습니다." :
                 $"{tkText}Not support {maxSizeMB} MB over file."
             );
+        }
 
-            return result;
+        public string UndefinedMode(string tkText)
+        {
+            return (
+                (this.IsHangul == true) ?
+                $"{tkText}지정되지 않은 Mode 입니다." :
+                $"{tkText}Undefined mode."
+            );
         }
 
         /*
         public string CryptoCommandDescriptionX(bool isEncryptCommand)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncryptCommand);
             var result = (
                 (isHangul == true) ?
                 $"" :
