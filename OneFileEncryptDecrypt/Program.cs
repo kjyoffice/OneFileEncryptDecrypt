@@ -19,7 +19,7 @@ namespace OneFileEncryptDecrypt
             return result;
         }
 
-        private static void AppSettingDefaultCheck(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, string[] args)
+        private static void AppSettingDefaultCheck(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
         {
             var errorMessage = new List<string>();
 
@@ -27,19 +27,16 @@ namespace OneFileEncryptDecrypt
             {
                 if (asx.Crypto.IsExistSaltFile == false)
                 {
-                    var cmdName = XCommand.CreateSaltCommand.CommandName;
-
-                    if ((args.Length <= 0) || ((args.Length > 0) && (args[0].ToLower() != cmdName)))
-                    {
-                        // 암호화 Salt가 없습니다. 다음의 명령을 실행해주세요.
-                        errorMessage.AddRange(asx.WorkMessage.NotExistCryptoSalt(cmdName));
-                    }
+                    // 암호화 Salt가 없습니다.
+                    errorMessage.AddRange(asx.WorkMessage.NotExistCryptoSalt);
+                    errorMessage.Add(string.Empty);
                 }
             }
             else
             {
                 // AppSettings이 없거나 올바르지 않습니다.
                 errorMessage.Add(asx.WorkMessage.EmptyOrWrongAppSettings);
+                errorMessage.Add(string.Empty);
             }
 
             cwms.Error.MessageNow(errorMessage, true);
@@ -54,16 +51,17 @@ namespace OneFileEncryptDecrypt
             var asx = Program.GetAppSetting();
             var cwms = new XConsole.ConsoleWriteMessageSet();
 
-            Program.AppSettingDefaultCheck(asx, cwms, args);
+            Program.AppSettingDefaultCheck(asx, cwms);
 
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/syntax
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/how-to-parse-and-invoke
             // 하나의 파일을 암호화 및 복호화 합니다.
             var rc = new RootCommand(asx.WorkMessage.AppDescription);
-            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.EncryptCommandName, XWork.EncryptWork.ExecuteNow, asx, cwms));
-            rc.Add(XCommand.CryptoCommand.CreateCommand(XCommand.CryptoCommand.DecryptCommandName, XWork.DecryptWork.ExecuteNow, asx, cwms));
-            rc.Add(XCommand.CreateSaltCommand.CreateCommand(XWork.CreateSaltWork.ExecuteNow, asx, cwms));
+            rc.Add(XCommand.CryptoCommand.CreateCommand("encrypt", XWork.EncryptWork.ExecuteNow, asx, cwms, true));
+            rc.Add(XCommand.CryptoCommand.CreateCommand("decrypt", XWork.DecryptWork.ExecuteNow, asx, cwms, false));
+            // 암호화, 복호화 Salt를 생성합니다.
+            rc.Add(XCommand.JustSingleCommand.CreateCommand("createsalt", asx.WorkMessage.CreateSaltDescription, XWork.CreateSaltWork.ExecuteNow, asx, cwms));
 
             var pr = rc.Parse(args);
             //var pr = rc.Parse("encrypt -p helloworld -f D:\\Download\\Dummy\\IMG_2819.jpg");

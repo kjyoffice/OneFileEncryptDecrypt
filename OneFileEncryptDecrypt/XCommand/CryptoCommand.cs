@@ -8,24 +8,6 @@ namespace OneFileEncryptDecrypt.XCommand
 {
     public class CryptoCommand
     {
-        public static string EncryptCommandName
-        {
-            get
-            {
-                return "encrypt";
-            }
-        }
-
-        public static string DecryptCommandName
-        {
-            get
-            {
-                return "decrypt";
-            }
-        }
-
-        // -------------------------------------------------------------------
-
         private static Option<string> CreateOptionPassword(bool isEncryptCommand, XAppSettings.AppSettingsX asx)
         {
             var result = new Option<string>("--password", "-p");
@@ -120,9 +102,8 @@ namespace OneFileEncryptDecrypt.XCommand
 
         // ----------------------------------------------------------------------------------------------------------
 
-        public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet, XModel.CryptoWorkOrder> workAction, XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
+        public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet, XModel.CryptoWorkOrder> workAction, XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, bool isEncryptCommand)
         {
-            var isEncryptCommand = (commandName == CryptoCommand.EncryptCommandName);
             var optPW = CryptoCommand.CreateOptionPassword(isEncryptCommand, asx);
             var optFile = CryptoCommand.CreateOptionFile(isEncryptCommand, asx);
             var optMode = CryptoCommand.CreateOptionMode(asx);

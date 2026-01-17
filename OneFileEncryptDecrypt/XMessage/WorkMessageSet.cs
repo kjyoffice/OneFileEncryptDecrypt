@@ -359,6 +359,30 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ExportSaltDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 내보냅니다." :
+                    $"Export crypto salt."
+                );
+            }
+        }
+
+        public List<string> NotExistCryptoSalt
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    new List<string>() { $"암호화, 복호화 Salt가 없습니다.", $"새로운 Salt를 생성하거나 Import 해주세요." } :
+                    new List<string>() { $"Not exist crypto salt.", $"Please create new or import salt." }
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
@@ -396,15 +420,6 @@ namespace OneFileEncryptDecrypt.XMessage
         public WorkMessageSet(string languageCode)
         {
             this.IsHangul = (languageCode.ToUpper() == "KO-KR");
-        }
-
-        public List<string> NotExistCryptoSalt(string commandName)
-        {
-            return (
-                (this.IsHangul == true) ?
-                new List<string>() { $"암호화, 복호화 Salt가 없습니다.", $"다음의 명령을 실행해주세요. {commandName}." } :
-                new List<string>() { $"Not exist crypto salt.", $"Please run {commandName}." }
-            );
         }
 
         public string CryptoCommandDescription(bool isEncryptCommand)
