@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OneFileEncryptDecrypt.XWork
 {
-    public class DecryptWork_AESCBC
+    public class DecryptWork_AES256CBC
     {
         private static void ErrorMessage(XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoXFilePath cfn, string message)
         {
@@ -42,7 +42,7 @@ namespace OneFileEncryptDecrypt.XWork
         private static XModel.OriginalDataHMAC GetOriginalData(XAppSettings.AppSettingsX asx, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.EncryptDataHMAC edh)
         {
             // 파일 복호화
-            var originalData = XCrypto.AESCBC.DecryptNow(cks.GetCryptoKey, edh.CryptoIV, edh.EncryptData, asx.WorkMessage.DecryptFile, pv);
+            var originalData = XCrypto.AES256CBC.DecryptNow(cks.GetCryptoKey, edh.CryptoIV, edh.EncryptData, asx.WorkMessage.DecryptFile, pv);
             // 복호화 된 파일 HMAC 만들기
             var originalHMAC = XCrypto.HashWork.CreateSHA512HMAC(originalData, cks.GetOriginalHMACKey, asx.WorkMessage.DecryptHMAC, pv);
             var result = new XModel.OriginalDataHMAC(originalData, originalHMAC);
@@ -78,32 +78,32 @@ namespace OneFileEncryptDecrypt.XWork
             // 키 셋트 생성
             var cks = new XCrypto.CryptoKeySet(asx, cwo);
             // 암호화 된 파일 읽기
-            var edh = DecryptWork_AESCBC.GetEncryptData(asx, cfn, cks, pv);
+            var edh = DecryptWork_AES256CBC.GetEncryptData(asx, cfn, cks, pv);
 
             // 암호화 된 파일 HMAC 비교
-            if (DecryptWork_AESCBC.IsMatchEncryptHMAC(cfn, edh) == true)
+            if (DecryptWork_AES256CBC.IsMatchEncryptHMAC(cfn, edh) == true)
             {
                 // 파일 복호화
-                var odh = DecryptWork_AESCBC.GetOriginalData(asx, cks, pv, edh);
+                var odh = DecryptWork_AES256CBC.GetOriginalData(asx, cks, pv, edh);
 
-                if (DecryptWork_AESCBC.IsMatchOriginalHMAC(cfn, odh) == true)
+                if (DecryptWork_AES256CBC.IsMatchOriginalHMAC(cfn, odh) == true)
                 {
                     // 원본파일 저장
                     FileWork.WriteFileByte(odh.OriginalData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
 
                     // Success
-                    DecryptWork_AESCBC.SuccessMessage(asx, cwms, cwo, cfn);
+                    DecryptWork_AES256CBC.SuccessMessage(asx, cwms, cwo, cfn);
                 }
                 else
                 {
                     // 복호화 파일 HMAC가 다릅니다.
-                    DecryptWork_AESCBC.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentDecryptHMAC);
+                    DecryptWork_AES256CBC.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentDecryptHMAC);
                 }
             }
             else
             {
                 // 암호화 파일 HMAC가 다릅니다.
-                DecryptWork_AESCBC.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentEncryptHMAC);
+                DecryptWork_AES256CBC.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentEncryptHMAC);
             }
         }
     }

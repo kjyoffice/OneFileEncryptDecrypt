@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OneFileEncryptDecrypt.XCrypto
 {
-    public class AESCBC
+    public class AES256CBC
     {
         private static void CommonWork(byte[] key, byte[] iv, Aes aes)
         {
@@ -26,7 +26,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             {
                 using (var aes = Aes.Create())
                 {
-                    AESCBC.CommonWork(key, iv, aes);
+                    AES256CBC.CommonWork(key, iv, aes);
 
                     using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
                     {
@@ -81,7 +81,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             {
                 using (var aes = Aes.Create())
                 {
-                    AESCBC.CommonWork(key, iv, aes);
+                    AES256CBC.CommonWork(key, iv, aes);
 
                     using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
                     {

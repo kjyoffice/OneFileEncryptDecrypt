@@ -15,7 +15,7 @@ namespace OneFileEncryptDecrypt.XModel
 
         private string CryptoModeConfirm(string cryptoMode, bool isEncrypt)
         {
-            var defaultCryptoMode = XValue.ProcessValue.CryptoMode_AESCBC;
+            var defaultCryptoMode = XValue.ProcessValue.CryptoMode_AES256CBC;
             var cryptoModeUse = ((cryptoMode == string.Empty) ? defaultCryptoMode : cryptoMode);
             var result = ((isEncrypt == true) ? cryptoModeUse : string.Empty).ToUpper();
 

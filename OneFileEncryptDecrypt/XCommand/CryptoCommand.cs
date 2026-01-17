@@ -90,7 +90,7 @@ namespace OneFileEncryptDecrypt.XCommand
             var cryptoMode = optr.GetValueOrDefault<string>().ToUpper();
             var isAllow = (
                 (cryptoMode == string.Empty) ||
-                ((cryptoMode != string.Empty) && (cryptoMode == XValue.ProcessValue.CryptoMode_AESCBC))
+                ((cryptoMode != string.Empty) && (cryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC))
             );
 
             if (isAllow == false)

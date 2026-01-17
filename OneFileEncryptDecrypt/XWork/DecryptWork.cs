@@ -86,10 +86,10 @@ namespace OneFileEncryptDecrypt.XWork
                     if (cfn.IsAllExistDecryptFile == true)
                     {
                         // 복호화 방법 체크
-                        if (ci.CryptoMode == XValue.ProcessValue.CryptoMode_AESCBC)
+                        if (ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC)
                         {
                             // AES-CBC
-                            DecryptWork_AESCBC.ExecuteNow(asx, cwms, cwo, cfn, pv, decryptOriginalFIlePath);
+                            DecryptWork_AES256CBC.ExecuteNow(asx, cwms, cwo, cfn, pv, decryptOriginalFIlePath);
                         }
                         else
                         {

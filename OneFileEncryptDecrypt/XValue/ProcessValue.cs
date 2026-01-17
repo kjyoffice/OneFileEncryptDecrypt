@@ -31,11 +31,11 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
-        public static string CryptoMode_AESCBC
+        public static string CryptoMode_AES256CBC
         {
             get
             {
-                return "AESCBC";
+                return "AES256CBC";
             }
         }
 

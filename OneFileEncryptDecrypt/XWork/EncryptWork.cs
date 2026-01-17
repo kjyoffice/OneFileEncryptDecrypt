@@ -24,10 +24,10 @@ namespace OneFileEncryptDecrypt.XWork
                 if (cfn.IsEmptyDirectory == true)
                 {
                     // 암호화 방법 체크
-                    if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AESCBC)
+                    if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC)
                     {
                         // AES-CBC
-                        EncryptWork_AESCBC.ExecuteNow(asx, cwms, cwo, cfn, encryptZIPFilePath);
+                        EncryptWork_AES256CBC.ExecuteNow(asx, cwms, cwo, cfn, encryptZIPFilePath);
                     }
                     else
                     {
