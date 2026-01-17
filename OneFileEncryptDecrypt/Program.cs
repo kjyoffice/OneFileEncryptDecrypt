@@ -47,8 +47,8 @@ namespace OneFileEncryptDecrypt
 
         // -------------------------------------------------------------------------------
 
-        // OneFileEncryptDecrypt encrypt -pw 0123456789 -f d:\Download\Dummy\IMG_2819.JPG
-        // OneFileEncryptDecrypt decrypt -pw 0123456789 -f d:\Download\Dummy\IMG_2819.JPG.ofedx
+        // OneFileEncryptDecrypt encrypt -p 0123456789 -f d:\Download\Dummy\IMG_2819.JPG
+        // OneFileEncryptDecrypt decrypt -p 0123456789 -f d:\Download\Dummy\IMG_2819.JPG.ofedx
         public static void Main(string[] args)
         {
             var asx = Program.GetAppSetting();
@@ -66,8 +66,8 @@ namespace OneFileEncryptDecrypt
             rc.Add(XCommand.CreateSaltCommand.CreateCommand(XWork.CreateSaltWork.ExecuteNow, asx, cwms));
 
             var pr = rc.Parse(args);
-            //var pr = rc.Parse("encrypt --key helloworld --file D:\\Download\\Dummy\\IMG_2819.jpg");
-            //var pr = rc.Parse("encrypt -k helloworld -f D:\\Download\\Dummy\\Hello.txt");
+            //var pr = rc.Parse("encrypt -p helloworld -f D:\\Download\\Dummy\\IMG_2819.jpg");
+            //var pr = rc.Parse("decrypt -p helloworld -f D:\\Download\\Dummy\\IMG_2819.jpg.ofedx");
 
             pr.Invoke();
         }
