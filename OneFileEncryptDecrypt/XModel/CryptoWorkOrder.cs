@@ -9,6 +9,7 @@ namespace OneFileEncryptDecrypt.XModel
     {
         public byte[] CryptoPassword { get; private set; }
         public string SourceFilePath { get; private set; }
+        public string CryptoMode { get; private set; }
 
         // ----------------------------------------------------------------
 
@@ -16,6 +17,7 @@ namespace OneFileEncryptDecrypt.XModel
         {
             this.CryptoPassword = Encoding.UTF8.GetBytes(cryptoPassword);
             this.SourceFilePath = sourceFilePath;
+            this.CryptoMode = XValue.ProcessValue.CryptoMode_AESCBC;
         }
 
         public string CreateEncryptZIPFilePath()

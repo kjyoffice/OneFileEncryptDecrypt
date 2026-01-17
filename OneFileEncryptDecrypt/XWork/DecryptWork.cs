@@ -28,7 +28,6 @@ namespace OneFileEncryptDecrypt.XWork
             else
             {
                 // 같은 이름의 암호화된 파일이 있습니다.
-                // 진행이 중단되었습니다.
                 cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistDecryptFile);
             }
 
