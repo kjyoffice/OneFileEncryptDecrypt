@@ -77,10 +77,5 @@ namespace OneFileEncryptDecrypt.XModel
         {
             this.FinalMessage(ConsoleColor.Green, "Done");
         }
-
-        public void Fail()
-        {
-            this.FinalMessage(ConsoleColor.Red, "Fail");
-        }
     }
 }
