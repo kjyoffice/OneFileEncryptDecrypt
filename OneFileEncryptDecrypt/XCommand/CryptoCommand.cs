@@ -28,7 +28,7 @@ namespace OneFileEncryptDecrypt.XCommand
 
         private static Option<string> CreateOptionPassword(bool isEncryptCommand, XAppSettings.AppSettingsX asx)
         {
-            var result = new Option<string>("--password", "-pw");
+            var result = new Option<string>("--password", "-p");
             // 암호화 비밀번호
             result.Description = asx.WorkMessage.CryptoPasswordDescription(isEncryptCommand);
             result.Required = true;
