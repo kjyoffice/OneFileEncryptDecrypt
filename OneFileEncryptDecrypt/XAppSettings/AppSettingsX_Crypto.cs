@@ -61,14 +61,16 @@ namespace OneFileEncryptDecrypt.XAppSettings
 
         public AppSettingsX_Crypto(XAppSettings_Json.AppSettingsX_Crypto_Json? jsonData)
         {
+            var callSign = XValue.ProcessValue.ApplicationCallSign;
+            var workFileExt = XValue.ProcessValue.WorkFileExtension;
             var workDirPath = (jsonData?.WorkDirectoryPath ?? string.Empty);
             var isAllow = ((workDirPath != string.Empty) && (Directory.Exists(workDirPath) == true));
-            var saltDirPathUse = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoSalt");
+            var saltDirPathUse = this.CreateXDirectoryPath(isAllow, workDirPath, $"{callSign}CryptoSalt");
 
             this.IsAllow = isAllow;
             this.SaltDirectoryPath = saltDirPathUse;
-            this.SaltFilePath = Path.Combine(saltDirPathUse, "CryptoSalt.ofed");
-            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoTemp");
+            this.SaltFilePath = Path.Combine(saltDirPathUse, $"CryptoSalt{workFileExt}");
+            this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, $"{callSign}CryptoTemp");
         }
 
         public XModel.CryptoXFilePath CreateCryptoWorkPath()

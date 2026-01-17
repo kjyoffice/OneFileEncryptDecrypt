@@ -22,9 +22,10 @@ namespace OneFileEncryptDecrypt.XModel
 
         public string CreateEncryptZIPFilePath()
         {
+            var workDoneFileExt = XValue.ProcessValue.WorkFileExtension_DoneX;
             var sourceFilePath = this.SourceFilePath;
             var dirPath = Path.GetDirectoryName(sourceFilePath)!;
-            var newFileName = (Path.GetFileName(sourceFilePath) + ".ofedx");
+            var newFileName = (Path.GetFileName(sourceFilePath) + workDoneFileExt);
             var result = Path.Combine(dirPath, newFileName);
 
             return result;

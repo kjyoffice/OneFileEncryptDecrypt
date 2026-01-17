@@ -8,13 +8,14 @@ namespace OneFileEncryptDecrypt.XWork
     {
         private static bool IsAllowSourceAndFinalFilePath(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, string decryptOriginalFIlePath)
         {
+            var workDoneFileExt = XValue.ProcessValue.WorkFileExtension_DoneX.ToUpper();
             var result = false;
 
             // 원본파일 역시 존재하면 안된다
             if (File.Exists(decryptOriginalFIlePath) == false)
             {
                 // 파일 확장자 체크랑 ZIP 파일인지 체크한다
-                if ((Path.GetExtension(cwo.SourceFilePath).ToUpper() == ".OFEDX") && (FileWork.IsZIPFileMagicByte(cwo.SourceFilePath) == true))
+                if ((Path.GetExtension(cwo.SourceFilePath).ToUpper() == workDoneFileExt) && (FileWork.IsZIPFileMagicByte(cwo.SourceFilePath) == true))
                 {
                     // OK
                     result = true;

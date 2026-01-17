@@ -48,11 +48,13 @@ namespace OneFileEncryptDecrypt.XModel
 
         public CryptoXFilePath(string workDirPath)
         {
+            var workFileExt = XValue.ProcessValue.WorkFileExtension;
+
             this.WorkDirectoryPath = workDirPath;
-            this.EncryptDataFilePath = Path.Combine(workDirPath, "EncryptData.ofed");
-            this.EncryptHMACFilePath = Path.Combine(workDirPath, "EncryptDataHMAC.ofed");
-            this.OriginalHMACFilePath = Path.Combine(workDirPath, "OriginalHMAC.ofed");            
-            this.CryptoIVFilePath = Path.Combine(workDirPath, "CryptoIV.ofed");
+            this.EncryptDataFilePath = Path.Combine(workDirPath, $"EncryptData{workFileExt}");
+            this.EncryptHMACFilePath = Path.Combine(workDirPath, $"EncryptDataHMAC{workFileExt}");
+            this.OriginalHMACFilePath = Path.Combine(workDirPath, $"OriginalHMAC{workFileExt}");            
+            this.CryptoIVFilePath = Path.Combine(workDirPath, $"CryptoIV{workFileExt}");
             this.CryptoInfoFilePath = Path.Combine(workDirPath, "CryptoInfo.json");
         }
 
