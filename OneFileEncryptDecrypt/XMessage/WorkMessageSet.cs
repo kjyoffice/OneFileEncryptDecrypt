@@ -363,17 +363,15 @@ namespace OneFileEncryptDecrypt.XMessage
 
         // ------------------------------------------------
 
-        private string CryptoCommandText(bool isHangul, string commandName)
+        private string CryptoCommandText(bool isHangul, bool isEncryptCommand)
         {
-            var encCmdName = XCommand.CryptoCommand.EncryptCommandName;
-            var decCmdName = XCommand.CryptoCommand.DecryptCommandName;
             var result = string.Empty;
 
-            if (commandName == encCmdName)
+            if (isEncryptCommand == true)
             {
                 result = ((isHangul == true) ? "암호화" : "Encrypt");
             }
-            else if (commandName == decCmdName)
+            else if (isEncryptCommand == false)
             {
                 result = ((isHangul == true) ? "복호화" : "Decrypt");
             }
@@ -397,10 +395,10 @@ namespace OneFileEncryptDecrypt.XMessage
             );
         }
 
-        public string CryptoCommandDescription(string commandName)
+        public string CryptoCommandDescription(bool isEncryptCommand)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncryptCommand);
             var result = (
                 (isHangul == true) ?
                 $"파일을 {cmdText} 합니다." :
@@ -410,10 +408,10 @@ namespace OneFileEncryptDecrypt.XMessage
             return result;
         }
 
-        public string CryptoPasswordDescription(string commandName)
+        public string CryptoPasswordDescription(bool isEncryptCommand)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncryptCommand);
             var result = (
                 (isHangul == true) ?
                 $"{cmdText} 비밀번호" :
@@ -435,10 +433,10 @@ namespace OneFileEncryptDecrypt.XMessage
             return result;
         }
 
-        public string CryptoFileDescription(string commandName)
+        public string CryptoFileDescription(bool isEncryptCommand)
         {
             var isHangul = this.IsHangul;
-            var cmdText = this.CryptoCommandText(isHangul, commandName);
+            var cmdText = this.CryptoCommandText(isHangul, isEncryptCommand);
             var result = (
                 (isHangul == true) ?
                 $"{cmdText} 파일 경로" :
@@ -473,7 +471,7 @@ namespace OneFileEncryptDecrypt.XMessage
         }
 
         /*
-        public string CryptoCommandDescriptionX(string commandName)
+        public string CryptoCommandDescriptionX(bool isEncryptCommand)
         {
             var isHangul = this.IsHangul;
             var cmdText = this.CryptoCommandText(isHangul, commandName);
@@ -486,7 +484,7 @@ namespace OneFileEncryptDecrypt.XMessage
             return result;
         }
 
-        public string NotExistCryptoSalt(string commandName)
+        public string NotExistCryptoSalt(bool isEncryptCommand)
         {
             return (
                 (this.IsHangul == true) ?

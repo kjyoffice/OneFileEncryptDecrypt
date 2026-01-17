@@ -30,6 +30,7 @@ namespace OneFileEncryptDecrypt.XWork
                     // 암호화 방법 체크
                     if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AESCBC)
                     {
+                        // AES-CBC
                         EncryptWork_AESCBC.ExecuteNow(asx, cwms, cwo, cfn, encryptZIPFilePath);
                     }
                     else

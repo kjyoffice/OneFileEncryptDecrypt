@@ -26,11 +26,11 @@ namespace OneFileEncryptDecrypt.XCommand
 
         // -------------------------------------------------------------------
 
-        private static Option<string> CreateOptionPassword(string commandName, XAppSettings.AppSettingsX asx)
+        private static Option<string> CreateOptionPassword(bool isEncryptCommand, XAppSettings.AppSettingsX asx)
         {
             var result = new Option<string>("--password", "-pw");
             // 암호화 비밀번호
-            result.Description = asx.WorkMessage.CryptoPasswordDescription(commandName);
+            result.Description = asx.WorkMessage.CryptoPasswordDescription(isEncryptCommand);
             result.Required = true;
             result.Validators.Add(optr => CryptoCommand.CreateOptionKeyValidator(optr, asx));
 
@@ -53,11 +53,11 @@ namespace OneFileEncryptDecrypt.XCommand
             }
         }
 
-        private static Option<string> CreateOptionFile(string commandName, XAppSettings.AppSettingsX asx)
+        private static Option<string> CreateOptionFile(bool isEncryptCommand, XAppSettings.AppSettingsX asx)
         {
             var result = new Option<string>("--file", "-f");
             // 암호화 파일 경로
-            result.Description = asx.WorkMessage.CryptoFileDescription(commandName);
+            result.Description = asx.WorkMessage.CryptoFileDescription(isEncryptCommand);
             result.Required = true;
             result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx));
 
@@ -95,10 +95,11 @@ namespace OneFileEncryptDecrypt.XCommand
 
         public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet, XModel.CryptoWorkOrder> workAction, XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms)
         {
-            var optPW = CryptoCommand.CreateOptionPassword(commandName, asx);
-            var optFile = CryptoCommand.CreateOptionFile(commandName, asx);
+            var isEncryptCommand = (commandName == CryptoCommand.EncryptCommandName);
+            var optPW = CryptoCommand.CreateOptionPassword(isEncryptCommand, asx);
+            var optFile = CryptoCommand.CreateOptionFile(isEncryptCommand, asx);
             // 파일을 암호화 합니다.
-            var cmdDesc = asx.WorkMessage.CryptoCommandDescription(commandName);
+            var cmdDesc = asx.WorkMessage.CryptoCommandDescription(isEncryptCommand);
 
             var result = new Command(commandName, cmdDesc);
             result.Options.Add(optPW);
@@ -112,9 +113,12 @@ namespace OneFileEncryptDecrypt.XCommand
                     {
                         var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
                         var filePath = (pr.GetValue(optFile) ?? string.Empty);
-                        var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath);
+                        var cryptoMode = XValue.ProcessValue.CryptoMode_AESCBC;
+                        var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode);
 
-                        workAction(asx, cwms, cwo);
+                        Console.WriteLine(cryptoMode);
+
+                        //workAction(asx, cwms, cwo);
                     }
                 }
             );
