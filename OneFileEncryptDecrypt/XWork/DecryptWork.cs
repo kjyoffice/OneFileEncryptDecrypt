@@ -41,6 +41,15 @@ namespace OneFileEncryptDecrypt.XWork
             FileWork.ZIPExtract(cwo.SourceFilePath, cfn.WorkDirectoryPath, asx.WorkMessage.ZIPExtractFile, pv);
         }
 
+        private static XModel.CryptoInfo GetCryptoInfo(XModel.CryptoXFilePath cfn)
+        {
+            var jsonText = File.ReadAllText(cfn.CryptoInfoFilePath, Encoding.UTF8);
+            var jsonData = JsonWork.ToDataModel<XModel_Json.CryptoInfo_Json>(jsonText);
+            var result = new XModel.CryptoInfo(jsonData);
+
+            return result;
+        }
+
         private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XModel.CryptoXFilePath cfn, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv)
         {
             // 복호화 IV 읽기
@@ -123,45 +132,56 @@ namespace OneFileEncryptDecrypt.XWork
                 // 우선 파일 압축을 해제한다
                 DecryptWork.ZIPExtract(asx, cfn, cwo, pv);
 
-                // 복호화 필수 파일들이 있는지 체크
-                // 아무래도 zip 파일 경로 아무거나 넣으면 일단 압축을 풀거기 때문에 필수 파일이 모두 있는지 체크함
-                if (cfn.IsAllExistDecryptFile == true)
+                // 복호화 정보 받아오기
+                var ci = DecryptWork.GetCryptoInfo(cfn);
+
+                if (ci.IsAllow == true)
                 {
-                    // 키 셋트 생성
-                    var cks = new XCrypto.CryptoKeySet(asx, cwo);
-                    // 암호화 된 파일 읽기
-                    var edh = DecryptWork.GetEncryptData(asx, cfn, cks, pv);
-
-                    // 암호화 된 파일 HMAC 비교
-                    if (DecryptWork.IsMatchEncryptHMAC(cfn, edh) == true)
+                    // 복호화 필수 파일들이 있는지 체크
+                    // 아무래도 zip 파일 경로 아무거나 넣으면 일단 압축을 풀거기 때문에 필수 파일이 모두 있는지 체크함
+                    if (cfn.IsAllExistDecryptFile == true)
                     {
-                        // 파일 복호화
-                        var odh = DecryptWork.GetOriginalData(asx, cks, pv, edh);
+                        // 키 셋트 생성
+                        var cks = new XCrypto.CryptoKeySet(asx, cwo);
+                        // 암호화 된 파일 읽기
+                        var edh = DecryptWork.GetEncryptData(asx, cfn, cks, pv);
 
-                        if (DecryptWork.IsMatchOriginalHMAC(cfn, odh) == true)
+                        // 암호화 된 파일 HMAC 비교
+                        if (DecryptWork.IsMatchEncryptHMAC(cfn, edh) == true)
                         {
-                            // 원본파일 저장
-                            FileWork.WriteFileByte(odh.OriginalData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
+                            // 파일 복호화
+                            var odh = DecryptWork.GetOriginalData(asx, cks, pv, edh);
 
-                            // Success
-                            DecryptWork.SuccessMessage(asx, cwms, cwo, cfn);
+                            if (DecryptWork.IsMatchOriginalHMAC(cfn, odh) == true)
+                            {
+                                // 원본파일 저장
+                                FileWork.WriteFileByte(odh.OriginalData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
+
+                                // Success
+                                DecryptWork.SuccessMessage(asx, cwms, cwo, cfn);
+                            }
+                            else
+                            {
+                                // 복호화 파일 HMAC가 다릅니다.
+                                DecryptWork.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentDecryptHMAC);
+                            }
                         }
                         else
                         {
-                            // 복호화 파일 HMAC가 다릅니다.
-                            DecryptWork.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentDecryptHMAC);
+                            // 암호화 파일 HMAC가 다릅니다.
+                            DecryptWork.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentEncryptHMAC);
                         }
                     }
                     else
                     {
-                        // 암호화 파일 HMAC가 다릅니다.
-                        DecryptWork.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentEncryptHMAC);
+                        // 존재하지 않는 복호화 필수 파일이 있습니다.
+                        DecryptWork.ErrorMessage(cwms, cfn, asx.WorkMessage.NotExistDecryptRequireFile);
                     }
                 }
                 else
                 {
                     // 존재하지 않는 복호화 필수 파일이 있습니다.
-                    DecryptWork.ErrorMessage(cwms, cfn, asx.WorkMessage.NotExistDecryptRequireFile);
+                    DecryptWork.ErrorMessage(cwms, cfn, asx.WorkMessage.WrongDecryptInfo);
                 }
             }
         }

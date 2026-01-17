@@ -106,6 +106,7 @@ namespace OneFileEncryptDecrypt.XWork
                     EncryptWork.SaveEncryptData(asx, cfn, edh, pv);
                     // 암호화 정보
                     EncryptWork.CreateAndSaveCryptoInfo(cfn);
+
                     // 파일들 압축
                     EncryptWork.ZIPCompression(asx, cfn, encryptZIPFilePath, pv);
 

@@ -311,6 +311,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string WrongDecryptInfo
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"복호화 정보가 올바르지 않습니다." :
+                    $"Wrong decrypt info."
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
