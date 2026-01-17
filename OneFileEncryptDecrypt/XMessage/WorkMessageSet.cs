@@ -47,6 +47,30 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ImportSaltDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 가져옵니다." :
+                    $"Import crypto salt."
+                );
+            }
+        }
+
+        public string ExportSaltDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    "암호화, 복호화 Salt를 내보냅니다." :
+                    $"Export crypto salt."
+                );
+            }
+        }
+
         public string CreateSaltDone
         {
             get
@@ -355,18 +379,6 @@ namespace OneFileEncryptDecrypt.XMessage
                     (this.IsHangul == true) ?
                     $"암호화 방법을 지정합니다. (AESCBC) (기본값, AESCBC)" :
                     $"Select crypto mode. (AESCBC) (Default, AESCBC)"
-                );
-            }
-        }
-
-        public string ExportSaltDescription
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "암호화, 복호화 Salt를 내보냅니다." :
-                    $"Export crypto salt."
                 );
             }
         }

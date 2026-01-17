@@ -60,8 +60,9 @@ namespace OneFileEncryptDecrypt
             var rc = new RootCommand(asx.WorkMessage.AppDescription);
             rc.Add(XCommand.CryptoCommand.CreateCommand("encrypt", XWork.EncryptWork.ExecuteNow, asx, cwms, true));
             rc.Add(XCommand.CryptoCommand.CreateCommand("decrypt", XWork.DecryptWork.ExecuteNow, asx, cwms, false));
-            // 암호화, 복호화 Salt를 생성합니다.
-            rc.Add(XCommand.JustSingleCommand.CreateCommand("createsalt", asx.WorkMessage.CreateSaltDescription, XWork.CreateSaltWork.ExecuteNow, asx, cwms));
+            rc.Add(XCommand.CreateSaltCommand.CreateCommand(asx, cwms));
+            rc.Add(XCommand.ImportSaltCommand.CreateCommand(asx, cwms));
+            rc.Add(XCommand.ExportSaltCommand.CreateCommand(asx, cwms));
 
             var pr = rc.Parse(args);
             //var pr = rc.Parse("encrypt -p helloworld -f D:\\Download\\Dummy\\IMG_2819.jpg");
