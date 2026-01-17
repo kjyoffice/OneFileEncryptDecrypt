@@ -21,7 +21,7 @@ namespace OneFileEncryptDecrypt.XWork
             return result;
         }
 
-        private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh)
+        private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh)
         {
             var cryptoIV = cks.GetCryptoIV;
             // 파일 암호화
@@ -64,18 +64,31 @@ namespace OneFileEncryptDecrypt.XWork
             FileWork.ZIPCompression(cfn.WorkDirectoryPath, encryptZIPFilePath, asx.WorkMessage.ZIPCompressionFile, pv);
         }
 
+        private static void SuccessMessage(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn)
+        {
+            // 작업파일 삭제
+            cfn.DeleteAllFile(cwo.SourceFilePath);
+
+            cwms.EmptyLine();
+            // 암호화 비밀번호는 잊으면 안됩니다.
+            // 잊지 않도록 기억해주세요!
+            cwms.Warning.MessageNow(asx.WorkMessage.EncryptPasswordMemoryNotify, true);
+            // 파일을 암호화 했습니다.
+            cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
+        }
+
         // ---------------------------------------------------------------------------------------
 
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
             // 압축할 파일 경로
-            var encryptZIPFilePath = cwo.CreateEncryptZIPFilePath;
+            var encryptZIPFilePath = cwo.CreateEncryptZIPFilePath();
 
             // 압축할 파일이 존재하지 않아야 한다!
             if (File.Exists(encryptZIPFilePath) == false)
             {
                 // 저장 할 파일들 경로생성
-                var cfn = asx.Crypto.GetCryptoWorkPath;
+                var cfn = asx.Crypto.CreateCryptoWorkPath();
 
                 if (cfn.IsEmptyDirectory == true)
                 {
@@ -85,7 +98,7 @@ namespace OneFileEncryptDecrypt.XWork
                     // 원본파일 읽고, HMAC 만들기
                     var odh = EncryptWork.GetOriginalData(asx, cwms, cwo, cks, pv);
                     // 암호화 하고 HMAC 만들기
-                    var edh = EncryptWork.GetEncryptData(asx, cwms, cwo, cks, pv, odh);
+                    var edh = EncryptWork.GetEncryptData(asx, cwms, cks, pv, odh);
 
                     // 원본
                     EncryptWork.SaveOriginalData(cfn, odh);
@@ -96,15 +109,8 @@ namespace OneFileEncryptDecrypt.XWork
                     // 파일들 압축
                     EncryptWork.ZIPCompression(asx, cfn, encryptZIPFilePath, pv);
 
-                    // 작업파일 삭제
-                    cfn.DeleteAllFile(cwo.SourceFilePath);
-
-                    cwms.EmptyLine();
-                    // 암호화 비밀번호는 잊으면 안됩니다.
-                    // 잊지 않도록 기억해주세요!
-                    cwms.Warning.MessageNow(asx.WorkMessage.EncryptPasswordMemoryNotify, true);
-                    // 파일을 암호화 했습니다.
-                    cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
+                    // Success
+                    EncryptWork.SuccessMessage(asx, cwms, cwo, cfn);
                 }
                 else
                 {

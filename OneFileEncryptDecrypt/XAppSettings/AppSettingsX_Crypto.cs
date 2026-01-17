@@ -41,19 +41,6 @@ namespace OneFileEncryptDecrypt.XAppSettings
             }
         }
 
-        public XModel.CryptoXFilePath GetCryptoWorkPath
-        {
-            get
-            {
-                var tempDirPath = this.CryptoTempDirectoryPath;
-                var workDirName = this.CreateWorkDirectoryName;
-                var workDirPath = this.CreateXDirectoryPath(true, tempDirPath, workDirName);
-                var result = new XModel.CryptoXFilePath(workDirPath);
-
-                return result;
-            }
-        }
-
         // --------------------------------------------------------
 
         private string CreateXDirectoryPath(bool isAllow, string dirPath, string dirName)
@@ -82,6 +69,16 @@ namespace OneFileEncryptDecrypt.XAppSettings
             this.SaltDirectoryPath = saltDirPathUse;
             this.SaltFilePath = Path.Combine(saltDirPathUse, "CryptoSalt.ofed");
             this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(isAllow, workDirPath, "OFEDCryptoTemp");
+        }
+
+        public XModel.CryptoXFilePath CreateCryptoWorkPath()
+        {
+            var tempDirPath = this.CryptoTempDirectoryPath;
+            var workDirName = this.CreateWorkDirectoryName;
+            var workDirPath = this.CreateXDirectoryPath(true, tempDirPath, workDirName);
+            var result = new XModel.CryptoXFilePath(workDirPath);
+
+            return result;
         }
     }
 }
