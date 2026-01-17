@@ -6,9 +6,59 @@ namespace OneFileEncryptDecrypt.XWork
 {
     public class DecryptWork
     {
+        private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XModel.CryptoXFilePath cfn, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv)
+        {
+            // 복호화 IV 읽기
+            var cryptoIV = File.ReadAllBytes(cfn.CryptoIVFilePath);
+            // 암호화 된 파일 읽기
+            var encryptData = FileWork.GetFileByte(cfn.EncryptDataFilePath, asx.WorkMessage.ReadFile, pv);
+            // 암호화 된 파일 HMAC 만들기
+            var encryptHMAC = XCrypto.HashWork.CreateSHA512HMAC(encryptData, cks.GetCryptoHMACKey, asx.WorkMessage.EncryptHMAC, pv);
+            var result = new XModel.EncryptDataHMAC(cryptoIV, encryptData, encryptHMAC);
+
+            return result;
+        }
+
+        private static bool IsMatchEncryptHMAC(XModel.CryptoXFilePath cfn, XModel.EncryptDataHMAC edh)
+        {
+            // 암호화된 파일 읽은 후 만들어진 HMAC
+            var encryptHMAC = XCrypto.HashWork.ConvertHashText(edh.EncryptHMAC);
+            // 암호화 할 때 만들어둔 HMAC
+            var encryptHMACChecker = XCrypto.HashWork.ConvertHashText(File.ReadAllBytes(cfn.EncryptHMACFilePath));
+            var result = (encryptHMAC == encryptHMACChecker);
+
+            return result;
+        }
+
+        private static XModel.OriginalDataHMAC GetOriginalData(XAppSettings.AppSettingsX asx, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.EncryptDataHMAC edh)
+        {
+            // 파일 복호화
+            var originalData = XCrypto.AES256CBC.DecryptNow(cks.GetCryptoKey, edh.CryptoIV, edh.EncryptData, asx.WorkMessage.DecryptFile, pv);
+            // 복호화 된 파일 HMAC 만들기
+            var originalHMAC = XCrypto.HashWork.CreateSHA512HMAC(originalData, cks.GetOriginalHMACKey, asx.WorkMessage.DecryptHMAC, pv);
+            var result = new XModel.OriginalDataHMAC(originalData, originalHMAC);
+
+            return result;
+        }
+
+        private static bool IsMatchOriginalHMAC(XModel.CryptoXFilePath cfn, XModel.OriginalDataHMAC odh)
+        {
+            // 복호화 후 HMAC
+            var originalHMAC = XCrypto.HashWork.ConvertHashText(odh.OriginalHMAC);
+            // 암호화 할 때 만들어둔 원본 HMAC
+            var originalHMACChecker = XCrypto.HashWork.ConvertHashText(File.ReadAllBytes(cfn.OriginalHMACFilePath));
+            var result = (originalHMAC == originalHMACChecker);
+
+            return result;
+        }
+
+
+        // ---------------------------------------------------------------------------------------------
+
+
+
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
-            /*
             // 복호화 후 원본파일 경로
             var decryptOriginalFIlePath = cwo.CreateDecryptOriginalFIlePath;
 
@@ -29,63 +79,42 @@ namespace OneFileEncryptDecrypt.XWork
                     // 아무래도 zip 파일 경로 아무거나 넣으면 일단 압축을 풀거기 때문에 필수 파일이 모두 있는지 체크함
                     if (cfn.IsAllExistDecryptFile == true)
                     {
-                        // 원본파일 해쉬 읽기
-                        var originalChecksumChecker = XCrypto.HashWork.ConvertHashText(File.ReadAllBytes(cfn.OriginalChecksumFilePath));
-                        // 암호화 된 파일 해쉬 읽기
-                        var encryptDataChecksumChecker = XCrypto.HashWork.ConvertHashText(File.ReadAllBytes(cfn.EncryptDataChecksumFilePath));
-                        // 복호화 IV 읽기
-                        var cryptoIV = File.ReadAllBytes(cfn.CryptoIVFilePath);
+                        // 키 셋트 생성
+                        var cks = new XCrypto.CryptoKeySet(asx, cwo);
+
                         // 암호화 된 파일 읽기
-                        var encryptData = FileWork.GetFileByte(cfn.EncryptDataFilePath, asx.WorkMessage.ReadFile, pv);
-                        // 암호화 된 파일 해쉬 만들기
-                        var encryptDataChecksum = XCrypto.HashWork.ConvertHashText(XCrypto.HashWork.CreateSHA512(encryptData, asx.WorkMessage.EncryptChecksum, pv));
+                        var edh = DecryptWork.GetEncryptData(asx, cfn, cks, pv);
 
-                        // 암호화 된 파일 해쉬 비교
-                        if (encryptDataChecksum == encryptDataChecksumChecker)
+                        // 암호화 된 파일 HMAC 비교
+                        if (DecryptWork.IsMatchEncryptHMAC(cfn, edh) == true)
                         {
-                            // 복호화 키 생성
-                            var cryptoKey = XCrypto.AES256Process.CreateKey(cwo.CryptoPassword, asx.Crypto.GetSalt);
                             // 파일 복호화
-                            var decryptData = XCrypto.AES256X.DecryptNow(cryptoKey, cryptoIV, encryptData, asx.WorkMessage.DecryptFile, pv);
+                            var odh = DecryptWork.GetOriginalData(asx, cks, pv, edh);
 
-                            // 복호화 데이터가 있으면 일단 정상 비번이라고 간주
-                            if (decryptData.Length > 0)
+                            if (DecryptWork.IsMatchOriginalHMAC(cfn, odh) == true)
                             {
-                                // 암호화 된 파일 해쉬 만들기
-                                var decryptDataChecksum = XCrypto.HashWork.ConvertHashText(XCrypto.HashWork.CreateSHA512(decryptData, asx.WorkMessage.DecryptChecksum, pv));
+                                // 원본파일 저장
+                                FileWork.WriteFileByte(odh.OriginalData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
 
-                                if (decryptDataChecksum == originalChecksumChecker)
-                                {
-                                    // 원본파일 저장
-                                    FileWork.WriteFileByte(decryptData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
+                                // 작업파일 삭제
+                                cfn.DeleteAllFile(cwo.SourceFilePath);
 
-                                    // 작업파일 삭제
-                                    cfn.DeleteAllFile(cwo.SourceFilePath);
-
-                                    cwms.EmptyLine();
-                                    // 파일을 복호화 했습니다.
-                                    cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
-                                }
-                                else
-                                {
-                                    cwms.EmptyLine();
-                                    // 복호화 파일 해쉬가 다릅니다.
-                                    cwms.Error.MessageNow(asx.WorkMessage.DifferentDecryptChecksum);
-                                }
+                                cwms.EmptyLine();
+                                // 파일을 복호화 했습니다.
+                                cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
                             }
                             else
                             {
-                                // 복호화 비번 틀림으로 간주
                                 cwms.EmptyLine();
-                                // 복호화에 실패했습니다.
-                                cwms.Error.MessageNow(asx.WorkMessage.DecryptFail);
+                                // 복호화 파일 HMAC가 다릅니다.
+                                cwms.Error.MessageNow(asx.WorkMessage.DifferentDecryptHMAC);
                             }
                         }
                         else
                         {
                             cwms.EmptyLine();
-                            // 암호화 파일 해쉬가 다릅니다.
-                            cwms.Error.MessageNow(asx.WorkMessage.DifferentEncryptChecksum);
+                            // 암호화 파일 HMAC가 다릅니다.
+                            cwms.Error.MessageNow(asx.WorkMessage.DifferentEncryptHMAC);
                         }
                     }
                     else
@@ -110,7 +139,6 @@ namespace OneFileEncryptDecrypt.XWork
                 // 진행이 중단되었습니다.
                 cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistDecryptFile);
             }
-            */
         }
     }
 }

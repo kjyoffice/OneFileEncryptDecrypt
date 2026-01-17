@@ -275,18 +275,6 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string DecryptFail
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "복호화에 실패했습니다." :
-                    "Decrypt fail."
-                );
-            }
-        }
-
         public List<string> NotEmptyEncryptDirectory
         {
             get
