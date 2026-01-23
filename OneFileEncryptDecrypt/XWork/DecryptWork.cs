@@ -70,7 +70,7 @@ namespace OneFileEncryptDecrypt.XWork
             if (DecryptWork.IsAllowSourceAndFinalFilePath(asx, cwms, cwo, decryptOriginalFIlePath) == true)
             {
                 // 저장 할 파일들 경로생성
-                var cfn = asx.Crypto.CreateCryptoWorkPath();
+                var cfn = asx.CreateCryptoWorkPath();
                 var pv = new XModel.ProgressViewer();
 
                 // 우선 파일 압축을 해제한다

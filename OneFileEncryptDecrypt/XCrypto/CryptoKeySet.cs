@@ -14,6 +14,7 @@ namespace OneFileEncryptDecrypt.XCrypto
         public string KeyType { get; private set; }
         public int KeyIterations { get; private set; }
         private byte[] MasterKey { get; set; }
+        public byte[] CryptoSalt { get; set; }
 
         // ------------------------------------------------------------------------
 
@@ -91,18 +92,30 @@ namespace OneFileEncryptDecrypt.XCrypto
             return result;
         }
 
+        private byte[] CreateSalt(byte[]? salt)
+        {
+            return (((salt != null) && (salt.Length > 0)) ? salt : RandomNumberGenerator.GetBytes(16));
+        }
+
         // ------------------------------------------------------------------------
 
-        public CryptoKeySet(byte[] password, byte[] salt)
+        private CryptoKeySet(byte[] password, byte[]? salt, int dummyX)
         {
+            var saltUse = this.CreateSalt(salt);
             var keyIterations = 100_000;
 
             this.KeyType = "SHA-256 PBKDF2 HKDF";
             this.KeyIterations = keyIterations;
-            this.MasterKey = this.CreateMasterKey(password, salt, keyIterations);
+            this.MasterKey = this.CreateMasterKey(password, saltUse, keyIterations);
+            this.CryptoSalt = saltUse;
         }
 
-        public CryptoKeySet(XAppSettings.AppSettingsX asx, XModel.CryptoWorkOrder cwo) : this(cwo.CryptoPassword, asx.Crypto.GetSalt)
+        public CryptoKeySet(byte[] password, byte[] salt) : this(password, salt, 0)
+        {
+            // Empty
+        }
+
+        public CryptoKeySet(XModel.CryptoWorkOrder cwo) : this(cwo.CryptoPassword, null, 0)
         {
             // Empty
         }

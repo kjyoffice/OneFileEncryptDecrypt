@@ -19,7 +19,7 @@ namespace OneFileEncryptDecrypt.XWork
             if (File.Exists(encryptZIPFilePath) == false)
             {
                 // 저장 할 파일들 경로생성
-                var cfn = asx.Crypto.CreateCryptoWorkPath();
+                var cfn = asx.CreateCryptoWorkPath();
 
                 if (cfn.IsEmptyDirectory == true)
                 {
