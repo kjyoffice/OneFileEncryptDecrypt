@@ -1,6 +1,8 @@
-<h1 align="center">OneFileEncryptDecrypt</h1>
-<h3 align="center">One file encrypt decrypt in my machine.</h3>
-<h3 align="center">Protect my important file.</h3>
+# OneFileEncryptDecrypt
+
+### One file encrypt decrypt in my machine.
+
+### Protect my important file.
 
 ## Require
 
@@ -9,6 +11,8 @@
 ## Optional
 
 VisualStudio 2026 or Higher
+
+VisualStudio Code with C# Extension
 
 ## Get Started
 
@@ -51,14 +55,6 @@ OneFileEncryptDecrypt.exe
 
 ## Using
 
-### CreateSalt
-
-- Create crypto salt.
-
-```bash
-OneFileEncryptDecrypt createsalt
-```
-
 ### Encrypt
 
 - Encrypt file
@@ -77,59 +73,6 @@ OneFileEncryptDecrypt decrypt -p <PASSWORD> -f <ENCRYPT_FILE_PATH>
 OneFileEncryptDecrypt decrypt --password <PASSWORD> --file <ENCRYPT_FILE_PATH>
 ```
 
-### ExportSalt
-
-- Export crypto salt.
-
-```bash
-OneFileEncryptDecrypt exportsalt -d <EXPORT_DIRECTORY_PATH>
-OneFileEncryptDecrypt exportsalt --directory <EXPORT_DIRECTORY_PATH>
-```
-
-### ImportSalt
-
-- Import crypto salt.
-
-```bash
-OneFileEncryptDecrypt exportsalt -f <EXPORTED_SALT_FILEPATH>
-OneFileEncryptDecrypt exportsalt --file <EXPORTED_SALT_FILEPATH>
-```
-
-## Check Point.
-
-### Crypto Salt Location
-
-Crypto salt stored system specific location.
-
-Default location is application sub directory.
-
-If you change location?
-
-`exportsalt` after check to `appsettings.json` in `crypto.workDirectoryPath` value.
-
-- Sub directory (Default)
-
-```json
-{
-	"crypto": {
-		"workDirectoryPath": "."
-	}
-}
-```
-- Specific location
-
-```json
-{
-	"crypto": {
-        "workDirectoryPath": "C:\\Dir1\\Dir2"
-	}
-}
-```
-
-After change  `appsettings.json` in `crypto.workDirectoryPath` value.
-
-Require execute `createsalt` or `importsalt`.
-
 ### Network
 
 Encrypted file send/share to another machine is not recommended.
@@ -139,5 +82,17 @@ First concept is `MY MACHINE` in file encrypt and decrypt.
 If you know encrypted file send/share network risk.
 
 Please `MY ANOTHER MACHINE` or `TRUST MACHINE`.
+
+## Change Log
+
+### 2026-01-23
+
+Delete system salt.
+
+Every encrypt time create new salt use.
+
+And salt is include encrypt result file.
+
+
 
 

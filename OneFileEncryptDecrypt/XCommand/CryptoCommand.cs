@@ -122,16 +122,12 @@ namespace OneFileEncryptDecrypt.XCommand
             result.SetAction(
                 (ParseResult pr) =>
                 {
-                    // Salt 파일은 필수로 있어야 한다!
-                    if (asx.Crypto.IsExistSaltFile == true)
-                    {
-                        var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
-                        var filePath = (pr.GetValue(optFile) ?? string.Empty);
-                        var cryptoMode = (pr.GetValue(optMode) ?? string.Empty);
-                        var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode, isEncrypt);
+                    var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
+                    var filePath = (pr.GetValue(optFile) ?? string.Empty);
+                    var cryptoMode = (pr.GetValue(optMode) ?? string.Empty);
+                    var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode, isEncrypt);
 
-                        workAction(asx, cwms, cwo);
-                    }
+                    workAction(asx, cwms, cwo);
                 }
             );
 
