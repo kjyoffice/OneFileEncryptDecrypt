@@ -71,14 +71,22 @@ namespace OneFileEncryptDecrypt.XWork
             cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
         }
 
+        private static XCrypto.CryptoKeySet CreateCryptoKeySet(XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn)
+        {
+            // Salt 정보 받아오기
+            var salt = File.ReadAllBytes(cfn.CryptoSaltFilePath);
+            // 키 셋트 생성
+            var result = new XCrypto.CryptoKeySet(cwo, salt);
+
+            return result;
+        }
+
         // --------------------------------------------------------
 
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn, XModel.ProgressViewer pv, string decryptOriginalFIlePath)
         {
-            Console.WriteLine("복호화 고고고");
-            /*
             // 키 셋트 생성
-            var cks = new XCrypto.CryptoKeySet(cwo);
+            var cks = DecryptWork_AES256CBC.CreateCryptoKeySet(cwo, cfn);
             // 암호화 된 파일 읽기
             var edh = DecryptWork_AES256CBC.GetEncryptData(asx, cfn, cks, pv);
 
@@ -107,7 +115,6 @@ namespace OneFileEncryptDecrypt.XWork
                 // 암호화 파일 HMAC가 다릅니다.
                 DecryptWork_AES256CBC.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentEncryptHMAC);
             }
-            */
         }
     }
 }

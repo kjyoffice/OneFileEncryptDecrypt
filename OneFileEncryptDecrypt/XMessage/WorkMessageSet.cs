@@ -35,102 +35,6 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public string CreateSaltDescription
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "암호화, 복호화 Salt를 생성합니다." :
-                    $"Create crypto salt."
-                );
-            }
-        }
-
-        public string ImportSaltDescription
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "암호화, 복호화 Salt를 가져옵니다." :
-                    $"Import crypto salt."
-                );
-            }
-        }
-
-        public string ExportSaltDescription
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "암호화, 복호화 Salt를 내보냅니다." :
-                    $"Export crypto salt."
-                );
-            }
-        }
-
-        public string CreateSaltDone
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "암호화, 복호화 Salt를 생성했습니다." :
-                    $"Create done crypto salt."
-                );
-            }
-        }
-
-        public string ImportSaltDone
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "암호화, 복호화 Salt를 가져왔습니다." :
-                    $"Import done crypto salt."
-                );
-            }
-        }
-
-        public string ExportSaltDone
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "암호화, 복호화 Salt를 내보냈습니다." :
-                    $"Export done crypto salt."
-                );
-            }
-        }
-
-        public string AlreadyExistExportSaltFile
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "내보낼 암호화, 복호화 Salt를 저장할 파일이 존재합니다." :
-                    $"Already exist export crypto salt faile."
-                );
-            }
-        }
-
-        public string BackupSaltDone
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    "이미 생성된 암호화, 복호화 Salt를 백업했습니다." :
-                    "Already have crypto salt is backup."
-                );
-            }
-        }
-
         public string ReadFile
         {
             get
@@ -419,42 +323,6 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
-        public List<string> NotExistCryptoSalt
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    new List<string>() { $"암호화, 복호화 Salt가 없습니다.", $"새로운 Salt를 생성하거나 Import 해주세요." } :
-                    new List<string>() { $"Not exist crypto salt.", $"Please create new or import salt." }
-                );
-            }
-        }
-
-        public string ExportDirectoryPath
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    $"내보내기 디렉토리 경로" :
-                    $"Export directory path"
-                );
-            }
-        }
-
-        public string ImportFilePath
-        {
-            get
-            {
-                return (
-                    (this.IsHangul == true) ?
-                    $"가져오기 파일 경로" :
-                    $"Import file path"
-                );
-            }
-        }
-
         /*
         public string AppDescription
         {
@@ -566,15 +434,6 @@ namespace OneFileEncryptDecrypt.XMessage
                 (this.IsHangul == true) ?
                 $"{tkText}지정되지 않은 Mode 입니다." :
                 $"{tkText}Undefined mode."
-            );
-        }
-
-        public string NotExistExportDirectory(string tkText)
-        {
-            return (
-                (this.IsHangul == true) ?
-                $"{tkText}내보내기 디렉토리가 존재하지 않습니다." :
-                $"{tkText}Not exist export directory."
             );
         }
 

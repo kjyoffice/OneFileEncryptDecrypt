@@ -110,7 +110,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             this.CryptoSalt = saltUse;
         }
 
-        public CryptoKeySet(byte[] password, byte[] salt) : this(password, salt, 0)
+        public CryptoKeySet(XModel.CryptoWorkOrder cwo, byte[] salt) : this(cwo.CryptoPassword, salt, 0)
         {
             // Empty
         }
