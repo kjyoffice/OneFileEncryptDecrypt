@@ -100,6 +100,15 @@ namespace OneFileEncryptDecrypt.XCommand
             }
         }
 
+        private static Option<string> CreateOptionIsUIX(XAppSettings.AppSettingsX asx)
+        {
+            var result = new Option<string>("--isuix");
+            result.Description = "Support UIX Mode";
+            result.Required = false;
+
+            return result;
+        }
+
         // ----------------------------------------------------------------------------------------------------------
 
         public static Command CreateCommand(string commandName, Action<XAppSettings.AppSettingsX, XConsole.ConsoleWriteMessageSet, XModel.CryptoWorkOrder> workAction, XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, bool isEncrypt)
@@ -107,6 +116,7 @@ namespace OneFileEncryptDecrypt.XCommand
             var optPW = CryptoCommand.CreateOptionPassword(isEncrypt, asx);
             var optFile = CryptoCommand.CreateOptionFile(isEncrypt, asx);
             var optMode = CryptoCommand.CreateOptionMode(asx);
+            var optIsUIX = CryptoCommand.CreateOptionIsUIX(asx);
             // 파일을 암호화 합니다.
             var cmdDesc = asx.WorkMessage.CryptoCommandDescription(isEncrypt);
 
@@ -118,6 +128,8 @@ namespace OneFileEncryptDecrypt.XCommand
             {
                 result.Options.Add(optMode);
             }
+
+            result.Options.Add(optIsUIX);
 
             result.SetAction(
                 (ParseResult pr) =>

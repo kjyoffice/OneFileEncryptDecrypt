@@ -323,6 +323,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string ProgramExitPressEnter
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"<<< 프로그램 종료를 위해서는 Enter를 쳐주세요. >>>" :
+                    $"<<< Program exist press Enter. >>>"
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {

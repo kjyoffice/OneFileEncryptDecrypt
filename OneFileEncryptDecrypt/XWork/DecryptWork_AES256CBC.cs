@@ -69,6 +69,9 @@ namespace OneFileEncryptDecrypt.XWork
             cwms.EmptyLine();
             // 파일을 복호화 했습니다.
             cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
+
+            // Final Success!
+            asx.FinalSuccessSign();
         }
 
         private static XCrypto.CryptoKeySet CreateCryptoKeySet(XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn)
