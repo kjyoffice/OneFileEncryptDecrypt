@@ -1,29 +1,33 @@
 # OneFileEncryptDecrypt
 
-### One file encrypt decrypt in my machine.
+One file encrypt decrypt in my machine.
 
-### Protect my important file.
+Protect my important file.
 
-## Require
+## Build Require
 
 .NET 10
 
-## Optional
+## Optional, Code edit
 
-VisualStudio 2026 or Higher
+VisualStudio 2026
+
+OR
 
 VisualStudio Code with C# Extension
 
-## Get Started
+## Build
 
 ### 1. Clone this repository.
 
-### 2-1. VisualStudio Build
+### 2. Build, Select one under 2-1 or 2-2
+
+### 2-1. VisualStudio
 
 - Open solution
 - Build
 
-### 2-2. Command Line Build 
+### 2-2. Command Line 
 
 - Move clone directory
 

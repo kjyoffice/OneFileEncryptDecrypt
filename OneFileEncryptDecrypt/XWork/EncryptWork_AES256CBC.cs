@@ -78,6 +78,9 @@ namespace OneFileEncryptDecrypt.XWork
             cwms.Warning.MessageNow(asx.WorkMessage.EncryptPasswordMemoryNotify, true);
             // 파일을 암호화 했습니다.
             cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
+
+            // Final Success!
+            asx.FinalSuccessSign();
         }
 
         // ----------------------------------------------------------------------------------------------------------------------------

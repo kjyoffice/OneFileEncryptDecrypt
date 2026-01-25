@@ -10,11 +10,31 @@ namespace OneFileEncryptDecrypt
 {
     public class Program
     {
+        private static bool IsExecuteArgsEnableUIXMode(string[] args)
+        {
+            var argsUse = (new List<string>(args)).Concat(Enumerable.Range(0, 3).Select(x => string.Empty)).Select(x => x.ToUpper()).ToList();
+            var result = false;
+
+            for (var i = 0; i < argsUse.Count; i++)
+            {
+                if ((argsUse[i] == "--ISUIX") && (argsUse[(i + 1)] == "TRUE"))
+                {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        // ----------------------------------------------------------------
+
         // OneFileEncryptDecrypt encrypt -p 0123456789 -f d:\Download\Dummy\IMG_2819.JPG
         // OneFileEncryptDecrypt decrypt -p 0123456789 -f d:\Download\Dummy\IMG_2819.JPG.ofedx
         public static void Main(string[] args)
         {
-            var asx = new XAppSettings.AppSettingsX();
+            var isUIXMode = Program.IsExecuteArgsEnableUIXMode(args);
+            var asx = new XAppSettings.AppSettingsX(isUIXMode);
             var cwms = new XConsole.ConsoleWriteMessageSet();
 
             // https://learn.microsoft.com/ko-kr/dotnet/standard/commandline/
@@ -30,6 +50,14 @@ namespace OneFileEncryptDecrypt
             //var pr = rc.Parse("decrypt -p helloworld -f D:\\Download\\Dummy\\IMG_2819.jpg.ofedx");
 
             pr.Invoke();
+
+            if ((asx.IsUIXMode == true) && (asx.IsFinalSuccess == false))
+            {
+                Console.Out.WriteLine(string.Empty);
+                // 프로그램 종료를 위해서는 Enter를 쳐주세요.
+                Console.Out.WriteLine(asx.WorkMessage.ProgramExitPressEnter);
+                Console.In.ReadLine();
+            }
         }
     }
 }

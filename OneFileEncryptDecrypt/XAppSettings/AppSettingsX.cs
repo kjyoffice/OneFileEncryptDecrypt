@@ -9,6 +9,8 @@ namespace OneFileEncryptDecrypt.XAppSettings
     {
         public string CryptoTempDirectoryPath { get; private set; }
         public XMessage.WorkMessageSet WorkMessage { get; private set; }
+        public bool IsUIXMode { get; private set; }
+        public bool IsFinalSuccess { get; private set; }
 
         // --------------------------------------------
 
@@ -40,7 +42,7 @@ namespace OneFileEncryptDecrypt.XAppSettings
 
         // --------------------------------------------
 
-        public AppSettingsX()
+        public AppSettingsX(bool isUIXMode)
         {
             var callSign = XValue.ProcessValue.ApplicationCallSign;
             var langCode = CultureInfo.CurrentUICulture.Name;
@@ -48,6 +50,8 @@ namespace OneFileEncryptDecrypt.XAppSettings
 
             this.CryptoTempDirectoryPath = this.CreateXDirectoryPath(workDirPath, $"{callSign}CryptoTemp");
             this.WorkMessage = new XMessage.WorkMessageSet(langCode);
+            this.IsUIXMode = isUIXMode;
+            this.IsFinalSuccess = false;
         }
 
         public XModel.CryptoXFilePath CreateCryptoWorkPath()
@@ -58,6 +62,11 @@ namespace OneFileEncryptDecrypt.XAppSettings
             var result = new XModel.CryptoXFilePath(workDirPath);
 
             return result;
+        }
+
+        public void FinalSuccessSign()
+        {
+            this.IsFinalSuccess = true;
         }
     }
 }

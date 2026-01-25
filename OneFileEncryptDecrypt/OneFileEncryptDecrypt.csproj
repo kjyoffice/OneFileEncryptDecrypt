@@ -10,6 +10,9 @@
 	<Version>1.0.0.1</Version>
 	<AssemblyVersion>1.0.0.2</AssemblyVersion>
 	<FileVersion>1.0.0.3</FileVersion>
+	<Title>$(AssemblyName)</Title>
+	<PackageProjectUrl>https://github.com/kjyoffice/OneFileEncryptDecrypt</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/kjyoffice/OneFileEncryptDecrypt</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
