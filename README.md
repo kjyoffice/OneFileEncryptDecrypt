@@ -87,6 +87,12 @@ If you know encrypted file send/share network risk.
 
 Please `MY ANOTHER MACHINE` or `TRUST MACHINE`.
 
+## UI
+
+Please check this repository.
+
+- [OneFileEncryptDecrypt.UIX](https://github.com/kjyoffice/OneFileEncryptDecrypt.UIX)
+
 ## Change Log
 
 ### 2026-01-23
