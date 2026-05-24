@@ -41,12 +41,12 @@ namespace OneFileEncryptDecrypt.XCommand
             // 암호화 파일 경로
             result.Description = asx.WorkMessage.CryptoFileDescription(isEncrypt);
             result.Required = true;
-            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx));
+            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx, isEncrypt));
 
             return result;
         }
 
-        private static void CreateOptionFileValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
+        private static void CreateOptionFileValidator(OptionResult optr, XAppSettings.AppSettingsX asx, bool isEncrypt)
         {
             var tkText = CommandProcess.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
@@ -54,16 +54,20 @@ namespace OneFileEncryptDecrypt.XCommand
             // 파일이 존재하는지 체크
             if ((filePath != string.Empty) && (File.Exists(filePath) == true))
             {
-                var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
-                // 1048576 : 1024 * 1024
-                var maxByte = (1_048_576L * (maxSizeMB + 1));
-                var fi = new FileInfo(filePath);
-
-                // 파일은 일정 크기 이상 안되게 한다
-                if (fi.Length > maxByte)
+                // 암호화 할때만 용량을 체크한다
+                if (isEncrypt == true)
                 {
-                    // 100 MB 이상의 파일은 지원하지 않습니다.
-                    optr.AddError(asx.WorkMessage.CryptoFileBigNotSupport(tkText, maxSizeMB));
+                    var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
+                    // 1048576 : 1024 * 1024
+                    var maxByte = (1_048_576L * (maxSizeMB + 1));
+                    var fi = new FileInfo(filePath);
+
+                    // 파일은 일정 크기 이상 안되게 한다
+                    if (fi.Length > maxByte)
+                    {
+                        // 100 MB 이상의 파일은 지원하지 않습니다.
+                        optr.AddError(asx.WorkMessage.CryptoFileBigNotSupport(tkText, maxSizeMB));
+                    }
                 }
             }
             else
