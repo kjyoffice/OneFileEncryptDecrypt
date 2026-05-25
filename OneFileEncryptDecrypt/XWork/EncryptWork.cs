@@ -15,6 +15,16 @@ namespace OneFileEncryptDecrypt.XWork
             // 압축할 파일 경로
             var encryptZIPFilePath = cwo.CreateEncryptZIPFilePath();
 
+            cwms.Success.MessageNow("Encrypt", true);
+            cwms.EmptyLine();
+            cwms.Warning.MessageNow("[Source File] ");
+            cwms.Success.MessageNow(cwo.SourceFilePath, true);
+            cwms.Warning.MessageNow("[Target File] ");
+            cwms.Success.MessageNow(encryptZIPFilePath, true);
+            cwms.Warning.MessageNow("[Mode] ");
+            cwms.Success.MessageNow(cwo.CryptoMode, true);
+            cwms.EmptyLine();
+
             // 압축할 파일이 존재하지 않아야 한다!
             if (File.Exists(encryptZIPFilePath) == false)
             {
