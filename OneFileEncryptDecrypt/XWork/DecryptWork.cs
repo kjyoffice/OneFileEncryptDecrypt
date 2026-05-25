@@ -23,13 +23,13 @@ namespace OneFileEncryptDecrypt.XWork
                 else
                 {
                     // 복호화 파일이 올바르지 않습니다.
-                    cwms.Error.MessageNow(asx.WorkMessage.DecryptFileWrong);
+                    cwms.Error.MessageNow(asx.WorkMessage.DecryptFileWrong, true);
                 }
             }
             else
             {
                 // 같은 이름의 암호화된 파일이 있습니다.
-                cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistDecryptFile);
+                cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistDecryptFile, true);
             }
 
             return result;
@@ -56,7 +56,7 @@ namespace OneFileEncryptDecrypt.XWork
             cfn.DeleteAllFile(string.Empty);
 
             cwms.EmptyLine();
-            cwms.Error.MessageNow(message);
+            cwms.Error.MessageNow(message, true);
         }
 
         // ---------------------------------------------------------------------------------------------

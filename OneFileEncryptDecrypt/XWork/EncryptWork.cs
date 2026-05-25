@@ -32,19 +32,19 @@ namespace OneFileEncryptDecrypt.XWork
                     else
                     {
                         // 지정되지 않은 암호화 작업입니다.
-                        cwms.Error.MessageNow(asx.WorkMessage.UndefinedEncryptWork);
+                        cwms.Error.MessageNow(asx.WorkMessage.UndefinedEncryptWork, true);
                     }
                 }
                 else
                 {
                     // 암호화 작업 디렉토리가 비어있지 않습니다.
-                    cwms.Error.MessageNow(asx.WorkMessage.NotEmptyEncryptDirectory);
+                    cwms.Error.MessageNow(asx.WorkMessage.NotEmptyEncryptDirectory, true);
                 }
             }
             else
             {
                 // 같은 이름의 암호화된 파일이 있습니다.
-                cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistEncryptFile);
+                cwms.Error.MessageNow(asx.WorkMessage.AlreadyExistEncryptFile, true);
             }
         }
     }

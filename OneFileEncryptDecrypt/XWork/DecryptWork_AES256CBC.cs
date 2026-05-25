@@ -12,7 +12,7 @@ namespace OneFileEncryptDecrypt.XWork
             cfn.DeleteAllFile(string.Empty);
 
             cwms.EmptyLine();
-            cwms.Error.MessageNow(message);
+            cwms.Error.MessageNow(message, true);
         }
 
         private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XModel.CryptoXFilePath cfn, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv)
@@ -68,7 +68,8 @@ namespace OneFileEncryptDecrypt.XWork
 
             cwms.EmptyLine();
             // 파일을 복호화 했습니다.
-            cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
+            cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone, true);
+            cwms.EmptyLine();
 
             // Final Success!
             asx.FinalSuccessSign();
