@@ -39,6 +39,14 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
+        public static string CryptoMode_AES256GCM
+        {
+            get
+            {
+                return "AES256GCM";
+            }
+        }
+
         public static string ApplicationCallSign
         {
             get

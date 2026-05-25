@@ -17,13 +17,19 @@ namespace OneFileEncryptDecrypt.XWork
             return result;
         }
 
-        private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh)
+        private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh)
         {
             var cryptoIV = cks.GetCryptoIV;
             var encryptData = new List<byte>();
 
             // 파일 암호화
+            if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC)
+            {
             XCrypto.AES256CBC.EncryptNow(cks.GetCryptoKey, cryptoIV, odh.OriginalData, asx.WorkMessage.EncryptFile, pv, encryptData);
+            }
+            else if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM)
+            {
+            }
 
             var encryptDataUse = encryptData.ToArray();
             // 암호화 된 데이터 HMAC
@@ -99,7 +105,7 @@ namespace OneFileEncryptDecrypt.XWork
             // 원본파일 읽고, HMAC 만들기
             var odh = EncryptWork_AES256CBC.GetOriginalData(asx, cwms, cwo, cks, pv);
             // 암호화 하고 HMAC 만들기
-            var edh = EncryptWork_AES256CBC.GetEncryptData(asx, cwms, cks, pv, odh);
+            var edh = EncryptWork_AES256CBC.GetEncryptData(asx, cwms, cwo, cks, pv, odh);
 
             // 원본
             EncryptWork_AES256CBC.SaveOriginalData(cfn, odh);
