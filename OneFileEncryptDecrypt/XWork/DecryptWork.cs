@@ -93,6 +93,7 @@ namespace OneFileEncryptDecrypt.XWork
                     // 아무래도 zip 파일 경로 아무거나 넣으면 일단 압축을 풀거기 때문에 필수 파일이 모두 있는지 체크함
                     if (cfn.IsAllExistDecryptFile == true)
                     {
+                        cwms.EmptyLine();
                         cwms.Warning.MessageNow("[Mode] ");
                         cwms.Success.MessageNow(ci.CryptoMode, true);
                         cwms.Warning.MessageNow("[Version] ");
