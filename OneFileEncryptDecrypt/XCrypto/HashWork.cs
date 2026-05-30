@@ -10,8 +10,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 {
     public class HashWork
     {
-        // Keep!
-        private static byte[] CreateSHA512(byte[] source, string title, XModel.ProgressViewer? pv)
+        public static byte[] CreateSHA512(byte[] source, string title, XModel.ProgressViewer? pv)
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
