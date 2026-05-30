@@ -106,8 +106,9 @@ namespace OneFileEncryptDecrypt.XWork
 
         // ----------------------------------------------------------------------------------------------------------------------------
 
-        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn, string encryptZIPFilePath, int cryptoVersion)
+        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn, string encryptZIPFilePath)
         {
+            var cryptoVersion = XValue.ProcessValue.CryptoVersion1;
             var pv = new XModel.ProgressViewer();
             // 키 셋트 생성 (salt는 신규 생성)
             var cks = new XCrypto.CryptoKeySet(cwo);

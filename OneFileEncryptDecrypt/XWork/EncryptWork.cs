@@ -43,13 +43,11 @@ namespace OneFileEncryptDecrypt.XWork
 
                 if (cfn.IsEmptyDirectory == true)
                 {
-                    var cryptoVersion = XValue.ProcessValue.CryptoVersion1;
-
                     // 암호화 방법 체크
                     if ((cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) || (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM))
                     {
                         // AES256 CBC / GCM
-                        EncryptWork_AES256.ExecuteNow(asx, cwms, cwo, cfn, encryptZIPFilePath, cryptoVersion);
+                        EncryptWork_AES256.ExecuteNow(asx, cwms, cwo, cfn, encryptZIPFilePath);
                     }
                     else
                     {

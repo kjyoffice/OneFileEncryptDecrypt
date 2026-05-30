@@ -103,10 +103,10 @@ namespace OneFileEncryptDecrypt.XWork
                         cwms.EmptyLine();
 
                         // 복호화 방법 체크
-                        if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) && (ci.CryptoVersion == cryptoVersion))
+                        if (((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) || (ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM)) && (ci.CryptoVersion == cryptoVersion))
                         {
-                            // AES-CBC
-                            DecryptWork_AES256.ExecuteNow(asx, cwms, cwo, cfn, pv, decryptOriginalFIlePath);
+                            // AES256 CBC / GCM
+                            DecryptWork_AES256.ExecuteNow(asx, cwms, cwo, cfn, pv, decryptOriginalFIlePath, ci);
                         }
                         else
                         {
