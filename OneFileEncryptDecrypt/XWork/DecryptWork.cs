@@ -93,6 +93,8 @@ namespace OneFileEncryptDecrypt.XWork
                     // 아무래도 zip 파일 경로 아무거나 넣으면 일단 압축을 풀거기 때문에 필수 파일이 모두 있는지 체크함
                     if (cfn.IsAllExistDecryptFile == true)
                     {
+                        var cryptoVersion = XValue.ProcessValue.CryptoVersion1;
+
                         cwms.EmptyLine();
                         cwms.Warning.MessageNow("[Mode] ");
                         cwms.Success.MessageNow(ci.CryptoMode, true);
@@ -101,7 +103,7 @@ namespace OneFileEncryptDecrypt.XWork
                         cwms.EmptyLine();
 
                         // 복호화 방법 체크
-                        if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) && (ci.CryptoVersion == 1))
+                        if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) && (ci.CryptoVersion == cryptoVersion))
                         {
                             // AES-CBC
                             DecryptWork_AES256CBC.ExecuteNow(asx, cwms, cwo, cfn, pv, decryptOriginalFIlePath);

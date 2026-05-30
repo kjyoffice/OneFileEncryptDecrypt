@@ -70,5 +70,13 @@ namespace OneFileEncryptDecrypt.XValue
                 return ".ofedx";
             }
         }
+
+        public static int CryptoVersion1
+        {
+            get
+            {
+                return 1;
+            }
+        }
     }
 }

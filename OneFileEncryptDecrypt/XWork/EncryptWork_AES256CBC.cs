@@ -49,7 +49,8 @@ namespace OneFileEncryptDecrypt.XWork
         {
             // 암호화 정보 생성
             var cryptoMode = XValue.ProcessValue.CryptoMode_AES256CBC;
-            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(1, cryptoMode, cks.KeyType, cks.KeyIterations));
+            var cryptoVersion = XValue.ProcessValue.CryptoVersion1;
+            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(cryptoVersion, cryptoMode, cks.KeyType, cks.KeyIterations));
 
             // 암호화 정보 저장
             File.WriteAllText(cfn.CryptoInfoFilePath, infoText, Encoding.UTF8);
