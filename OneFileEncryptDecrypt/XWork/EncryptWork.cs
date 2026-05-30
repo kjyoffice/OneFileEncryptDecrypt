@@ -12,10 +12,13 @@ namespace OneFileEncryptDecrypt.XWork
     {
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
+            var appTitle = XValue.ProcessValue.ApplicationPublicTitle;
             // 압축할 파일 경로
             var encryptZIPFilePath = cwo.CreateEncryptZIPFilePath();
 
-            cwms.Success.MessageNow("Encrypt", true);
+            cwms.Success.MessageNow(appTitle);
+            cwms.Normal.MessageNow(" - ");
+            cwms.Warning.MessageNow("Encrypt", true);
             cwms.EmptyLine();
             cwms.Warning.MessageNow("[Source File] ");
             cwms.Success.MessageNow(cwo.SourceFilePath, true);

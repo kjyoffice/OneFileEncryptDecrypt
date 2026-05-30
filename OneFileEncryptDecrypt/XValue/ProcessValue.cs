@@ -47,6 +47,14 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
+        public static string ApplicationPublicTitle
+        {
+            get
+            {
+                return "OneFileEncryptDecrypt";
+            }
+        }
+
         public static string ApplicationCallSign
         {
             get
