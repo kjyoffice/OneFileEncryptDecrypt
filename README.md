@@ -68,6 +68,13 @@ OneFileEncryptDecrypt encrypt -p <PASSWORD> -f <ENCRYPT_FILE_PATH>
 OneFileEncryptDecrypt encrypt --password <PASSWORD> --file <ENCRYPT_FILE_PATH>
 ```
 
+- Encrypt file with encrypt mode
+
+```bash
+OneFileEncryptDecrypt encrypt -p <PASSWORD> -f <ENCRYPT_FILE_PATH> -m <ENCRYPT_MODE>
+OneFileEncryptDecrypt encrypt --password <PASSWORD> --file <ENCRYPT_FILE_PATH> --mode <ENCRYPT_MODE>
+```
+
 ### Decrypt
 
 - Decrypt file
@@ -94,6 +101,10 @@ Please check this repository.
 - [OneFileEncryptDecrypt.UIX](https://github.com/kjyoffice/OneFileEncryptDecrypt.UIX)
 
 ## Change Log
+
+### 2026-05-30
+
+Add new encrypt mode. AES256 GCM.
 
 ### 2026-01-23
 
