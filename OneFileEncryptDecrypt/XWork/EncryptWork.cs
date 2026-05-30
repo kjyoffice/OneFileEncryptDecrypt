@@ -25,6 +25,16 @@ namespace OneFileEncryptDecrypt.XWork
             cwms.Success.MessageNow(cwo.CryptoMode, true);
             cwms.EmptyLine();
 
+            // TODO : 테스트때 필요시 활성화 
+            // 이 부분 활성화 하면 실제 암호화때 원본파일 삭제하는거 비활성화
+            // - 코드 찾기용 : cfn.DeleteAllFile(cwo.SourceFilePath);
+            /*
+            if (File.Exists(encryptZIPFilePath) == true)
+            {
+                File.Delete(encryptZIPFilePath);
+            }
+            */
+
             // 압축할 파일이 존재하지 않아야 한다!
             if (File.Exists(encryptZIPFilePath) == false)
             {
