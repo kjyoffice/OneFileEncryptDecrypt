@@ -28,6 +28,9 @@ namespace OneFileEncryptDecrypt
         // ----------------------------------------------------------------
 
         // OneFileEncryptDecrypt encrypt -p 0123456789 -f D:\Download\Dummy\IMG_2819.jpg
+        // OneFileEncryptDecrypt encrypt -p 0123456789 -f D:\Download\Dummy\IMG_2819.jpg -m aes256cbc
+        // OneFileEncryptDecrypt encrypt -p 0123456789 -f D:\Download\Dummy\IMG_2819.jpg -m aes256gcm
+        //
         // OneFileEncryptDecrypt decrypt -p 0123456789 -f D:\Download\Dummy\IMG_2819.jpg.ofedx
         public static void Main(string[] args)
         {
