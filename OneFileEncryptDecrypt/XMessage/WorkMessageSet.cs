@@ -317,8 +317,8 @@ namespace OneFileEncryptDecrypt.XMessage
             {
                 return (
                     (this.IsHangul == true) ?
-                    $"암호화 방법을 지정합니다. (AESCBC) (기본값, AESCBC)" :
-                    $"Select crypto mode. (AESCBC) (Default, AESCBC)"
+                    $"암호화 방법을 지정합니다. (AES256CBC / AES256GCM) (기본값, AES256CBC)" :
+                    $"Select crypto mode. (AES256CBC / AES256GCM) (Default, AES256CBC)"
                 );
             }
         }
