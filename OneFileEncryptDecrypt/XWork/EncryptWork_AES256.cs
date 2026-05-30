@@ -43,6 +43,7 @@ namespace OneFileEncryptDecrypt.XWork
             }
             else
             {
+                // 이 메소드에서는 이 부분이 잡히지 않는다고 가정함!
                 result = Array.Empty<byte>();
             }
 

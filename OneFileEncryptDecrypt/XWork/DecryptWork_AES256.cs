@@ -51,18 +51,20 @@ namespace OneFileEncryptDecrypt.XWork
 
         private static byte[] GetOriginalData_Work(XAppSettings.AppSettingsX asx, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.EncryptDataHMAC edh, XModel.CryptoInfo ci)
         {
+            var cryptoVersion = XValue.ProcessValue.CryptoVersion1;
             byte[] result;
 
-            if (ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC)
+            if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) && (ci.CryptoVersion == cryptoVersion))
             {
                 result = XCrypto.AES256CBC.DecryptNow(edh.EncryptData, cks.GetCryptoKey, edh.CryptoIV, asx.WorkMessage.DecryptFile, pv);
             }
-            else if (ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM)
+            else if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM) && (ci.CryptoVersion == cryptoVersion))
             {
                 result = XCrypto.AES256GCM.DecryptNow(edh.EncryptData, cks.GetCryptoKey, cks.NonceSize, null, asx.WorkMessage.DecryptFile, pv);
             }
             else
             {
+                // 이 메소드에서는 이 부분이 잡히지 않는다고 가정함!
                 result = Array.Empty<byte>();
             }
 
