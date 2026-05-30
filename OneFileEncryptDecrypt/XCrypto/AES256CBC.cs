@@ -16,7 +16,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             aes.IV = iv;
         }
 
-        public static byte[] EncryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv) 
+        public static byte[] EncryptNow(byte[] source, byte[] key, byte[] iv, string title, XModel.ProgressViewer? pv) 
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
@@ -71,7 +71,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             return result;
         }
 
-        public static byte[] DecryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv)
+        public static byte[] DecryptNow(byte[] source, byte[] key, byte[] iv, string title, XModel.ProgressViewer? pv)
         {
             var bufferSize = XValue.ProcessValue.BufferChunkSize;
             var buffer = new byte[bufferSize];
