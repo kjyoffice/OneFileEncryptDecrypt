@@ -10,7 +10,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 {
     public class AES256GCM
     {
-        public static byte[] EncryptNow(byte[] source, byte[] key, byte[] nonce, byte[] aad, string title, XModel.ProgressViewer? pv)
+        public static byte[] EncryptNow(byte[] source, byte[] key, byte[] nonce, byte[]? aad, string title, XModel.ProgressViewer? pv)
         {
             using (var outStream = new MemoryStream())
             {
@@ -77,7 +77,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             }
         }
 
-        public static byte[] DecryptNow(byte[] source, byte[] key, int nonceSize, byte[] aad, string title, XModel.ProgressViewer? pv)
+        public static byte[] DecryptNow(byte[] source, byte[] key, int nonceSize, byte[]? aad, string title, XModel.ProgressViewer? pv)
         {
             using (var outStream = new MemoryStream())
             {
