@@ -16,10 +16,11 @@ namespace OneFileEncryptDecrypt.XCrypto
             aes.IV = iv;
         }
 
-        public static void EncryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv, List<byte> encryptData) 
+        public static byte[] EncryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv) 
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
+            var encryptData = new List<byte>();
 
             if (source.Length > 0)
             {
@@ -64,14 +65,19 @@ namespace OneFileEncryptDecrypt.XCrypto
                     aes.Clear();
                 }
             }
+
+            var result = encryptData.ToArray();
+
+            return result;
         }
 
-        public static void DecryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv, List<byte> streamList)
+        public static byte[] DecryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv)
         {
             var bufferSize = XValue.ProcessValue.BufferChunkSize;
             var buffer = new byte[bufferSize];
             var totalReadBytes = 0;
             var isLoop = true;
+            var streamList = new List<byte>();
 
             if (source.Length > 0)
             {
@@ -124,6 +130,10 @@ namespace OneFileEncryptDecrypt.XCrypto
                     aes.Clear();
                 }
             }
+
+            var result = streamList.ToArray();
+
+            return result;
         }
     }
 }

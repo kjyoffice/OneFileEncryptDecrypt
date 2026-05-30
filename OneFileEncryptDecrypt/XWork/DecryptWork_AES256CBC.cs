@@ -41,15 +41,10 @@ namespace OneFileEncryptDecrypt.XWork
 
         private static XModel.OriginalDataHMAC GetOriginalData(XAppSettings.AppSettingsX asx, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.EncryptDataHMAC edh)
         {
-            var originalData = new List<byte>();
-
-            // 파일 복호화
-            XCrypto.AES256CBC.DecryptNow(cks.GetCryptoKey, edh.CryptoIV, edh.EncryptData, asx.WorkMessage.DecryptFile, pv, originalData);
-
-            var originalDataUse = originalData.ToArray();
+            var originalData = XCrypto.AES256CBC.DecryptNow(cks.GetCryptoKey, edh.CryptoIV, edh.EncryptData, asx.WorkMessage.DecryptFile, pv);
             // 복호화 된 파일 HMAC 만들기
-            var originalHMAC = XCrypto.HashWork.CreateSHA512HMAC(originalDataUse, cks.GetOriginalHMACKey, asx.WorkMessage.DecryptHMAC, pv);
-            var result = new XModel.OriginalDataHMAC(originalDataUse, originalHMAC);
+            var originalHMAC = XCrypto.HashWork.CreateSHA512HMAC(originalData, cks.GetOriginalHMACKey, asx.WorkMessage.DecryptHMAC, pv);
+            var result = new XModel.OriginalDataHMAC(originalData, originalHMAC);
 
             return result;
         }

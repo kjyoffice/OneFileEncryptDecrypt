@@ -20,21 +20,11 @@ namespace OneFileEncryptDecrypt.XWork
         private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh)
         {
             var cryptoIV = cks.GetCryptoIV;
-            var encryptData = new List<byte>();
-
             // 파일 암호화
-            if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC)
-            {
-            XCrypto.AES256CBC.EncryptNow(cks.GetCryptoKey, cryptoIV, odh.OriginalData, asx.WorkMessage.EncryptFile, pv, encryptData);
-            }
-            else if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM)
-            {
-            }
-
-            var encryptDataUse = encryptData.ToArray();
+            var encryptData = XCrypto.AES256CBC.EncryptNow(cks.GetCryptoKey, cryptoIV, odh.OriginalData, asx.WorkMessage.EncryptFile, pv);
             // 암호화 된 데이터 HMAC
-            var hmac = XCrypto.HashWork.CreateSHA512HMAC(encryptDataUse, cks.GetCryptoHMACKey, asx.WorkMessage.EncryptHMAC, pv);
-            var result = new XModel.EncryptDataHMAC(cryptoIV, encryptDataUse, hmac);
+            var hmac = XCrypto.HashWork.CreateSHA512HMAC(encryptData, cks.GetCryptoHMACKey, asx.WorkMessage.EncryptHMAC, pv);
+            var result = new XModel.EncryptDataHMAC(cryptoIV, encryptData, hmac);
 
             return result;
         }
