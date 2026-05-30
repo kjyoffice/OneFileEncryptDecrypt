@@ -63,11 +63,10 @@ namespace OneFileEncryptDecrypt.XWork
 
         public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo)
         {
-            var appTitle = XValue.ProcessValue.ApplicationPublicTitle;
             // 복호화 후 원본파일 경로
             var decryptOriginalFIlePath = cwo.CreateDecryptOriginalFIlePath();
 
-            cwms.Success.MessageNow(appTitle);
+            cwms.Success.MessageNow(XValue.ProcessValue.ApplicationPublicTitle);
             cwms.Normal.MessageNow(" - ");
             cwms.Warning.MessageNow("Decrypt", true);
             cwms.EmptyLine();
@@ -100,7 +99,7 @@ namespace OneFileEncryptDecrypt.XWork
 
                         cwms.EmptyLine();
                         cwms.Warning.MessageNow("[Mode] ");
-                        cwms.Success.MessageNow(ci.CryptoMode, true);
+                        cwms.Success.MessageNow(XValue.ProcessValue.CryptoModeDisplay[ci.CryptoMode], true);
                         cwms.Warning.MessageNow("[Version] ");
                         cwms.Success.MessageNow(ci.CryptoVersion.ToString(), true);
                         cwms.EmptyLine();

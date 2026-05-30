@@ -47,6 +47,18 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
+        public static Dictionary<string, string> CryptoModeDisplay
+        {
+            get
+            {
+                return new Dictionary<string, string>()
+                {
+                    { ProcessValue.CryptoMode_AES256CBC, "AES256 CBC" },
+                    { ProcessValue.CryptoMode_AES256GCM, "AES256 GCM" },
+                };
+            }
+        }
+
         public static string ApplicationPublicTitle
         {
             get
