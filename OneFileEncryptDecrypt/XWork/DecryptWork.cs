@@ -106,7 +106,7 @@ namespace OneFileEncryptDecrypt.XWork
                         if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) && (ci.CryptoVersion == cryptoVersion))
                         {
                             // AES-CBC
-                            DecryptWork_AES256CBC.ExecuteNow(asx, cwms, cwo, cfn, pv, decryptOriginalFIlePath);
+                            DecryptWork_AES256.ExecuteNow(asx, cwms, cwo, cfn, pv, decryptOriginalFIlePath);
                         }
                         else
                         {
