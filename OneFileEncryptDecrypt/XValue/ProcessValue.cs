@@ -78,5 +78,14 @@ namespace OneFileEncryptDecrypt.XValue
                 return 1;
             }
         }
+
+        public static int TagSizeBits
+        {
+            get
+            {
+                // 16 bytes
+                return 128;
+            }
+        }
     }
 }
