@@ -120,12 +120,12 @@ namespace OneFileEncryptDecrypt.XCrypto
             // Empty
         }
 
-        public byte[] CreateKey(byte[] salt, string info, int keyLength)
+        private byte[] CreateKey(byte[] salt, string info, int keyLength)
         {
             return this.CreateSubKey(this.MasterKey, salt, info, keyLength);
         }
 
-        public byte[] CreateKey(string info, int keyLength)
+        private byte[] CreateKey(string info, int keyLength)
         {
             return this.CreateSubKey(this.MasterKey, null, info, keyLength);
         }
