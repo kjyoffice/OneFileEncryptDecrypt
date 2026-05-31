@@ -25,6 +25,8 @@ namespace OneFileEncryptDecrypt.XWork
             cwms.Success.MessageNow(encryptZIPFilePath, true);
             cwms.Warning.MessageNow("[Mode] ");
             cwms.Success.MessageNow(XValue.ProcessValue.CryptoModeDisplay(cwo.CryptoMode), true);
+            cwms.Warning.MessageNow("[Backup] ");
+            cwms.Success.MessageNow(asx.WorkMessage.EncryptBackupStatus(cwo.IsCryptoBackup), true);
             cwms.EmptyLine();
 
             // TODO : 테스트때 필요시 활성화 

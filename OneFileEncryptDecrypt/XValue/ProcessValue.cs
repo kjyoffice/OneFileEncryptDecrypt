@@ -96,6 +96,22 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
+        public static string CryptoBackup_TRUE
+        {
+            get
+            {
+                return "TRUE";
+            }
+        }
+
+        public static string CryptoBackup_FALSE
+        {
+            get
+            {
+                return "FALSE";
+            }
+        }
+
         // ---------------------------------------------------------------
 
         public static string CryptoModeDisplay(string cryptoMode)

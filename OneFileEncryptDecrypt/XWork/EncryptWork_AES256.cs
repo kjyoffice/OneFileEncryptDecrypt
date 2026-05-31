@@ -92,6 +92,13 @@ namespace OneFileEncryptDecrypt.XWork
 
         private static void SuccessMessage(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn)
         {
+            // 작업파일 백업
+            // 이거도 Stream 하게 Progress를 해야하지만... 나중에 ㅎㅎㅎ
+            if (cwo.IsCryptoBackup == true)
+            {
+                File.Copy(cwo.SourceFilePath, cwo.CreateSourceFileBackupPath(), true);
+            }
+
             // 작업파일 삭제
             cfn.DeleteAllFile(cwo.SourceFilePath);
 

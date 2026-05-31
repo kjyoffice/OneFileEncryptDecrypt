@@ -335,6 +335,18 @@ namespace OneFileEncryptDecrypt.XMessage
             }
         }
 
+        public string CryptoBackupDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"암호화때 원본 파일을 백업합니다. (기본값, true)" :
+                    $"Encrypt time backup original file. (Default, true)"
+                );
+            }
+        }
+
         /*
         public string AppDescription
         {
@@ -446,6 +458,24 @@ namespace OneFileEncryptDecrypt.XMessage
                 (this.IsHangul == true) ?
                 $"{tkText}지정되지 않은 Mode 입니다." :
                 $"{tkText}Undefined mode."
+            );
+        }
+
+        public string UndefinedBackup(string tkText)
+        {
+            return (
+                (this.IsHangul == true) ?
+                $"{tkText}지정되지 않은 Backup 입니다." :
+                $"{tkText}Undefined backup."
+            );
+        }
+
+        public string EncryptBackupStatus(bool isCryptoBackup)
+        {
+            return (
+                (this.IsHangul == true) ?
+                ((isCryptoBackup == true) ? "예, 백업" : "아니오.") :
+                ((isCryptoBackup == true) ? "Yes, Backup" : "No.")
             );
         }
 

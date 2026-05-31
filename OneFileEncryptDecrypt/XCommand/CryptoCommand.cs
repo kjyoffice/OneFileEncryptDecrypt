@@ -105,6 +105,34 @@ namespace OneFileEncryptDecrypt.XCommand
             }
         }
 
+        private static Option<string> CreateOptionBackup(XAppSettings.AppSettingsX asx)
+        {
+            var result = new Option<string>("--isbackup");
+            // 암호화때 원본 파일을 백업합니다.
+            result.Description = asx.WorkMessage.CryptoBackupDescription;
+            result.Required = false;
+            result.Validators.Add(optr => CryptoCommand.CreateOptionBackupValidator(optr, asx));
+
+            return result;
+        }
+
+        private static void CreateOptionBackupValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
+        {
+            var tkText = CommandProcess.IdentifierTokenText(optr);
+            var isBackup = optr.GetValueOrDefault<string>().ToUpper();
+            var isAllow = (
+                (isBackup == string.Empty) ||
+                ((isBackup != string.Empty) && (isBackup == XValue.ProcessValue.CryptoBackup_TRUE)) ||
+                ((isBackup != string.Empty) && (isBackup == XValue.ProcessValue.CryptoBackup_FALSE))
+            );
+
+            if (isAllow == false)
+            {
+                // 지정되지 않은 Backup 입니다.
+                optr.AddError(asx.WorkMessage.UndefinedBackup(tkText));
+            }
+        }
+
         private static Option<string> CreateOptionIsUIX(XAppSettings.AppSettingsX asx)
         {
             var result = new Option<string>("--isuix");
@@ -121,6 +149,7 @@ namespace OneFileEncryptDecrypt.XCommand
             var optPW = CryptoCommand.CreateOptionPassword(isEncrypt, asx);
             var optFile = CryptoCommand.CreateOptionFile(isEncrypt, asx);
             var optMode = CryptoCommand.CreateOptionMode(asx);
+            var optBackup = CryptoCommand.CreateOptionBackup(asx);
             var optIsUIX = CryptoCommand.CreateOptionIsUIX(asx);
             // 파일을 암호화 합니다.
             var cmdDesc = asx.WorkMessage.CryptoCommandDescription(isEncrypt);
@@ -132,6 +161,7 @@ namespace OneFileEncryptDecrypt.XCommand
             if (isEncrypt == true)
             {
                 result.Options.Add(optMode);
+                result.Options.Add(optBackup);
             }
 
             result.Options.Add(optIsUIX);
@@ -142,7 +172,8 @@ namespace OneFileEncryptDecrypt.XCommand
                     var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
                     var filePath = (pr.GetValue(optFile) ?? string.Empty);
                     var cryptoMode = (pr.GetValue(optMode) ?? string.Empty);
-                    var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode, isEncrypt);
+                    var cryptoBackup = (pr.GetValue(optBackup) ?? string.Empty);
+                    var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode, cryptoBackup, isEncrypt);
 
                     workAction(asx, cwms, cwo);
                 }
