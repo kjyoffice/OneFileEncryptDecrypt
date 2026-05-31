@@ -32,7 +32,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                     var outBuffer = new byte[cipher.GetOutputSize(bufferSize)];
                     var isLoop = true;
 
-                    pv?.Start(title, inStream.Length);
+                    pv?.ProgressStart(title, inStream.Length);
 
                     while (isLoop == true)
                     {
@@ -58,7 +58,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                     }
 
                     inStream.Close();
-                    pv?.Done();
+                    pv?.ProgressDone();
                 }
 
                 var finalBuffer = new byte[cipher.GetOutputSize(0)];
@@ -101,7 +101,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                     var outBuffer = new byte[bufferSize];
                     var isLoop = true;
 
-                    pv?.Start(title, inStream.Length);
+                    pv?.ProgressStart(title, inStream.Length);
 
                     while (isLoop == true)
                     {
@@ -127,7 +127,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                     }
 
                     inStream.Close();
-                    pv?.Done();
+                    pv?.ProgressDone();
                 }
 
                 var finalBuffer = new byte[cipher.GetOutputSize(0)];

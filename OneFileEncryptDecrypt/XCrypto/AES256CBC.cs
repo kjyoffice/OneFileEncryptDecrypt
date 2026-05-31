@@ -34,7 +34,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                         {
                             using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                             {
-                                pv?.Start(title, source.Length);
+                                pv?.ProgressStart(title, source.Length);
 
                                 while (offset < source.Length)
                                 {
@@ -55,7 +55,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 
                                 cs.Clear();
                                 cs.Close();
-                                pv?.Done();
+                                pv?.ProgressDone();
                             }
 
                             ms.Close();
@@ -93,7 +93,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                             {
                                 // 여긴 복호화니, 들어올 때 크기랑 복호화 후 크기가 다를것임
                                 // 그래서 마지막에 전체 크기로 바꿔준다 ㅎㅎㅎ
-                                pv?.Start(title, source.Length);
+                                pv?.ProgressStart(title, source.Length);
 
                                 while (isLoop == true)
                                 {
@@ -120,7 +120,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 
                                 cs.Clear();
                                 cs.Close();
-                                pv?.Done();
+                                pv?.ProgressDone();
                             }
 
                             ms.Close();
