@@ -99,7 +99,7 @@ namespace OneFileEncryptDecrypt.XWork
 
                         cwms.EmptyLine();
                         cwms.Warning.MessageNow("[Mode] ");
-                        cwms.Success.MessageNow(XValue.ProcessValue.CryptoModeDisplay[ci.CryptoMode], true);
+                        cwms.Success.MessageNow(XValue.ProcessValue.CryptoModeDisplay(ci.CryptoMode), true);
                         cwms.Warning.MessageNow("[Version] ");
                         cwms.Success.MessageNow(ci.CryptoVersion.ToString(), true);
                         cwms.EmptyLine();

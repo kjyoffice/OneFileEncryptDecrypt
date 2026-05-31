@@ -47,18 +47,6 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
-        public static Dictionary<string, string> CryptoModeDisplay
-        {
-            get
-            {
-                return new Dictionary<string, string>()
-                {
-                    { ProcessValue.CryptoMode_AES256CBC, "AES256 CBC" },
-                    { ProcessValue.CryptoMode_AES256GCM, "AES256 GCM" },
-                };
-            }
-        }
-
         public static string ApplicationPublicTitle
         {
             get
@@ -106,6 +94,20 @@ namespace OneFileEncryptDecrypt.XValue
                 // 16 bytes
                 return 128;
             }
+        }
+
+        // ---------------------------------------------------------------
+
+        public static string CryptoModeDisplay(string cryptoMode)
+        {
+            var dic = new Dictionary<string, string>()
+            {
+                { ProcessValue.CryptoMode_AES256CBC, "AES256 CBC" },
+                { ProcessValue.CryptoMode_AES256GCM, "AES256 GCM" },
+            };
+            var result = ((dic.ContainsKey(cryptoMode) == true) ? dic[cryptoMode] : "Unknown");
+
+            return result;
         }
     }
 }
