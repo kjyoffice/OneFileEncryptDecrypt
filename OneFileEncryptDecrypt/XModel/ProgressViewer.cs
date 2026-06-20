@@ -26,7 +26,7 @@ namespace OneFileEncryptDecrypt.XModel
             this.NowCount = 0m;
         }
 
-        public void Start(string title, decimal totalCount)
+        public void ProgressStart(string title, decimal totalCount)
         {
             this.Title = title;
             this.TotalCount = totalCount;
@@ -73,7 +73,7 @@ namespace OneFileEncryptDecrypt.XModel
             Console.ResetColor();
         }
 
-        public void Done()
+        public void ProgressDone()
         {
             this.FinalMessage(ConsoleColor.Green, "Done");
         }

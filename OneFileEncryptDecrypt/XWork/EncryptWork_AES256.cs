@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OneFileEncryptDecrypt.XWork
 {
-    public class EncryptWork_AES256CBC
+    public class EncryptWork_AES256
     {
         private static XModel.OriginalDataHMAC GetOriginalData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv)
         {
@@ -17,14 +17,38 @@ namespace OneFileEncryptDecrypt.XWork
             return result;
         }
 
-        private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh)
+        private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh)
         {
             var cryptoIV = cks.GetCryptoIV;
-            // 파일 암호화
-            var encryptData = XCrypto.AES256CBC.EncryptNow(cks.GetCryptoKey, cryptoIV, odh.OriginalData, asx.WorkMessage.EncryptFile, pv);
+            var edav = EncryptWork_AES256.GetEncryptData_Work(asx, cwo, cks, pv, odh, cryptoIV);
+            var encryptData = edav.EncryptData.ToArray();
             // 암호화 된 데이터 HMAC
             var hmac = XCrypto.HashWork.CreateSHA512HMAC(encryptData, cks.GetCryptoHMACKey, asx.WorkMessage.EncryptHMAC, pv);
-            var result = new XModel.EncryptDataHMAC(cryptoIV, encryptData, hmac);
+            var result = new XModel.EncryptDataHMAC(cryptoIV, encryptData, hmac, edav.EncryptVersion);
+
+            return result;
+        }
+
+        private static XModel.EncryptDataAndVersion GetEncryptData_Work(XAppSettings.AppSettingsX asx, XModel.CryptoWorkOrder cwo, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.OriginalDataHMAC odh, byte[] cryptoIV)
+        {
+            var result = new XModel.EncryptDataAndVersion();
+
+            // 파일 암호화
+            if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC)
+            {
+                var encData = XCrypto.AES256CBC.EncryptNow(odh.OriginalData, cks.GetCryptoKey, cryptoIV, asx.WorkMessage.EncryptFile, pv);
+                var encVersion = XValue.ProcessValue.CryptoVersion1;
+
+                result.ChangeData(encData, encVersion);
+            }
+            else if (cwo.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM)
+            {
+                var encData = XCrypto.AES256GCM.EncryptNow(odh.OriginalData, cks.GetCryptoKey, cks.GetCryptoNonce, null, asx.WorkMessage.EncryptFile, pv);
+                var encVersion = XValue.ProcessValue.CryptoVersion1;
+
+                result.ChangeData(encData, encVersion);
+            }
+            // else - 이 메소드에서는 이 부분이 잡히지 않는다고 가정함!
 
             return result;
         }
@@ -45,11 +69,10 @@ namespace OneFileEncryptDecrypt.XWork
             FileWork.WriteFileByte(edh.EncryptData, cfn.EncryptDataFilePath, asx.WorkMessage.SaveEncryptFile, pv);
         }
 
-        private static void CreateAndSaveCryptoInfo(XModel.CryptoXFilePath cfn, XCrypto.CryptoKeySet cks)
+        private static void CreateAndSaveCryptoInfo(XModel.CryptoXFilePath cfn, XCrypto.CryptoKeySet cks, XModel.CryptoWorkOrder cwo, XModel.EncryptDataHMAC edh)
         {
             // 암호화 정보 생성
-            var cryptoMode = XValue.ProcessValue.CryptoMode_AES256CBC;
-            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(1, cryptoMode, cks.KeyType, cks.KeyIterations));
+            var infoText = JsonWork.ToJsonText(new XModel.CryptoInfo(edh.EncryptVersion, cwo.CryptoMode, cks.KeyType, cks.KeyIterations));
 
             // 암호화 정보 저장
             File.WriteAllText(cfn.CryptoInfoFilePath, infoText, Encoding.UTF8);
@@ -69,6 +92,13 @@ namespace OneFileEncryptDecrypt.XWork
 
         private static void SuccessMessage(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn)
         {
+            // 작업파일 백업
+            // 이거도 Stream 하게 Progress를 해야하지만... 나중에 ㅎㅎㅎ
+            if (cwo.IsCryptoBackup == true)
+            {
+                File.Copy(cwo.SourceFilePath, cwo.CreateSourceFileBackupPath(), true);
+            }
+
             // 작업파일 삭제
             cfn.DeleteAllFile(cwo.SourceFilePath);
 
@@ -76,8 +106,10 @@ namespace OneFileEncryptDecrypt.XWork
             // 암호화 비밀번호는 잊으면 안됩니다.
             // 잊지 않도록 기억해주세요!
             cwms.Warning.MessageNow(asx.WorkMessage.EncryptPasswordMemoryNotify, true);
+            cwms.EmptyLine();
             // 파일을 암호화 했습니다.
-            cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone);
+            cwms.Success.MessageNow(asx.WorkMessage.EncryptFileDone, true);
+            cwms.EmptyLine();
 
             // Final Success!
             asx.FinalSuccessSign();
@@ -91,24 +123,24 @@ namespace OneFileEncryptDecrypt.XWork
             // 키 셋트 생성 (salt는 신규 생성)
             var cks = new XCrypto.CryptoKeySet(cwo);
             // 원본파일 읽고, HMAC 만들기
-            var odh = EncryptWork_AES256CBC.GetOriginalData(asx, cwms, cwo, cks, pv);
+            var odh = EncryptWork_AES256.GetOriginalData(asx, cwms, cwo, cks, pv);
             // 암호화 하고 HMAC 만들기
-            var edh = EncryptWork_AES256CBC.GetEncryptData(asx, cwms, cks, pv, odh);
+            var edh = EncryptWork_AES256.GetEncryptData(asx, cwms, cwo, cks, pv, odh);
 
             // 원본
-            EncryptWork_AES256CBC.SaveOriginalData(cfn, odh);
+            EncryptWork_AES256.SaveOriginalData(cfn, odh);
             // 암호화
-            EncryptWork_AES256CBC.SaveEncryptData(asx, cfn, edh, pv);
+            EncryptWork_AES256.SaveEncryptData(asx, cfn, edh, pv);
             // Salt 파일 생성
-            EncryptWork_AES256CBC.SaveCryptoSalt(cfn, cks);
+            EncryptWork_AES256.SaveCryptoSalt(cfn, cks);
             // 암호화 정보
-            EncryptWork_AES256CBC.CreateAndSaveCryptoInfo(cfn, cks);
+            EncryptWork_AES256.CreateAndSaveCryptoInfo(cfn, cks, cwo, edh);
 
             // 파일들 압축
-            EncryptWork_AES256CBC.ZIPCompression(asx, cfn, encryptZIPFilePath, pv);
+            EncryptWork_AES256.ZIPCompression(asx, cfn, encryptZIPFilePath, pv);
 
             // Success
-            EncryptWork_AES256CBC.SuccessMessage(asx, cwms, cwo, cfn);
+            EncryptWork_AES256.SuccessMessage(asx, cwms, cwo, cfn);
         }
     }
 }

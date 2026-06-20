@@ -1,0 +1,57 @@
+name: Build App
+
+on:
+  push:
+    branches:
+      - Release
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Publish
+        run: dotnet publish ./OneFileEncryptDecrypt/OneFileEncryptDecrypt.csproj -c Release --no-restore -o publish
+
+      - name: Set Version
+        shell: pwsh
+        run: |
+            $dateX = Get-Date -Format "yyyy-MM-dd"
+            $versionX = "${dateX}_${{ github.run_number }}"
+            echo "APP_VERSION=$versionX" >> $env:GITHUB_ENV 
+
+      - name: Zip Publish Files
+        shell: pwsh
+        run: |
+          Compress-Archive -Path publish/* -DestinationPath "OneFileEncryptDecrypt_v${env:APP_VERSION}.zip"
+
+    #   - name: Upload Build
+    #     uses: actions/upload-artifact@v5
+    #     with:
+    #       name: OneFileEncryptDecrypt_v${{ env.APP_VERSION }}
+    #       path: publish
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ env.APP_VERSION }}
+          name: OneFileEncryptDecrypt_v${{ env.APP_VERSION }}
+          files: OneFileEncryptDecrypt_v${{ env.APP_VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+          

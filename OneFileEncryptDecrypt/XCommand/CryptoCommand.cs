@@ -41,12 +41,12 @@ namespace OneFileEncryptDecrypt.XCommand
             // 암호화 파일 경로
             result.Description = asx.WorkMessage.CryptoFileDescription(isEncrypt);
             result.Required = true;
-            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx));
+            result.Validators.Add(optr => CryptoCommand.CreateOptionFileValidator(optr, asx, isEncrypt));
 
             return result;
         }
 
-        private static void CreateOptionFileValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
+        private static void CreateOptionFileValidator(OptionResult optr, XAppSettings.AppSettingsX asx, bool isEncrypt)
         {
             var tkText = CommandProcess.IdentifierTokenText(optr);
             var filePath = optr.GetValueOrDefault<string>();
@@ -54,16 +54,20 @@ namespace OneFileEncryptDecrypt.XCommand
             // 파일이 존재하는지 체크
             if ((filePath != string.Empty) && (File.Exists(filePath) == true))
             {
-                var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
-                // 1048576 : 1024 * 1024
-                var maxByte = (1_048_576L * (maxSizeMB + 1));
-                var fi = new FileInfo(filePath);
-
-                // 파일은 일정 크기 이상 안되게 한다
-                if (fi.Length > maxByte)
+                // 암호화 할때만 용량을 체크한다
+                if (isEncrypt == true)
                 {
-                    // 100 MB 이상의 파일은 지원하지 않습니다.
-                    optr.AddError(asx.WorkMessage.CryptoFileBigNotSupport(tkText, maxSizeMB));
+                    var maxSizeMB = XValue.ProcessValue.FileAllowMaxSizeMB;
+                    // 1048576 : 1024 * 1024
+                    var maxByte = (1_048_576L * (maxSizeMB + 1));
+                    var fi = new FileInfo(filePath);
+
+                    // 파일은 일정 크기 이상 안되게 한다
+                    if (fi.Length > maxByte)
+                    {
+                        // 100 MB 이상의 파일은 지원하지 않습니다.
+                        optr.AddError(asx.WorkMessage.CryptoFileBigNotSupport(tkText, maxSizeMB));
+                    }
                 }
             }
             else
@@ -90,13 +94,42 @@ namespace OneFileEncryptDecrypt.XCommand
             var cryptoMode = optr.GetValueOrDefault<string>().ToUpper();
             var isAllow = (
                 (cryptoMode == string.Empty) ||
-                ((cryptoMode != string.Empty) && (cryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC))
+                ((cryptoMode != string.Empty) && (cryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC)) ||
+                ((cryptoMode != string.Empty) && (cryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM))
             );
 
             if (isAllow == false)
             {
                 // 지정되지 않은 Mode 입니다.
                 optr.AddError(asx.WorkMessage.UndefinedMode(tkText));
+            }
+        }
+
+        private static Option<string> CreateOptionBackup(XAppSettings.AppSettingsX asx)
+        {
+            var result = new Option<string>("--isbackup");
+            // 암호화때 원본 파일을 백업합니다.
+            result.Description = asx.WorkMessage.CryptoBackupDescription;
+            result.Required = false;
+            result.Validators.Add(optr => CryptoCommand.CreateOptionBackupValidator(optr, asx));
+
+            return result;
+        }
+
+        private static void CreateOptionBackupValidator(OptionResult optr, XAppSettings.AppSettingsX asx)
+        {
+            var tkText = CommandProcess.IdentifierTokenText(optr);
+            var isBackup = optr.GetValueOrDefault<string>().ToUpper();
+            var isAllow = (
+                (isBackup == string.Empty) ||
+                ((isBackup != string.Empty) && (isBackup == XValue.ProcessValue.CryptoBackup_TRUE)) ||
+                ((isBackup != string.Empty) && (isBackup == XValue.ProcessValue.CryptoBackup_FALSE))
+            );
+
+            if (isAllow == false)
+            {
+                // 지정되지 않은 Backup 입니다.
+                optr.AddError(asx.WorkMessage.UndefinedBackup(tkText));
             }
         }
 
@@ -116,6 +149,7 @@ namespace OneFileEncryptDecrypt.XCommand
             var optPW = CryptoCommand.CreateOptionPassword(isEncrypt, asx);
             var optFile = CryptoCommand.CreateOptionFile(isEncrypt, asx);
             var optMode = CryptoCommand.CreateOptionMode(asx);
+            var optBackup = CryptoCommand.CreateOptionBackup(asx);
             var optIsUIX = CryptoCommand.CreateOptionIsUIX(asx);
             // 파일을 암호화 합니다.
             var cmdDesc = asx.WorkMessage.CryptoCommandDescription(isEncrypt);
@@ -127,6 +161,7 @@ namespace OneFileEncryptDecrypt.XCommand
             if (isEncrypt == true)
             {
                 result.Options.Add(optMode);
+                result.Options.Add(optBackup);
             }
 
             result.Options.Add(optIsUIX);
@@ -137,7 +172,8 @@ namespace OneFileEncryptDecrypt.XCommand
                     var cryptoPW = (pr.GetValue(optPW) ?? string.Empty);
                     var filePath = (pr.GetValue(optFile) ?? string.Empty);
                     var cryptoMode = (pr.GetValue(optMode) ?? string.Empty);
-                    var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode, isEncrypt);
+                    var cryptoBackup = (pr.GetValue(optBackup) ?? string.Empty);
+                    var cwo = new XModel.CryptoWorkOrder(cryptoPW, filePath, cryptoMode, cryptoBackup, isEncrypt);
 
                     workAction(asx, cwms, cwo);
                 }

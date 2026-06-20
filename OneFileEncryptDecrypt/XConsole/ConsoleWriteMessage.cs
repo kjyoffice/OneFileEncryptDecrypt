@@ -15,7 +15,7 @@ namespace OneFileEncryptDecrypt.XConsole
             if (message.Count > 0)
             {
                 Console.ForegroundColor = textColor;
-                Console.Out.WriteLine(string.Join(Environment.NewLine, message));
+                Console.Out.Write(string.Join(Environment.NewLine, message));
 
                 if (isAndEmptyLine == true)
                 {

@@ -15,6 +15,7 @@ namespace OneFileEncryptDecrypt.XCrypto
         public int KeyIterations { get; private set; }
         private byte[] MasterKey { get; set; }
         public byte[] CryptoSalt { get; set; }
+        public int NonceSize { get; private set; }
 
         // ------------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ namespace OneFileEncryptDecrypt.XCrypto
         {
             get
             {
-                return RandomNumberGenerator.GetBytes(12);
+                return RandomNumberGenerator.GetBytes(this.NonceSize);
             }
         }
 
@@ -108,6 +109,7 @@ namespace OneFileEncryptDecrypt.XCrypto
             this.KeyIterations = keyIterations;
             this.MasterKey = this.CreateMasterKey(password, saltUse, keyIterations);
             this.CryptoSalt = saltUse;
+            this.NonceSize = 12;
         }
 
         public CryptoKeySet(XModel.CryptoWorkOrder cwo, byte[] salt) : this(cwo.CryptoPassword, salt, 0)
@@ -120,12 +122,12 @@ namespace OneFileEncryptDecrypt.XCrypto
             // Empty
         }
 
-        public byte[] CreateKey(byte[] salt, string info, int keyLength)
+        private byte[] CreateKey(byte[] salt, string info, int keyLength)
         {
             return this.CreateSubKey(this.MasterKey, salt, info, keyLength);
         }
 
-        public byte[] CreateKey(string info, int keyLength)
+        private byte[] CreateKey(string info, int keyLength)
         {
             return this.CreateSubKey(this.MasterKey, null, info, keyLength);
         }

@@ -39,6 +39,22 @@ namespace OneFileEncryptDecrypt.XValue
             }
         }
 
+        public static string CryptoMode_AES256GCM
+        {
+            get
+            {
+                return "AES256GCM";
+            }
+        }
+
+        public static string ApplicationPublicTitle
+        {
+            get
+            {
+                return "OneFileEncryptDecrypt";
+            }
+        }
+
         public static string ApplicationCallSign
         {
             get
@@ -61,6 +77,53 @@ namespace OneFileEncryptDecrypt.XValue
             {
                 return ".ofedx";
             }
+        }
+
+        public static int CryptoVersion1
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        public static int TagSizeBits
+        {
+            get
+            {
+                // 16 bytes
+                return 128;
+            }
+        }
+
+        public static string CryptoBackup_TRUE
+        {
+            get
+            {
+                return "TRUE";
+            }
+        }
+
+        public static string CryptoBackup_FALSE
+        {
+            get
+            {
+                return "FALSE";
+            }
+        }
+
+        // ---------------------------------------------------------------
+
+        public static string CryptoModeDisplay(string cryptoMode)
+        {
+            var dic = new Dictionary<string, string>()
+            {
+                { ProcessValue.CryptoMode_AES256CBC, "AES256 CBC" },
+                { ProcessValue.CryptoMode_AES256GCM, "AES256 GCM" },
+            };
+            var result = ((dic.ContainsKey(cryptoMode) == true) ? dic[cryptoMode] : "Unknown");
+
+            return result;
         }
     }
 }

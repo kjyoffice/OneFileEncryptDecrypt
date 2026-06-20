@@ -16,11 +16,11 @@ namespace OneFileEncryptDecrypt.XCrypto
             aes.IV = iv;
         }
 
-        public static byte[] EncryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv)
+        public static byte[] EncryptNow(byte[] source, byte[] key, byte[] iv, string title, XModel.ProgressViewer? pv) 
         {
             var chunkSize = XValue.ProcessValue.BufferChunkSize;
             var offset = 0;
-            var result = new List<byte>();
+            var encryptData = new List<byte>();
 
             if (source.Length > 0)
             {
@@ -34,7 +34,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                         {
                             using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                             {
-                                pv?.Start(title, source.Length);
+                                pv?.ProgressStart(title, source.Length);
 
                                 while (offset < source.Length)
                                 {
@@ -51,11 +51,11 @@ namespace OneFileEncryptDecrypt.XCrypto
 
                                 cs.FlushFinalBlock();
 
-                                result.AddRange(ms.ToArray());
+                                encryptData.AddRange(ms.ToArray());
 
                                 cs.Clear();
                                 cs.Close();
-                                pv?.Done();
+                                pv?.ProgressDone();
                             }
 
                             ms.Close();
@@ -66,16 +66,18 @@ namespace OneFileEncryptDecrypt.XCrypto
                 }
             }
 
-            return result.ToArray();
+            var result = encryptData.ToArray();
+
+            return result;
         }
 
-        public static byte[] DecryptNow(byte[] key, byte[] iv, byte[] source, string title, XModel.ProgressViewer? pv)
+        public static byte[] DecryptNow(byte[] source, byte[] key, byte[] iv, string title, XModel.ProgressViewer? pv)
         {
             var bufferSize = XValue.ProcessValue.BufferChunkSize;
             var buffer = new byte[bufferSize];
             var totalReadBytes = 0;
-            var streamList = new List<byte>();
             var isLoop = true;
+            var streamList = new List<byte>();
 
             if (source.Length > 0)
             {
@@ -91,7 +93,7 @@ namespace OneFileEncryptDecrypt.XCrypto
                             {
                                 // 여긴 복호화니, 들어올 때 크기랑 복호화 후 크기가 다를것임
                                 // 그래서 마지막에 전체 크기로 바꿔준다 ㅎㅎㅎ
-                                pv?.Start(title, source.Length);
+                                pv?.ProgressStart(title, source.Length);
 
                                 while (isLoop == true)
                                 {
@@ -118,7 +120,7 @@ namespace OneFileEncryptDecrypt.XCrypto
 
                                 cs.Clear();
                                 cs.Close();
-                                pv?.Done();
+                                pv?.ProgressDone();
                             }
 
                             ms.Close();

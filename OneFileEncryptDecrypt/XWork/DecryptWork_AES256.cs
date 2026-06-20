@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OneFileEncryptDecrypt.XWork
 {
-    public class DecryptWork_AES256CBC
+    public class DecryptWork_AES256
     {
         private static void ErrorMessage(XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoXFilePath cfn, string message)
         {
@@ -12,7 +12,7 @@ namespace OneFileEncryptDecrypt.XWork
             cfn.DeleteAllFile(string.Empty);
 
             cwms.EmptyLine();
-            cwms.Error.MessageNow(message);
+            cwms.Error.MessageNow(message, true);
         }
 
         private static XModel.EncryptDataHMAC GetEncryptData(XAppSettings.AppSettingsX asx, XModel.CryptoXFilePath cfn, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv)
@@ -39,13 +39,34 @@ namespace OneFileEncryptDecrypt.XWork
             return result;
         }
 
-        private static XModel.OriginalDataHMAC GetOriginalData(XAppSettings.AppSettingsX asx, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.EncryptDataHMAC edh)
+        private static XModel.OriginalDataHMAC GetOriginalData(XAppSettings.AppSettingsX asx, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.EncryptDataHMAC edh, XModel.CryptoInfo ci)
         {
-            // 파일 복호화
-            var originalData = XCrypto.AES256CBC.DecryptNow(cks.GetCryptoKey, edh.CryptoIV, edh.EncryptData, asx.WorkMessage.DecryptFile, pv);
+            var originalData = DecryptWork_AES256.GetOriginalData_Work(asx, cks, pv, edh, ci);
             // 복호화 된 파일 HMAC 만들기
             var originalHMAC = XCrypto.HashWork.CreateSHA512HMAC(originalData, cks.GetOriginalHMACKey, asx.WorkMessage.DecryptHMAC, pv);
             var result = new XModel.OriginalDataHMAC(originalData, originalHMAC);
+
+            return result;
+        }
+
+        private static byte[] GetOriginalData_Work(XAppSettings.AppSettingsX asx, XCrypto.CryptoKeySet cks, XModel.ProgressViewer pv, XModel.EncryptDataHMAC edh, XModel.CryptoInfo ci)
+        {
+            var cryptoVersion = XValue.ProcessValue.CryptoVersion1;
+            byte[] result;
+
+            if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256CBC) && (ci.CryptoVersion == cryptoVersion))
+            {
+                result = XCrypto.AES256CBC.DecryptNow(edh.EncryptData, cks.GetCryptoKey, edh.CryptoIV, asx.WorkMessage.DecryptFile, pv);
+            }
+            else if ((ci.CryptoMode == XValue.ProcessValue.CryptoMode_AES256GCM) && (ci.CryptoVersion == cryptoVersion))
+            {
+                result = XCrypto.AES256GCM.DecryptNow(edh.EncryptData, cks.GetCryptoKey, cks.NonceSize, null, asx.WorkMessage.DecryptFile, pv);
+            }
+            else
+            {
+                // 이 메소드에서는 이 부분이 잡히지 않는다고 가정함!
+                result = Array.Empty<byte>();
+            }
 
             return result;
         }
@@ -68,7 +89,8 @@ namespace OneFileEncryptDecrypt.XWork
 
             cwms.EmptyLine();
             // 파일을 복호화 했습니다.
-            cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone);
+            cwms.Success.MessageNow(asx.WorkMessage.DecryptFileDone, true);
+            cwms.EmptyLine();
 
             // Final Success!
             asx.FinalSuccessSign();
@@ -86,37 +108,37 @@ namespace OneFileEncryptDecrypt.XWork
 
         // --------------------------------------------------------
 
-        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn, XModel.ProgressViewer pv, string decryptOriginalFIlePath)
+        public static void ExecuteNow(XAppSettings.AppSettingsX asx, XConsole.ConsoleWriteMessageSet cwms, XModel.CryptoWorkOrder cwo, XModel.CryptoXFilePath cfn, XModel.ProgressViewer pv, string decryptOriginalFIlePath, XModel.CryptoInfo ci)
         {
             // 키 셋트 생성
-            var cks = DecryptWork_AES256CBC.CreateCryptoKeySet(cwo, cfn);
+            var cks = DecryptWork_AES256.CreateCryptoKeySet(cwo, cfn);
             // 암호화 된 파일 읽기
-            var edh = DecryptWork_AES256CBC.GetEncryptData(asx, cfn, cks, pv);
+            var edh = DecryptWork_AES256.GetEncryptData(asx, cfn, cks, pv);
 
             // 암호화 된 파일 HMAC 비교
-            if (DecryptWork_AES256CBC.IsMatchEncryptHMAC(cfn, edh) == true)
+            if (DecryptWork_AES256.IsMatchEncryptHMAC(cfn, edh) == true)
             {
                 // 파일 복호화
-                var odh = DecryptWork_AES256CBC.GetOriginalData(asx, cks, pv, edh);
+                var odh = DecryptWork_AES256.GetOriginalData(asx, cks, pv, edh, ci);
 
-                if (DecryptWork_AES256CBC.IsMatchOriginalHMAC(cfn, odh) == true)
+                if (DecryptWork_AES256.IsMatchOriginalHMAC(cfn, odh) == true)
                 {
                     // 원본파일 저장
                     FileWork.WriteFileByte(odh.OriginalData, decryptOriginalFIlePath, asx.WorkMessage.SaveDecryptFile, pv);
 
                     // Success
-                    DecryptWork_AES256CBC.SuccessMessage(asx, cwms, cwo, cfn);
+                    DecryptWork_AES256.SuccessMessage(asx, cwms, cwo, cfn);
                 }
                 else
                 {
                     // 복호화 파일 HMAC가 다릅니다.
-                    DecryptWork_AES256CBC.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentDecryptHMAC);
+                    DecryptWork_AES256.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentDecryptHMAC);
                 }
             }
             else
             {
                 // 암호화 파일 HMAC가 다릅니다.
-                DecryptWork_AES256CBC.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentEncryptHMAC);
+                DecryptWork_AES256.ErrorMessage(cwms, cfn, asx.WorkMessage.DifferentEncryptHMAC);
             }
         }
     }

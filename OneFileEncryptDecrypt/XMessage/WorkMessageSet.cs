@@ -317,8 +317,8 @@ namespace OneFileEncryptDecrypt.XMessage
             {
                 return (
                     (this.IsHangul == true) ?
-                    $"암호화 방법을 지정합니다. (AESCBC) (기본값, AESCBC)" :
-                    $"Select crypto mode. (AESCBC) (Default, AESCBC)"
+                    $"암호화 방법을 지정합니다. (AES256CBC / AES256GCM) (기본값, AES256CBC)" :
+                    $"Select crypto mode. (AES256CBC / AES256GCM) (Default, AES256CBC)"
                 );
             }
         }
@@ -331,6 +331,18 @@ namespace OneFileEncryptDecrypt.XMessage
                     (this.IsHangul == true) ?
                     $"<<< 프로그램 종료를 위해서는 Enter를 쳐주세요. >>>" :
                     $"<<< Program exist press Enter. >>>"
+                );
+            }
+        }
+
+        public string CryptoBackupDescription
+        {
+            get
+            {
+                return (
+                    (this.IsHangul == true) ?
+                    $"암호화때 원본 파일을 백업합니다. (기본값, true)" :
+                    $"Encrypt time backup original file. (Default, true)"
                 );
             }
         }
@@ -446,6 +458,24 @@ namespace OneFileEncryptDecrypt.XMessage
                 (this.IsHangul == true) ?
                 $"{tkText}지정되지 않은 Mode 입니다." :
                 $"{tkText}Undefined mode."
+            );
+        }
+
+        public string UndefinedBackup(string tkText)
+        {
+            return (
+                (this.IsHangul == true) ?
+                $"{tkText}지정되지 않은 Backup 입니다." :
+                $"{tkText}Undefined backup."
+            );
+        }
+
+        public string EncryptBackupStatus(bool isCryptoBackup)
+        {
+            return (
+                (this.IsHangul == true) ?
+                ((isCryptoBackup == true) ? "예, 백업" : "아니오.") :
+                ((isCryptoBackup == true) ? "Yes, Backup" : "No.")
             );
         }
 
